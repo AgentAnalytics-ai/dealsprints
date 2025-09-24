@@ -1,7 +1,7 @@
 import { Resend } from 'resend';
 
 // Only initialize Resend if API key is available
-const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
+const resend = process.env.dealsprints_resend ? new Resend(process.env.dealsprints_resend) : null;
 
 export async function POST(request: Request) {
   try {
@@ -13,7 +13,7 @@ export async function POST(request: Request) {
 
     // Check if Resend is available
     if (!resend) {
-      console.error('Resend API key not configured');
+      console.error('dealsprints_resend API key not configured');
       return Response.json({ error: 'Email service not configured' }, { status: 500 });
     }
 
