@@ -10,7 +10,6 @@ import { Footer } from "@/components/Footer";
 export default function HomePage() {
   return (
     <main className="min-h-screen">
-      {/* Removed Header component */}
       <Hero />
       <StatsBand />
       <Process />
