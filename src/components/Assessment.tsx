@@ -4,12 +4,47 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { TrendingUp, Users, DollarSign, Target, Building2, BarChart3 } from "lucide-react";
 
+// Fix: Add proper type definitions
+interface FormData {
+  [key: string]: string;
+}
+
+interface MarketInsights {
+  industry?: {
+    totalCompanies: number;
+    avgRevenue: string;
+    growthRate: string;
+    marketSize: string;
+    premium: string;
+  };
+  revenue?: {
+    percentile: number;
+    description: string;
+    valuation: string;
+    tier: string;
+  };
+}
+
+// Fix: Add proper field type definition
+interface FormField {
+  name: string;
+  label: string;
+  type: string;
+  required?: boolean;
+  options?: string[];
+}
+
+interface FormStep {
+  title: string;
+  fields: FormField[];
+}
+
 export function Assessment() {
   const [step, setStep] = useState(0);
-  const [formData, setFormData] = useState({});
-  const [marketInsights, setMarketInsights] = useState({});
+  const [formData, setFormData] = useState<FormData>({});
+  const [marketInsights, setMarketInsights] = useState<MarketInsights>({});
 
-  const steps = [
+  const steps: FormStep[] = [
     {
       title: "Business Information",
       fields: [
@@ -29,8 +64,8 @@ export function Assessment() {
   ];
 
   // Generate real-time market insights
-  const generateMarketInsights = (data: any) => {
-    const insights: any = {};
+  const generateMarketInsights = (data: FormData): MarketInsights => {
+    const insights: MarketInsights = {};
     
     if (data.industry) {
       const industryData: any = {
@@ -111,7 +146,7 @@ export function Assessment() {
                           required={field.required}
                         >
                           <option value="" className="text-gray-500">Select {field.label}</option>
-                          {field.options.map((option, i) => (
+                          {field.options?.map((option, i) => (
                             <option key={i} value={option} className="text-gray-900">{option}</option>
                           ))}
                         </select>
