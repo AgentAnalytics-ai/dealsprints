@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { TrendingUp, Users, DollarSign, Target, Building2, BarChart3, Clock, MapPin, Briefcase, Award } from "lucide-react";
+import { TrendingUp, Users, DollarSign, Target, Building2, BarChart3, Clock, MapPin, Briefcase, Award, Zap, Eye } from "lucide-react";
 
 // Enhanced type definitions
 interface FormData {
@@ -29,10 +29,26 @@ interface MarketInsights {
     marketPosition: string;
     opportunity: string;
   };
-  leadScore?: {
-    total: number;
-    category: string;
-    value: string;
+  competitive?: {
+    percentile: number;
+    growthAdvantage: string;
+    profitabilityRank: string;
+  };
+  opportunity?: {
+    marketPotential: string;
+    multiplier: string;
+    locationPremium: string;
+  };
+  buyers?: {
+    activeBuyers: number;
+    qualifiedMatches: number;
+    avgCloseTime: string;
+  };
+  valuation?: {
+    assetValue: string;
+    goodwillValue: string;
+    growthPremium: string;
+    totalValue: string;
   };
 }
 
@@ -166,39 +182,65 @@ export function Assessment() {
       insights.growth = growthData[data.growth];
     }
 
-    // Lead scoring
-    let score = 0;
-    let category = "Standard";
-    let value = "$500-$1,000";
+    // Competitive positioning
+    if (data.revenue && data.growth) {
+      let percentile = 50;
+      let growthAdvantage = "Average";
+      let profitabilityRank = "Middle tier";
 
-    // Revenue scoring
-    if (data.revenue === "$20M+") score += 100;
-    else if (data.revenue === "$5M-$20M") score += 75;
-    else if (data.revenue === "$1M-$5M") score += 50;
-    else if (data.revenue === "$500K-$1M") score += 25;
+      if (data.revenue === "$20M+" && data.growth === "Exceptional (30%+)") {
+        percentile = 95; growthAdvantage = "Top 5%"; profitabilityRank = "Elite";
+      } else if (data.revenue === "$5M-$20M" && data.growth === "Strong (15-30%)") {
+        percentile = 85; growthAdvantage = "Top 15%"; profitabilityRank = "High";
+      } else if (data.revenue === "$1M-$5M" && data.growth === "Moderate (5-15%)") {
+        percentile = 70; growthAdvantage = "Top 30%"; profitabilityRank = "Above average";
+      } else if (data.revenue === "$500K-$1M" && data.growth === "Flat (0-5%)") {
+        percentile = 45; growthAdvantage = "Average"; profitabilityRank = "Average";
+      }
 
-    // Timeline scoring
-    if (data.timeline === "Immediately (within 3 months)") score += 40;
-    else if (data.timeline === "3-6 months") score += 30;
-    else if (data.timeline === "6-12 months") score += 20;
+      insights.competitive = { percentile, growthAdvantage, profitabilityRank };
+    }
 
-    // Growth scoring
-    if (data.growth === "Exceptional (30%+)") score += 30;
-    else if (data.growth === "Strong (15-30%)") score += 20;
-    else if (data.growth === "Moderate (5-15%)") score += 10;
+    // Market opportunity
+    if (data.industry && data.revenue) {
+      const opportunityData: any = {
+        Technology: { marketPotential: "$2.3B", multiplier: "8-12x", locationPremium: "+25%" },
+        Healthcare: { marketPotential: "$1.8B", multiplier: "6-10x", locationPremium: "+30%" },
+        Manufacturing: { marketPotential: "$3.1B", multiplier: "4-6x", locationPremium: "+15%" },
+        "Professional Services": { marketPotential: "$1.2B", multiplier: "3-5x", locationPremium: "+20%" },
+        "Retail/E-commerce": { marketPotential: "$4.2B", multiplier: "2-4x", locationPremium: "+10%" }
+      };
+      insights.opportunity = opportunityData[data.industry] || opportunityData["Professional Services"];
+    }
 
-    // Industry scoring
-    if (data.industry === "Technology") score += 25;
-    else if (data.industry === "Healthcare") score += 20;
-    else if (data.industry === "Manufacturing") score += 15;
+    // Buyer interest
+    if (data.industry && data.revenue) {
+      let activeBuyers = 15;
+      let qualifiedMatches = 8;
+      let avgCloseTime = "60 days";
 
-    // Determine category and value
-    if (score >= 90) { category = "Premium"; value = "$2,000-$5,000"; }
-    else if (score >= 70) { category = "High-Value"; value = "$1,000-$2,000"; }
-    else if (score >= 50) { category = "Quality"; value = "$500-$1,000"; }
-    else if (score >= 30) { category = "Standard"; value = "$200-$500"; }
+      if (data.industry === "Technology" && data.revenue === "$5M-$20M") {
+        activeBuyers = 45; qualifiedMatches = 23; avgCloseTime = "45 days";
+      } else if (data.industry === "Healthcare" && data.revenue === "$1M-$5M") {
+        activeBuyers = 32; qualifiedMatches = 18; avgCloseTime = "50 days";
+      } else if (data.revenue === "$20M+") {
+        activeBuyers = 28; qualifiedMatches = 15; avgCloseTime = "75 days";
+      }
 
-    insights.leadScore = { total: score, category, value };
+      insights.buyers = { activeBuyers, qualifiedMatches, avgCloseTime };
+    }
+
+    // Valuation breakdown
+    if (data.revenue) {
+      const valuationData: any = {
+        "Under $500K": { assetValue: "$200K", goodwillValue: "$300K", growthPremium: "$100K", totalValue: "$600K" },
+        "$500K-$1M": { assetValue: "$400K", goodwillValue: "$600K", growthPremium: "$200K", totalValue: "$1.2M" },
+        "$1M-$5M": { assetValue: "$800K", goodwillValue: "$1.2M", growthPremium: "$300K", totalValue: "$2.3M" },
+        "$5M-$20M": { assetValue: "$2M", goodwillValue: "$3M", growthPremium: "$800K", totalValue: "$5.8M" },
+        "$20M+": { assetValue: "$8M", goodwillValue: "$12M", growthPremium: "$3M", totalValue: "$23M" }
+      };
+      insights.valuation = valuationData[data.revenue];
+    }
     
     return insights;
   };
@@ -215,8 +257,30 @@ export function Assessment() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Calculate final lead score
+    // Calculate final lead score (internal only)
     const insights = generateMarketInsights(formData);
+    
+    // Calculate lead score for internal use
+    let leadScore = 0;
+    if (formData.revenue === "$20M+") leadScore += 100;
+    else if (formData.revenue === "$5M-$20M") leadScore += 75;
+    else if (formData.revenue === "$1M-$5M") leadScore += 50;
+    else if (formData.revenue === "$500K-$1M") leadScore += 25;
+
+    if (formData.timeline === "Immediately (within 3 months)") leadScore += 40;
+    else if (formData.timeline === "3-6 months") leadScore += 30;
+    else if (formData.timeline === "6-12 months") leadScore += 20;
+
+    if (formData.growth === "Exceptional (30%+)") leadScore += 30;
+    else if (formData.growth === "Strong (15-30%)") leadScore += 20;
+    else if (formData.growth === "Moderate (5-15%)") leadScore += 10;
+
+    if (formData.industry === "Technology") leadScore += 25;
+    else if (formData.industry === "Healthcare") leadScore += 20;
+    else if (formData.industry === "Manufacturing") leadScore += 15;
+
+    const category = leadScore >= 90 ? "Premium" : leadScore >= 70 ? "High-Value" : leadScore >= 50 ? "Quality" : "Standard";
+    const value = leadScore >= 90 ? "$2,000-$5,000" : leadScore >= 70 ? "$1,000-$2,000" : leadScore >= 50 ? "$500-$1,000" : "$200-$500";
     
     try {
       const response = await fetch('/api/lead', {
@@ -227,7 +291,7 @@ export function Assessment() {
         body: JSON.stringify({
           ...formData,
           marketInsights: insights,
-          leadScore: insights.leadScore,
+          leadScore: { total: leadScore, category, value },
           timestamp: new Date().toISOString()
         }),
       });
@@ -421,62 +485,119 @@ export function Assessment() {
                   </motion.div>
                 )}
 
-                {/* Growth Insights */}
-                {marketInsights.growth && (
+                {/* Competitive Positioning */}
+                {marketInsights.competitive && (
+                  <motion.div
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    className="bg-indigo-900/30 rounded-xl p-4 border border-indigo-500/20"
+                  >
+                    <h4 className="font-semibold text-lg mb-3 flex items-center gap-2 text-white">
+                      <Target className="h-5 w-5 text-indigo-400" />
+                      Competitive Position
+                    </h4>
+                    <div className="space-y-2">
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-gray-300">Market position:</span>
+                        <span className="font-semibold text-indigo-400">Top {marketInsights.competitive.percentile}%</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-gray-300">Growth vs peers:</span>
+                        <span className="font-semibold text-green-400">{marketInsights.competitive.growthAdvantage}</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-gray-300">Profitability rank:</span>
+                        <span className="font-semibold text-white">{marketInsights.competitive.profitabilityRank}</span>
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+
+                {/* Market Opportunity */}
+                {marketInsights.opportunity && (
+                  <motion.div
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    className="bg-emerald-900/30 rounded-xl p-4 border border-emerald-500/20"
+                  >
+                    <h4 className="font-semibold text-lg mb-3 flex items-center gap-2 text-white">
+                      <TrendingUp className="h-5 w-5 text-emerald-400" />
+                      Market Opportunity
+                    </h4>
+                    <div className="space-y-2">
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-gray-300">Untapped potential:</span>
+                        <span className="font-semibold text-emerald-400">{marketInsights.opportunity.marketPotential}</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-gray-300">Industry multiplier:</span>
+                        <span className="font-semibold text-white">{marketInsights.opportunity.multiplier}</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-gray-300">Location premium:</span>
+                        <span className="font-semibold text-emerald-400">{marketInsights.opportunity.locationPremium}</span>
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+
+                {/* Buyer Interest */}
+                {marketInsights.buyers && (
+                  <motion.div
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    className="bg-amber-900/30 rounded-xl p-4 border border-amber-500/20"
+                  >
+                    <h4 className="font-semibold text-lg mb-3 flex items-center gap-2 text-white">
+                      <Users className="h-5 w-5 text-amber-400" />
+                      Buyer Interest
+                    </h4>
+                    <div className="space-y-2">
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-gray-300">Active buyers:</span>
+                        <span className="font-semibold text-amber-400">{marketInsights.buyers.activeBuyers}</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-gray-300">Qualified matches:</span>
+                        <span className="font-semibold text-white">{marketInsights.buyers.qualifiedMatches}</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-gray-300">Avg. close time:</span>
+                        <span className="font-semibold text-amber-400">{marketInsights.buyers.avgCloseTime}</span>
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+
+                {/* Valuation Breakdown */}
+                {marketInsights.valuation && (
                   <motion.div
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     className="bg-purple-900/30 rounded-xl p-4 border border-purple-500/20"
                   >
                     <h4 className="font-semibold text-lg mb-3 flex items-center gap-2 text-white">
-                      <TrendingUp className="h-5 w-5 text-purple-400" />
-                      Growth Analysis
+                      <Briefcase className="h-5 w-5 text-purple-400" />
+                      Valuation Breakdown
                     </h4>
                     <div className="space-y-2">
                       <div className="flex justify-between items-center">
-                        <span className="text-sm text-gray-300">Trajectory:</span>
-                        <span className="font-semibold text-purple-400">{marketInsights.growth.trajectory}</span>
+                        <span className="text-sm text-gray-300">Asset value:</span>
+                        <span className="font-semibold text-purple-400">{marketInsights.valuation.assetValue}</span>
                       </div>
                       <div className="flex justify-between items-center">
-                        <span className="text-sm text-gray-300">Market position:</span>
-                        <span className="font-semibold text-white">{marketInsights.growth.marketPosition}</span>
-                      </div>
-                      <div className="bg-purple-500/20 rounded-lg p-3 mt-3">
-                        <p className="text-xs text-purple-300 font-medium">{marketInsights.growth.opportunity}</p>
-                      </div>
-                    </div>
-                  </motion.div>
-                )}
-
-                {/* Lead Score */}
-                {marketInsights.leadScore && (
-                  <motion.div
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    className="bg-yellow-900/30 rounded-xl p-4 border border-yellow-500/20"
-                  >
-                    <h4 className="font-semibold text-lg mb-3 flex items-center gap-2 text-white">
-                      <Award className="h-5 w-5 text-yellow-400" />
-                      Lead Quality Score
-                    </h4>
-                    <div className="space-y-2">
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm text-gray-300">Score:</span>
-                        <span className="font-semibold text-yellow-400">{marketInsights.leadScore.total}/100</span>
-                      </div>
-                      <div className="w-full bg-gray-700 rounded-full h-2 mb-3">
-                        <div 
-                          className="bg-gradient-to-r from-yellow-500 to-orange-500 h-2 rounded-full"
-                          style={{ width: `${marketInsights.leadScore.total}%` }}
-                        />
+                        <span className="text-sm text-gray-300">Goodwill value:</span>
+                        <span className="font-semibold text-white">{marketInsights.valuation.goodwillValue}</span>
                       </div>
                       <div className="flex justify-between items-center">
-                        <span className="text-sm text-gray-300">Category:</span>
-                        <span className="font-semibold text-white">{marketInsights.leadScore.category}</span>
+                        <span className="text-sm text-gray-300">Growth premium:</span>
+                        <span className="font-semibold text-green-400">{marketInsights.valuation.growthPremium}</span>
                       </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm text-gray-300">Est. value:</span>
-                        <span className="font-semibold text-yellow-400">{marketInsights.leadScore.value}</span>
+                      <div className="border-t border-purple-500/30 pt-2 mt-2">
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm font-semibold text-gray-300">Total estimated value:</span>
+                          <span className="font-bold text-purple-400 text-lg">{marketInsights.valuation.totalValue}</span>
+                        </div>
                       </div>
                     </div>
                   </motion.div>
