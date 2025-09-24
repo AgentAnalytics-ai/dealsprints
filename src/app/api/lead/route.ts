@@ -91,7 +91,7 @@ export async function POST(request: Request) {
 
     // Send email to admin
     const { data, error } = await resend.emails.send({
-      from: 'DealSprints <noreply@dealsprints.com>',
+      from: 'DealSprints <noreply@agentanalyticsai.com>',
       to: [process.env.ADMIN_EMAIL || 'admin@dealsprints.com'],
       subject: subject,
       html: emailContent,
