@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Logo } from "./Logo";
-import { TrendingUp, Clock, Shield, Users } from "lucide-react";
+import { TrendingUp, Clock, Shield, Users, ArrowDown } from "lucide-react";
 
 export function Hero() {
   return (
@@ -41,23 +41,18 @@ export function Hero() {
             Get instant valuations, find investment opportunities, and connect with business owners.
           </p>
           
-          {/* Zillow-Style Search Bar */}
-          <div className="max-w-2xl mx-auto mb-8">
-            <div className="bg-white rounded-lg shadow-lg p-4">
-              <div className="flex flex-col md:flex-row gap-4">
-                <div className="flex-1">
-                  <input
-                    type="text"
-                    placeholder="Search businesses by name, industry, or location..."
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-                <button className="bg-blue-500 text-white px-8 py-3 rounded-lg hover:bg-blue-600 transition-colors font-semibold">
-                  Search
-                </button>
-              </div>
+          {/* Scroll Indicator */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.5 }}
+            className="text-center mb-8"
+          >
+            <div className="flex flex-col items-center text-gray-400">
+              <span className="text-sm mb-2">Explore our platform</span>
+              <ArrowDown className="w-5 h-5 animate-bounce" />
             </div>
-          </div>
+          </motion.div>
 
           {/* Trust Signals */}
           <div className="flex flex-wrap justify-center gap-6 mb-12 text-sm text-gray-400">
@@ -107,7 +102,7 @@ export function Hero() {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.5 }}
+            transition={{ duration: 0.6, delay: 0.7 }}
             className="text-center"
           >
             <p className="text-sm text-gray-400 mb-2">
