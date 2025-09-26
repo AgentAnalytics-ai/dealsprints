@@ -42,14 +42,15 @@ export default function HomePage() {
 
   return (
     <main className="min-h-screen">
+      {/* Tabs at the very top - before hero */}
+      <TopNavigation activeTab={activeTab} onTabChange={handleTabChange} />
+      
+      {/* Hero section */}
       <Hero />
       <StatsBand />
       <Process />
       
-      {/* Top Navigation - Sticky at top */}
-      <TopNavigation activeTab={activeTab} onTabChange={handleTabChange} />
-      
-      {/* Tab Content with Loading State */}
+      {/* Tab Content */}
       <section className="bg-gray-50 min-h-screen">
         {isLoading ? (
           <div className="flex items-center justify-center py-20">
