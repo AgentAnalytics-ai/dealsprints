@@ -31,8 +31,17 @@ const mapStyles = [
   }
 ];
 
-export function OKCBusinessMap() {
+interface OKCBusinessMapProps {
+  searchFilters?: {
+    industry: string;
+    status: string;
+    priceRange: string;
+  };
+}
+
+export function OKCBusinessMap({ searchFilters }: OKCBusinessMapProps) {
   const [businesses, setBusinesses] = useState<OKCBusiness[]>([]);
+  const [filteredBusinesses, setFilteredBusinesses] = useState<OKCBusiness[]>([]);
   const [selectedBusiness, setSelectedBusiness] = useState<OKCBusiness | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -45,6 +54,7 @@ export function OKCBusinessMap() {
       setError(null);
       const data = await getOKCBusinesses();
       setBusinesses(data);
+      setFilteredBusinesses(data);
     } catch (err) {
       setError('Failed to load businesses. Please try again.');
       console.error('Error loading businesses:', err);
@@ -52,6 +62,43 @@ export function OKCBusinessMap() {
       setLoading(false);
     }
   }, []);
+
+  // 2025/2026: Filter businesses based on search criteria
+  const filterBusinesses = useCallback(() => {
+    if (!searchFilters) {
+      setFilteredBusinesses(businesses);
+      return;
+    }
+
+    let filtered = businesses;
+
+    if (searchFilters.industry) {
+      filtered = filtered.filter(business => 
+        business.industry?.toLowerCase().includes(searchFilters.industry.toLowerCase())
+      );
+    }
+
+    if (searchFilters.status) {
+      filtered = filtered.filter(business => business.status === searchFilters.status);
+    }
+
+    if (searchFilters.priceRange) {
+      const [min, max] = searchFilters.priceRange.split('-').map(Number);
+      filtered = filtered.filter(business => {
+        const price = business.estimatedValue || 0;
+        if (searchFilters.priceRange === '500000+') {
+          return price >= 500000;
+        }
+        return price >= min && price <= max;
+      });
+    }
+
+    setFilteredBusinesses(filtered);
+  }, [businesses, searchFilters]);
+
+  useEffect(() => {
+    filterBusinesses();
+  }, [filterBusinesses]);
 
   useEffect(() => {
     loadBusinesses();
@@ -137,41 +184,42 @@ export function OKCBusinessMap() {
 
   return (
     <div className="w-full">
-      <div className="mb-6">
-        <h2 className="text-3xl font-bold text-gray-900 mb-2">
-          Oklahoma City Business Marketplace
+      <div className="mb-8 bg-white rounded-lg shadow-lg p-6">
+        <h2 className="text-3xl font-bold text-gray-900 mb-3">
+          Interactive Business Map
         </h2>
-        <p className="text-gray-600 text-lg">
-          Discover {businesses.length} businesses in OKC - Find, buy, and sell businesses like never before
+        <p className="text-gray-700 text-lg mb-4">
+          Discover {filteredBusinesses.length} businesses in OKC - Find, buy, and sell businesses like never before
         </p>
-        <div className="mt-4 flex items-center space-x-4 text-sm text-gray-500">
-          <div className="flex items-center">
+        <div className="flex items-center space-x-6 text-sm">
+          <div className="flex items-center bg-blue-50 px-3 py-2 rounded-lg">
             <div className="w-4 h-4 bg-blue-500 rounded-full mr-2"></div>
-            Active Businesses
+            <span className="font-medium text-blue-800">Active Businesses</span>
           </div>
-          <div className="flex items-center">
+          <div className="flex items-center bg-red-50 px-3 py-2 rounded-lg">
             <div className="w-4 h-4 bg-red-500 rounded-full mr-2"></div>
-            For Sale
+            <span className="font-medium text-red-800">For Sale</span>
           </div>
-          <div className="flex items-center">
+          <div className="flex items-center bg-green-50 px-3 py-2 rounded-lg">
             <div className="w-4 h-4 bg-green-500 rounded-full mr-2"></div>
-            AI Valued
+            <span className="font-medium text-green-800">AI Valued</span>
           </div>
         </div>
       </div>
       
-      <LoadScript
-        googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!}
-        libraries={libraries}
-        loadingElement={<div className="h-96 bg-gray-100 animate-pulse rounded-lg"></div>}
-      >
+      {process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ? (
+        <LoadScript
+          googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}
+          libraries={libraries}
+          loadingElement={<div className="h-96 bg-gray-100 animate-pulse rounded-lg"></div>}
+        >
         <GoogleMap
           mapContainerStyle={mapContainerStyle}
           center={center}
           zoom={12}
           options={mapOptions}
         >
-          {businesses.map((business) => (
+          {filteredBusinesses.map((business) => (
             <Marker
               key={business.id}
               position={business.coordinates}
@@ -249,7 +297,27 @@ export function OKCBusinessMap() {
             </InfoWindow>
           )}
         </GoogleMap>
-      </LoadScript>
+        </LoadScript>
+      ) : (
+        <div className="h-96 bg-gray-100 rounded-lg flex items-center justify-center">
+          <div className="text-center">
+            <div className="text-gray-500 text-lg mb-4">🗺️</div>
+            <h3 className="text-xl font-semibold text-gray-700 mb-2">Google Maps Integration</h3>
+            <p className="text-gray-600 mb-4">
+              To enable the interactive map, please add your Google Maps API key to the environment variables.
+            </p>
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-left max-w-md">
+              <h4 className="font-semibold text-blue-800 mb-2">Setup Instructions:</h4>
+              <ol className="text-sm text-blue-700 space-y-1">
+                <li>1. Get a Google Maps API key from Google Cloud Console</li>
+                <li>2. Enable Maps JavaScript API and Places API</li>
+                <li>3. Add NEXT_PUBLIC_GOOGLE_MAPS_API_KEY to your .env.local file</li>
+                <li>4. Restart your development server</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
