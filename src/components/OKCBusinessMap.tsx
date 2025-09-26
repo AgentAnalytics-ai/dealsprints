@@ -85,7 +85,7 @@ export function OKCBusinessMap({ searchFilters }: OKCBusinessMapProps) {
     if (searchFilters.priceRange) {
       const [min, max] = searchFilters.priceRange.split('-').map(Number);
       filtered = filtered.filter(business => {
-        const price = business.estimatedValue || 0;
+        const price = business.price || 0;
         if (searchFilters.priceRange === '500000+') {
           return price >= 500000;
         }
