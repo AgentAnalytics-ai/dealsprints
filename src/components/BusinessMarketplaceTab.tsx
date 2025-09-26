@@ -5,6 +5,7 @@ import { OKCBusinessMap } from './OKCBusinessMap';
 import { BusinessSearch } from './BusinessSearch';
 
 export function BusinessMarketplaceTab() {
+  console.log('BusinessMarketplaceTab rendered');
   const [searchFilters, setSearchFilters] = useState({
     industry: '',
     status: '',

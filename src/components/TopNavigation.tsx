@@ -72,7 +72,10 @@ export function TopNavigation({ activeTab, onTabChange }: TopNavigationProps) {
             return (
               <button
                 key={tab.id}
-                onClick={() => onTabChange(tab.id)}
+                onClick={() => {
+                  console.log('Tab clicked:', tab.id);
+                  onTabChange(tab.id);
+                }}
                 className={`${
                   activeTab === tab.id
                     ? 'border-blue-500 text-blue-600 bg-blue-50'
@@ -111,6 +114,7 @@ export function TopNavigation({ activeTab, onTabChange }: TopNavigationProps) {
                   <button
                     key={tab.id}
                     onClick={() => {
+                      console.log('Mobile tab clicked:', tab.id);
                       onTabChange(tab.id);
                       setIsMobileMenuOpen(false);
                     }}

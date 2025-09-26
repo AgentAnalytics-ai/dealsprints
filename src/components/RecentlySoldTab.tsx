@@ -1,6 +1,7 @@
 'use client';
 
 export function RecentlySoldTab() {
+  console.log('RecentlySoldTab rendered');
   // Lightweight mock data - in production, this would come from your API
   const soldBusinesses = [
     {

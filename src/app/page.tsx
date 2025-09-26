@@ -17,6 +17,7 @@ export default function HomePage() {
   const [isLoading, setIsLoading] = useState(false);
 
   const renderTabContent = () => {
+    console.log('Rendering tab content for:', activeTab);
     switch (activeTab) {
       case 'evaluation':
         return <FreeEvaluationTab />;
@@ -32,9 +33,11 @@ export default function HomePage() {
   };
 
   const handleTabChange = (tab: string) => {
+    console.log('Tab change requested:', tab, 'Current active tab:', activeTab);
     if (tab !== activeTab) {
       setIsLoading(true);
       setActiveTab(tab);
+      console.log('Tab changed to:', tab);
       // Simulate loading for smooth transition
       setTimeout(() => setIsLoading(false), 300);
     }

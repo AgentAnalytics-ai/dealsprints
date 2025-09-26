@@ -1,6 +1,7 @@
 'use client';
 
 export function MarketInsightsTab() {
+  console.log('MarketInsightsTab rendered');
   // Lightweight mock data - in production, this would come from your API
   const insights = [
     {
