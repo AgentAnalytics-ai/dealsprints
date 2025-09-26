@@ -26,19 +26,19 @@ export function Hero() {
             <Logo size="massive" showText={false} className="justify-center" />
           </div>
 
-          {/* Zillow-Style Headline */}
+          {/* Psychology-Optimized Headline */}
           <h1 className="font-display text-5xl md:text-6xl leading-tight tracking-[-0.02em] mb-6">
-            Find Your Next{" "}
+            Get Your Free{" "}
             <span className="bg-gradient-to-r from-brand to-deal bg-clip-text text-transparent">
-              Business Opportunity
+              Business Ranking
             </span>
-            <br />in Oklahoma City
+            <br />& Market Analysis
           </h1>
           
           {/* Value Proposition */}
           <p className="max-w-3xl mx-auto text-xl text-gray-300 mb-8">
-            The #1 platform for buying and selling businesses in OKC. 
-            Get instant valuations, find investment opportunities, and connect with business owners.
+            See how your business compares to the market and get a detailed PDF report with 
+            location-based insights, growth recommendations, and competitive analysis.
           </p>
           
           {/* Scroll Indicator */}
@@ -58,19 +58,19 @@ export function Hero() {
           <div className="flex flex-wrap justify-center gap-6 mb-12 text-sm text-gray-400">
             <div className="flex items-center gap-2">
               <Users className="w-4 h-4 text-green-400" />
-              <span>500+ Businesses Sold</span>
+              <span>500+ Businesses Analyzed</span>
             </div>
             <div className="flex items-center gap-2">
               <Clock className="w-4 h-4 text-blue-400" />
-              <span>60-Day Close Guarantee</span>
+              <span>2-Minute Analysis</span>
             </div>
             <div className="flex items-center gap-2">
               <Shield className="w-4 h-4 text-purple-400" />
-              <span>100% Confidential</span>
+              <span>100% Free & Confidential</span>
             </div>
             <div className="flex items-center gap-2">
               <TrendingUp className="w-4 h-4 text-yellow-400" />
-              <span>Free Valuation Report</span>
+              <span>PDF Report Included</span>
             </div>
           </div>
 
@@ -94,7 +94,7 @@ export function Hero() {
               }}
             >
               <TrendingUp className="w-6 h-6" />
-              Get My Free Business Evaluation
+              Get My Free Business Ranking
             </a>
           </motion.div>
 
@@ -109,7 +109,7 @@ export function Hero() {
               ⚡ Limited spots available this month
             </p>
             <p className="text-xs text-gray-500">
-              Normally $5,000 • Free for qualified business owners
+              Normally $5,000 • Free PDF report with market analysis
             </p>
           </motion.div>
         </motion.div>

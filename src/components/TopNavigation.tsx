@@ -23,7 +23,7 @@ export function TopNavigation({ activeTab, onTabChange }: TopNavigationProps) {
   }, []);
 
   const tabs = [
-    { id: 'evaluation', label: 'Free Evaluation', icon: TrendingUp, description: 'Get instant business valuation' },
+    { id: 'evaluation', label: 'Free Business Ranking', icon: TrendingUp, description: 'Get instant business valuation & PDF report' },
     { id: 'marketplace', label: 'Business Map', icon: MapPin, description: 'Explore OKC businesses' },
     { id: 'sold', label: 'Recently Sold', icon: CheckCircle, description: 'See actual sale prices' },
     { id: 'insights', label: 'Market Insights', icon: BarChart3, description: 'AI-powered market data' }
