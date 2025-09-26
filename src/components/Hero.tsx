@@ -26,20 +26,38 @@ export function Hero() {
             <Logo size="massive" showText={false} className="justify-center" />
           </div>
 
-          {/* 3-Second Headline */}
+          {/* Zillow-Style Headline */}
           <h1 className="font-display text-5xl md:text-6xl leading-tight tracking-[-0.02em] mb-6">
-            Discover Your Business's{" "}
+            Find Your Next{" "}
             <span className="bg-gradient-to-r from-brand to-deal bg-clip-text text-transparent">
-              Hidden Value
+              Business Opportunity
             </span>
-            <br />in 60 Seconds
+            <br />in Oklahoma City
           </h1>
           
           {/* Value Proposition */}
           <p className="max-w-3xl mx-auto text-xl text-gray-300 mb-8">
-            Get your professional valuation report instantly. See how you compare to industry leaders 
-            and discover your business's true market value.
+            The #1 platform for buying and selling businesses in OKC. 
+            Get instant valuations, find investment opportunities, and connect with business owners.
           </p>
+          
+          {/* Zillow-Style Search Bar */}
+          <div className="max-w-2xl mx-auto mb-8">
+            <div className="bg-white rounded-lg shadow-lg p-4">
+              <div className="flex flex-col md:flex-row gap-4">
+                <div className="flex-1">
+                  <input
+                    type="text"
+                    placeholder="Search businesses by name, industry, or location..."
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                <button className="bg-blue-500 text-white px-8 py-3 rounded-lg hover:bg-blue-600 transition-colors font-semibold">
+                  Search
+                </button>
+              </div>
+            </div>
+          </div>
 
           {/* Trust Signals */}
           <div className="flex flex-wrap justify-center gap-6 mb-12 text-sm text-gray-400">
@@ -69,15 +87,19 @@ export function Hero() {
             className="mb-8"
           >
             <a 
-              href="#assessment" 
+              href="#evaluation" 
               className="inline-flex items-center gap-3 rounded-2xl bg-gradient-to-r from-brand to-deal px-12 py-5 font-bold text-white text-xl shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:scale-105"
               onClick={(e) => {
                 e.preventDefault();
-                document.getElementById('assessment')?.scrollIntoView({ behavior: 'smooth' });
+                // Scroll to evaluation tab
+                const evaluationTab = document.querySelector('[data-tab="evaluation"]');
+                if (evaluationTab) {
+                  evaluationTab.scrollIntoView({ behavior: 'smooth' });
+                }
               }}
             >
               <TrendingUp className="w-6 h-6" />
-              Get My Free Valuation Report
+              Get My Free Business Evaluation
             </a>
           </motion.div>
 
