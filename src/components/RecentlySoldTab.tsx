@@ -1,7 +1,6 @@
 'use client';
 
 export function RecentlySoldTab() {
-  console.log('RecentlySoldTab rendered');
   // Lightweight mock data - in production, this would come from your API
   const soldBusinesses = [
     {
@@ -75,12 +74,6 @@ export function RecentlySoldTab() {
               </div>
             </div>
           ))}
-        </div>
-        
-        <div className="text-center mt-12">
-          <button className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition-colors">
-            View All Sold Businesses
-          </button>
         </div>
       </div>
     </div>

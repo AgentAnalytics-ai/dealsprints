@@ -5,7 +5,6 @@ import { OKCBusinessMap } from './OKCBusinessMap';
 import { BusinessSearch } from './BusinessSearch';
 
 export function BusinessMarketplaceTab() {
-  console.log('BusinessMarketplaceTab rendered');
   const [searchFilters, setSearchFilters] = useState({
     industry: '',
     status: '',
@@ -14,7 +13,6 @@ export function BusinessMarketplaceTab() {
 
   const handleSearch = (filters: { industry: string; status: string; priceRange: string }) => {
     setSearchFilters(filters);
-    console.log('Search filters applied:', filters);
   };
   return (
     <div className="py-12">
