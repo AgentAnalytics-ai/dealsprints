@@ -6,7 +6,11 @@
 import { NextRequest } from 'next/server';
 import { generateBusinessAssessment, generateAssessmentEmail, SurveyResponseSchema } from '@/lib/ai/assessmentEngine';
 import { saveAssessment } from '@/lib/database/assessments';
+import { Resend } from 'resend';
 import { headers } from 'next/headers';
+
+// Initialize Resend (same setup as lead route)
+const resend = process.env.dealsprints_resend ? new Resend(process.env.dealsprints_resend) : null;
 
 // Rate limiting
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
@@ -71,6 +75,83 @@ export async function POST(req: NextRequest) {
 
     // Save to database
     await saveAssessment(assessmentRecord);
+
+    // Send email to admin (same as lead route)
+    if (resend) {
+      try {
+        const subject = `NEW ASSESSMENT REQUEST: ${surveyData.business_name} - ${surveyData.industry}`;
+        
+        // Create detailed email content for admin
+        const adminEmailContent = `
+          <div style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto;">
+            <h2 style="color: #2563eb; border-bottom: 2px solid #2563eb; padding-bottom: 10px;">
+              NEW BUSINESS ASSESSMENT REQUEST
+            </h2>
+            
+            <div style="background: #f8fafc; padding: 20px; border-radius: 8px; margin: 20px 0;">
+              <h3 style="color: #1e40af; margin-top: 0;">Assessment Details</h3>
+              <p style="margin: 5px 0;"><strong>Business:</strong> ${surveyData.business_name}</p>
+              <p style="margin: 5px 0;"><strong>Industry:</strong> ${surveyData.industry}</p>
+              <p style="margin: 5px 0;"><strong>Location:</strong> ${surveyData.location}</p>
+              <p style="margin: 5px 0;"><strong>Revenue:</strong> ${surveyData.annual_revenue}</p>
+              <p style="margin: 5px 0;"><strong>Employees:</strong> ${surveyData.employee_count}</p>
+              <p style="margin: 5px 0;"><strong>Generated:</strong> ${new Date().toLocaleString()}</p>
+              <p style="margin: 5px 0;"><strong>Processing Time:</strong> ${processingTime}ms</p>
+            </div>
+
+            <h3 style="color: #1e40af;">Contact Information</h3>
+            <table style="width: 100%; border-collapse: collapse;">
+              <tr><td style="padding: 8px; border-bottom: 1px solid #e5e7eb;"><strong>Email:</strong></td><td style="padding: 8px; border-bottom: 1px solid #e5e7eb;">${surveyData.contact_email}</td></tr>
+              <tr><td style="padding: 8px; border-bottom: 1px solid #e5e7eb;"><strong>Phone:</strong></td><td style="padding: 8px; border-bottom: 1px solid #e5e7eb;">${surveyData.contact_phone}</td></tr>
+              <tr><td style="padding: 8px; border-bottom: 1px solid #e5e7eb;"><strong>Timeline:</strong></td><td style="padding: 8px; border-bottom: 1px solid #e5e7eb;">${surveyData.timeline}</td></tr>
+              <tr><td style="padding: 8px; border-bottom: 1px solid #e5e7eb;"><strong>Reason for Selling:</strong></td><td style="padding: 8px; border-bottom: 1px solid #e5e7eb;">${surveyData.reason_for_selling}</td></tr>
+            </table>
+
+            <h3 style="color: #1e40af;">AI Assessment Summary</h3>
+            <div style="background: #f0f9ff; padding: 15px; border-radius: 8px; margin: 10px 0;">
+              <p><strong>Valuation Range:</strong> ${assessment.valuation_estimate.estimated_value_range.realistic.toLocaleString()}</p>
+              <p><strong>Financial Health Score:</strong> ${assessment.financial_assessment.financial_health_score}/100</p>
+              <p><strong>Confidence Level:</strong> ${assessment.valuation_estimate.confidence_level}</p>
+            </div>
+
+            <h3 style="color: #1e40af;">Key Recommendations</h3>
+            <ul>
+              ${assessment.executive_summary.key_recommendations.map(rec => `<li>${rec}</li>`).join('')}
+            </ul>
+
+            <div style="background: #dcfce7; padding: 15px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #16a34a;">
+              <h4 style="color: #166534; margin-top: 0;">Next Steps:</h4>
+              <ul style="color: #166534;">
+                <li>Review assessment in admin dashboard</li>
+                <li>Send assessment email to ${surveyData.contact_email}</li>
+                <li>Follow up within 24 hours</li>
+                <li>Assessment ID: ${assessmentRecord.id}</li>
+              </ul>
+            </div>
+
+            <p style="color: #6b7280; font-size: 12px; margin-top: 30px;">
+              This assessment was generated automatically. Review the full details in your admin dashboard.
+            </p>
+          </div>
+        `;
+
+        const { data, error } = await resend.emails.send({
+          from: 'DealSprints <noreply@agentanalyticsai.com>',
+          to: [process.env.ADMIN_EMAIL || 'admin@dealsprints.com'],
+          subject: subject,
+          html: adminEmailContent,
+        });
+
+        if (error) {
+          console.error('Resend error:', error);
+        } else {
+          console.log('Assessment notification email sent to admin');
+        }
+      } catch (emailError) {
+        console.error('Email sending error:', emailError);
+        // Don't fail the assessment if email fails
+      }
+    }
 
     // Log success
     console.log(`Assessment generated successfully for ${surveyData.business_name} in ${processingTime}ms`);
