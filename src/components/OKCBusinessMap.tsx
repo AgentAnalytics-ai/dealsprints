@@ -32,53 +32,37 @@ const mapStyles = [
 ];
 
 // Custom marker icons for different business statuses
-const getMarkerIcons = () => {
-  if (typeof window === 'undefined' || !window.google || !window.google.maps || !window.google.maps.Size) {
-    return {};
-  }
-  
-  return {
-    for_sale: {
-      url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(`
-        <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="16" cy="16" r="14" fill="#ef4444" stroke="#ffffff" stroke-width="2"/>
-          <text x="16" y="20" text-anchor="middle" fill="white" font-size="12" font-weight="bold">$</text>
-        </svg>
-      `),
-      scaledSize: new window.google.maps.Size(32, 32),
-      anchor: new window.google.maps.Point(16, 16)
-    },
-    active: {
-      url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(`
-        <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="16" cy="16" r="14" fill="#1f2937" stroke="#ffffff" stroke-width="2"/>
-          <text x="16" y="20" text-anchor="middle" fill="white" font-size="12" font-weight="bold">B</text>
-        </svg>
-      `),
-      scaledSize: new window.google.maps.Size(32, 32),
-      anchor: new window.google.maps.Point(16, 16)
-    },
-    sold: {
-      url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(`
-        <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="16" cy="16" r="14" fill="#10b981" stroke="#ffffff" stroke-width="2"/>
-          <text x="16" y="20" text-anchor="middle" fill="white" font-size="12" font-weight="bold">✓</text>
-        </svg>
-      `),
-      scaledSize: new window.google.maps.Size(32, 32),
-      anchor: new window.google.maps.Point(16, 16)
-    },
-    closed: {
-      url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(`
-        <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="16" cy="16" r="14" fill="#6b7280" stroke="#ffffff" stroke-width="2"/>
-          <text x="16" y="20" text-anchor="middle" fill="white" font-size="12" font-weight="bold">✕</text>
-        </svg>
-      `),
-      scaledSize: new window.google.maps.Size(32, 32),
-      anchor: new window.google.maps.Point(16, 16)
+  const getMarkerIcons = () => {
+    if (typeof window === 'undefined' || !window.google || !window.google.maps || !window.google.maps.Size) {
+      return {};
     }
-  };
+
+    // Enhanced marker icons with Zillow-like styling
+    const createMarkerIcon = (color: string, size: number = 40) => {
+      return {
+        path: window.google.maps.SymbolPath.CIRCLE,
+        fillColor: color,
+        fillOpacity: 0.8,
+        strokeColor: '#ffffff',
+        strokeWeight: 2,
+        scale: size / 10,
+        anchor: new window.google.maps.Point(0, 0)
+      };
+    };
+  
+    return {
+      for_sale: createMarkerIcon('#ef4444', 36),
+      active: createMarkerIcon('#3b82f6', 36),
+      sold: createMarkerIcon('#10b981', 36),
+      closed: createMarkerIcon('#6b7280', 36),
+      // Enhanced business types for better categorization
+      restaurant: createMarkerIcon('#f59e0b', 34),
+      retail: createMarkerIcon('#8b5cf6', 34),
+      service: createMarkerIcon('#06b6d4', 34),
+      manufacturing: createMarkerIcon('#84cc16', 34),
+      healthcare: createMarkerIcon('#ec4899', 34),
+      technology: createMarkerIcon('#6366f1', 34)
+    };
 };
 
 interface OKCBusinessMapProps {

@@ -1,6 +1,6 @@
 'use client';
 
-import { Assessment } from './Assessment';
+import SurveyForm from './SurveyForm';
 
 export function FreeEvaluationTab() {
   return (
@@ -96,7 +96,7 @@ export function FreeEvaluationTab() {
               Takes less than 2 minutes to complete
             </p>
           </div>
-          <Assessment />
+          <SurveyForm />
         </div>
       </div>
     </div>
