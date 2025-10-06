@@ -238,7 +238,7 @@ export default function SurveyForm() {
                 type="text"
                 value={formData.business_name}
                 onChange={(e) => handleInputChange('business_name', e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                 placeholder="Enter your business name"
                 required
               />
@@ -251,7 +251,7 @@ export default function SurveyForm() {
               <select
                 value={formData.industry}
                 onChange={(e) => handleInputChange('industry', e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                 required
               >
                 <option value="">Select your industry</option>
@@ -269,7 +269,7 @@ export default function SurveyForm() {
                 type="text"
                 value={formData.location}
                 onChange={(e) => handleInputChange('location', e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                 placeholder="e.g., Oklahoma City, OK"
                 required
               />
@@ -284,7 +284,7 @@ export default function SurveyForm() {
                   type="number"
                   value={formData.years_in_business}
                   onChange={(e) => handleInputChange('years_in_business', parseInt(e.target.value))}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                   min="0"
                   required
                 />
@@ -297,7 +297,7 @@ export default function SurveyForm() {
                 <select
                   value={formData.business_type}
                   onChange={(e) => handleInputChange('business_type', e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                   required
                 >
                   {businessTypes.map(type => (
@@ -319,7 +319,7 @@ export default function SurveyForm() {
               <select
                 value={formData.annual_revenue}
                 onChange={(e) => handleInputChange('annual_revenue', e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                 required
               >
                 <option value="">Select revenue range</option>
@@ -336,7 +336,7 @@ export default function SurveyForm() {
               <select
                 value={formData.employee_count}
                 onChange={(e) => handleInputChange('employee_count', e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                 required
               >
                 <option value="">Select employee count</option>
@@ -420,7 +420,7 @@ export default function SurveyForm() {
               <select
                 value={formData.reason_for_selling}
                 onChange={(e) => handleInputChange('reason_for_selling', e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                 required
               >
                 <option value="">Select reason for selling</option>
@@ -437,7 +437,7 @@ export default function SurveyForm() {
               <select
                 value={formData.timeline}
                 onChange={(e) => handleInputChange('timeline', e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                 required
               >
                 <option value="">Select timeline</option>
@@ -455,7 +455,7 @@ export default function SurveyForm() {
                 value={formData.additional_info}
                 onChange={(e) => handleInputChange('additional_info', e.target.value)}
                 rows={4}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                 placeholder="Tell us anything else that might be relevant for your business assessment..."
               />
             </div>
@@ -473,7 +473,7 @@ export default function SurveyForm() {
                 type="email"
                 value={formData.contact_email}
                 onChange={(e) => handleInputChange('contact_email', e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                 placeholder="your.email@example.com"
                 required
               />
@@ -487,7 +487,7 @@ export default function SurveyForm() {
                 type="tel"
                 value={formData.contact_phone}
                 onChange={(e) => handleInputChange('contact_phone', e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                 placeholder="(555) 123-4567"
                 required
               />
@@ -545,7 +545,7 @@ export default function SurveyForm() {
         >
           <AlertTriangle className="w-16 h-16 text-red-600 mx-auto mb-4" />
           <h2 className="text-2xl font-bold text-red-900 mb-2">Submission Failed</h2>
-          <p className="text-red-800 mb-6">
+          <p className="text-red-900 mb-6">
             There was an error processing your assessment request. Please try again or contact support.
           </p>
           <button
