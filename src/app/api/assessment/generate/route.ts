@@ -5,6 +5,7 @@
 
 import { NextRequest } from 'next/server';
 import { generateBusinessAssessment, generateAssessmentEmail, SurveyResponseSchema } from '@/lib/ai/assessmentEngine';
+import { saveAssessment } from '@/lib/database/assessments';
 import { headers } from 'next/headers';
 
 // Rate limiting
@@ -64,11 +65,12 @@ export async function POST(req: NextRequest) {
       email_content: emailContent,
       generated_at: new Date().toISOString(),
       processing_time: processingTime,
-      ip_address: ip
+      ip_address: ip,
+      status: 'pending' as const
     };
 
-    // TODO: Save to database (Redis/PostgreSQL)
-    // await saveAssessment(assessmentRecord);
+    // Save to database
+    await saveAssessment(assessmentRecord);
 
     // Log success
     console.log(`Assessment generated successfully for ${surveyData.business_name} in ${processingTime}ms`);

@@ -24,7 +24,7 @@ export default function HomePage() {
       case 'marketplace':
         return <BusinessMarketplaceTab />;
       case 'sold':
-        return <RecentlySoldTab />;
+        return <MarketInsightsTab />; // Replaced with insights for compliance
       case 'insights':
         return <MarketInsightsTab />;
       default:

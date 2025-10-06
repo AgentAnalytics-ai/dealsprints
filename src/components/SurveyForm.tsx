@@ -209,8 +209,12 @@ export default function SurveyForm() {
       });
 
       if (response.ok) {
+        const result = await response.json();
+        console.log('Assessment generated:', result);
         setSubmissionStatus('success');
       } else {
+        const errorData = await response.json();
+        console.error('Submission failed:', errorData);
         setSubmissionStatus('error');
       }
     } catch (error) {

@@ -68,46 +68,31 @@ export default function AssessmentDashboard() {
   const [selectedAssessment, setSelectedAssessment] = useState<AssessmentRecord | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Mock data for demonstration - in production, this would come from your database
+  // Fetch real assessments from API
   useEffect(() => {
-    const mockAssessments: AssessmentRecord[] = [
-      {
-        id: 'assessment_001',
-        survey_data: {
-          business_name: 'Downtown Coffee Co.',
-          industry: 'Food & Beverage',
-          location: 'Oklahoma City, OK',
-          annual_revenue: '$150,000 - $200,000',
-          contact_email: 'owner@downtowncoffee.com',
-          contact_phone: '(405) 555-0123',
-          timeline: '6-12 months',
-          reason_for_selling: 'Retirement planning'
-        },
-        assessment: {
-          executive_summary: {
-            valuation_range: '$180,000 - $250,000',
-            key_recommendations: ['Optimize inventory management', 'Improve digital presence', 'Document operational procedures']
-          },
-          valuation_estimate: {
-            estimated_value_range: {
-              realistic: 215000
-            },
-            confidence_level: 'high'
-          },
-          financial_assessment: {
-            financial_health_score: 78
-          }
-        },
-        email_content: 'Professional assessment email content...',
-        generated_at: '2024-01-15T10:30:00Z',
-        processing_time: 45000,
-        status: 'pending'
+    const fetchAssessments = async () => {
+      try {
+        const response = await fetch('/api/assessments');
+        if (response.ok) {
+          const data = await response.json();
+          setAssessments(data.assessments);
+          setFilteredAssessments(data.assessments);
+        } else {
+          console.error('Failed to fetch assessments');
+          // Fallback to empty array
+          setAssessments([]);
+          setFilteredAssessments([]);
+        }
+      } catch (error) {
+        console.error('Error fetching assessments:', error);
+        setAssessments([]);
+        setFilteredAssessments([]);
+      } finally {
+        setIsLoading(false);
       }
-    ];
+    };
 
-    setAssessments(mockAssessments);
-    setFilteredAssessments(mockAssessments);
-    setIsLoading(false);
+    fetchAssessments();
   }, []);
 
   // Filter assessments
