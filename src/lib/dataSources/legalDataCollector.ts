@@ -45,7 +45,7 @@ export async function collectBusinessData(placeId: string): Promise<{
   const collection_time = Date.now() - startTime;
 
   return {
-    sources,
+    sources: sources.filter((source) => source !== null),
     total_cost,
     collection_time
   };
@@ -237,7 +237,7 @@ export function validateDataQuality(sources: LegalDataSource[]): {
     }
   });
 
-  const reliability_score = reliabilityScores.reduce((sum, score) => sum + score, 0) / sources.length;
+  const reliability_score = reliabilityScores.reduce((sum: number, score) => sum + score, 0) / sources.length;
   const overall_quality = reliability_score * (sources.length / 4); // Normalize to expected sources
 
   const missing_data = [];

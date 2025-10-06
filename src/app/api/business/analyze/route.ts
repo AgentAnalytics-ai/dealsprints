@@ -68,16 +68,8 @@ export async function POST(request: NextRequest) {
 
     if (stream) {
       // Streaming response for real-time analysis
-      return new Response(
-        streamBusinessIntelligence(placeId).toDataStreamResponse(),
-        {
-          headers: {
-            'Content-Type': 'text/plain; charset=utf-8',
-            'Cache-Control': 'no-cache',
-            'Connection': 'keep-alive',
-          },
-        }
-      );
+      const stream = await streamBusinessIntelligence(placeId);
+      return stream.toTextStreamResponse();
     } else {
       // Standard response
       const startTime = Date.now();
@@ -132,7 +124,7 @@ export async function POST(request: NextRequest) {
     return Response.json(
       { 
         error: 'Analysis failed. Please try again later.',
-        details: process.env.NODE_ENV === 'development' ? error.message : undefined
+        details: process.env.NODE_ENV === 'development' ? (error instanceof Error ? error.message : String(error)) : undefined
       },
       { status: 500 }
     );

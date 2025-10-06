@@ -9,8 +9,8 @@ import { track } from '@vercel/analytics';
 export function trackCoreWebVitals() {
   if (typeof window === 'undefined') return;
 
-  import('web-vitals').then(({ getCLS, getFID, getFCP, getLCP, getTTFB }) => {
-    getCLS((metric) => {
+  import('web-vitals').then(({ onCLS, onINP, onFCP, onLCP, onTTFB }) => {
+    onCLS((metric) => {
       track('web_vitals', {
         metric: 'CLS',
         value: metric.value,
@@ -18,15 +18,15 @@ export function trackCoreWebVitals() {
       });
     });
 
-    getFID((metric) => {
+    onINP((metric) => {
       track('web_vitals', {
-        metric: 'FID',
+        metric: 'INP',
         value: metric.value,
         rating: metric.rating
       });
     });
 
-    getFCP((metric) => {
+    onFCP((metric) => {
       track('web_vitals', {
         metric: 'FCP',
         value: metric.value,
@@ -34,7 +34,7 @@ export function trackCoreWebVitals() {
       });
     });
 
-    getLCP((metric) => {
+    onLCP((metric) => {
       track('web_vitals', {
         metric: 'LCP',
         value: metric.value,
@@ -42,7 +42,7 @@ export function trackCoreWebVitals() {
       });
     });
 
-    getTTFB((metric) => {
+    onTTFB((metric) => {
       track('web_vitals', {
         metric: 'TTFB',
         value: metric.value,
@@ -66,7 +66,7 @@ export function trackBusinessAnalysis(placeId: string, metrics: {
     data_sources: metrics.dataSources,
     cost: metrics.cost,
     success: metrics.success,
-    error: metrics.error
+    error: metrics.error || 'Unknown error'
   });
 }
 

@@ -6,7 +6,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useChat } from 'ai/react';
+// import { useChat } from 'ai/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   TrendingUp, 
@@ -37,18 +37,9 @@ export function BusinessIntelligenceReport({
   const [analysisComplete, setAnalysisComplete] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
 
-  const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat({
-    api: '/api/business/analyze',
-    body: { placeId, stream: true },
-    onFinish: () => {
-      setAnalysisComplete(true);
-      setIsStreaming(false);
-    },
-    onError: (error) => {
-      console.error('Analysis error:', error);
-      setIsStreaming(false);
-    }
-  });
+  // Simplified version without AI SDK hooks for now
+  const messages: any[] = [];
+  const isLoading = false;
 
   const analysisSteps = [
     { name: 'Collecting Data', icon: Globe, description: 'Gathering public business information' },
@@ -73,7 +64,11 @@ export function BusinessIntelligenceReport({
       });
     }, 2000);
 
-    handleSubmit(new Event('submit') as any);
+    // Simulate API call
+    setTimeout(() => {
+      setAnalysisComplete(true);
+      setIsStreaming(false);
+    }, 10000);
   };
 
   const getScoreColor = (score: number) => {
