@@ -33,7 +33,7 @@ const mapStyles = [
 
 // Custom marker icons for different business statuses
 const getMarkerIcons = () => {
-  if (typeof window === 'undefined' || !window.google) {
+  if (typeof window === 'undefined' || !window.google || !window.google.maps || !window.google.maps.Size) {
     return {};
   }
   
@@ -372,12 +372,13 @@ export function OKCBusinessMap({ searchFilters }: OKCBusinessMapProps) {
         >
           {filteredBusinesses.map((business) => {
             const markerIcons = getMarkerIcons();
+            const icon = markerIcons[business.status] || markerIcons.active;
             return (
               <Marker
                 key={business.id}
                 position={business.coordinates}
                 onClick={() => handleMarkerClick(business)}
-                icon={markerIcons[business.status] || markerIcons.active}
+                icon={icon}
               />
             );
           })}
