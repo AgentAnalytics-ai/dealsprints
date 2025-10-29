@@ -46,7 +46,7 @@ export function LiveIndustryStats({ industry, revenue, employees, location }: Li
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border p-6 mb-8"
+      className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border p-6"
     >
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
@@ -66,17 +66,17 @@ export function LiveIndustryStats({ industry, revenue, employees, location }: Li
       </div>
 
       {/* Main Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-2 gap-3 mb-6">
         {/* Total Companies */}
         <div className="bg-white rounded-lg p-4 shadow-sm">
           <div className="flex items-center justify-between mb-2">
             <Building2 className="w-5 h-5 text-blue-600" />
             <span className="text-xs text-gray-500">Total Companies</span>
           </div>
-          <div className="text-2xl font-bold text-gray-900">
+          <div className="text-xl font-bold text-gray-900">
             {(stats.totalCompanies / 1000000).toFixed(1)}M
           </div>
-          <div className="text-xs text-gray-600">in this sector</div>
+          <div className="text-xs text-gray-600">companies</div>
         </div>
 
         {/* Average Revenue */}
@@ -85,8 +85,8 @@ export function LiveIndustryStats({ industry, revenue, employees, location }: Li
             <DollarSign className="w-5 h-5 text-green-600" />
             <span className="text-xs text-gray-500">Avg Revenue</span>
           </div>
-          <div className="text-2xl font-bold text-gray-900">{stats.avgRevenue}</div>
-          <div className="text-xs text-gray-600">industry average</div>
+          <div className="text-xl font-bold text-gray-900">{stats.avgRevenue}</div>
+          <div className="text-xs text-gray-600">avg revenue</div>
         </div>
 
         {/* Growth Rate */}
@@ -95,8 +95,8 @@ export function LiveIndustryStats({ industry, revenue, employees, location }: Li
             <TrendingUp className="w-5 h-5 text-emerald-600" />
             <span className="text-xs text-gray-500">Growth Rate</span>
           </div>
-          <div className="text-2xl font-bold text-gray-900">{stats.growthRate}</div>
-          <div className="text-xs text-gray-600">annual growth</div>
+          <div className="text-xl font-bold text-gray-900">{stats.growthRate}</div>
+          <div className="text-xs text-gray-600">growth</div>
         </div>
 
         {/* Market Size */}
@@ -105,8 +105,8 @@ export function LiveIndustryStats({ industry, revenue, employees, location }: Li
             <Target className="w-5 h-5 text-purple-600" />
             <span className="text-xs text-gray-500">Market Size</span>
           </div>
-          <div className="text-2xl font-bold text-gray-900">{stats.marketSize}</div>
-          <div className="text-xs text-gray-600">total market</div>
+          <div className="text-xl font-bold text-gray-900">{stats.marketSize}</div>
+          <div className="text-xs text-gray-600">market size</div>
         </div>
       </div>
 
@@ -127,7 +127,7 @@ export function LiveIndustryStats({ industry, revenue, employees, location }: Li
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 gap-4">
             {/* Revenue Percentile */}
             <div>
               <div className="flex items-center justify-between mb-2">
@@ -175,7 +175,7 @@ export function LiveIndustryStats({ industry, revenue, employees, location }: Li
       )}
 
       {/* Key Metrics */}
-      <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-3">
+      <div className="mt-6 grid grid-cols-2 gap-3">
         <div className="text-center p-3 bg-white rounded-lg shadow-sm">
           <div className="text-sm text-gray-600 mb-1">Profit Margin</div>
           <div className="font-semibold text-gray-900">{stats.keyMetrics.profitMargin}</div>

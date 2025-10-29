@@ -93,25 +93,30 @@ const FreeEvaluationContent = () => {
           </div>
         </div>
         
-        {/* Live Industry Stats Panel */}
-        <LiveIndustryStats 
-          industry={formData.industry}
-          revenue={formData.annual_revenue}
-          employees={formData.employee_count}
-          location={formData.location}
-        />
-
-        {/* Assessment Form */}
-        <div className="bg-white rounded-2xl shadow-xl p-8">
-          <div className="text-center mb-6">
-            <h3 className="text-2xl font-bold text-gray-900 mb-2">
-              Start Your Free Analysis
-            </h3>
-            <p className="text-gray-600">
-              Takes less than 2 minutes to complete
-            </p>
+        {/* Side-by-side Layout: Form + Live Stats */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Assessment Form */}
+          <div className="bg-white rounded-2xl shadow-xl p-8">
+            <div className="text-center mb-6">
+              <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                Start Your Free Analysis
+              </h3>
+              <p className="text-gray-600">
+                Takes less than 2 minutes to complete
+              </p>
+            </div>
+            <SurveyForm />
           </div>
-          <SurveyForm />
+
+          {/* Live Industry Stats Panel */}
+          <div className="lg:sticky lg:top-8 lg:h-fit">
+            <LiveIndustryStats 
+              industry={formData.industry}
+              revenue={formData.annual_revenue}
+              employees={formData.employee_count}
+              location={formData.location}
+            />
+          </div>
         </div>
       </div>
     </div>
