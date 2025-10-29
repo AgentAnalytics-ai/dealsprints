@@ -5,7 +5,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Building, 
@@ -65,6 +65,7 @@ export default function SurveyForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submissionStatus, setSubmissionStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
+  // Wizard steps (re-added)
   const steps = [
     { id: 'business-info', title: 'Business Information', icon: Building },
     { id: 'financial-info', title: 'Financial Details', icon: DollarSign },
@@ -73,6 +74,7 @@ export default function SurveyForm() {
     { id: 'contact-info', title: 'Contact Information', icon: Mail }
   ];
 
+  // Option arrays (re-added)
   const industries = [
     'Restaurant & Food Service',
     'Retail & E-commerce',
@@ -172,8 +174,61 @@ export default function SurveyForm() {
     'Operational efficiency'
   ];
 
+  // Live insight state
+  const [liveInsight, setLiveInsight] = useState<{ headline: string; summary: string; quick_score: number; recommendations: string[] } | null>(null);
+  const [liveLoading, setLiveLoading] = useState(false);
+  const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const abortRef = useRef<AbortController | null>(null);
+
+  // Debounced preview fetcher
+  const queuePreview = () => {
+    if (debounceTimer.current) clearTimeout(debounceTimer.current);
+    debounceTimer.current = setTimeout(fetchPreview, 450);
+  };
+
+  const fetchPreview = async () => {
+    try {
+      // cancel previous
+      if (abortRef.current) abortRef.current.abort();
+      abortRef.current = new AbortController();
+
+      const payload = {
+        business_name: formData.business_name,
+        industry: formData.industry,
+        location: formData.location,
+        annual_revenue: formData.annual_revenue,
+        employee_count: formData.employee_count,
+      };
+
+      // only call when at least one meaningful field present
+      if (!payload.industry && !payload.annual_revenue && !payload.location) {
+        setLiveInsight(null);
+        return;
+      }
+
+      setLiveLoading(true);
+      const res = await fetch('/api/assessment/preview', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+        signal: abortRef.current.signal,
+      });
+      if (!res.ok) throw new Error('Preview failed');
+      const data = await res.json();
+      setLiveInsight(data.insight);
+    } catch (e) {
+      // silence preview errors
+    } finally {
+      setLiveLoading(false);
+    }
+  };
+
   const handleInputChange = (field: keyof SurveyData, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+    // trigger preview for relevant fields
+    if (['industry', 'annual_revenue', 'employee_count', 'location', 'business_name'].includes(field)) {
+      queuePreview();
+    }
   };
 
   const handleArrayChange = (field: 'key_assets' | 'challenges' | 'growth_opportunities', value: string) => {
@@ -561,6 +616,41 @@ export default function SurveyForm() {
 
   return (
     <div className="max-w-4xl mx-auto p-6">
+      {/* Live Insight Panel */}
+      {(liveInsight || liveLoading) && (
+        <div className="mb-6">
+          <div className="rounded-lg border p-4 bg-gradient-to-r from-blue-50 to-indigo-50">
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="text-sm font-medium text-blue-900 mb-1">Live Insight</p>
+                {liveLoading ? (
+                  <p className="text-sm text-blue-700">Updating...</p>
+                ) : (
+                  <>
+                    <h3 className="text-lg font-semibold text-blue-900">{liveInsight?.headline}</h3>
+                    <p className="text-sm text-blue-800 mt-1">{liveInsight?.summary}</p>
+                  </>
+                )}
+              </div>
+              <div className="text-right">
+                <div className="text-xs text-blue-700">Quick Score</div>
+                <div className="text-2xl font-bold text-blue-900">{liveInsight?.quick_score ?? 50}</div>
+              </div>
+            </div>
+            {!liveLoading && liveInsight?.recommendations?.length ? (
+              <div className="mt-3">
+                <div className="text-xs font-medium text-blue-900 mb-1">Suggestions</div>
+                <ul className="text-sm text-blue-800 list-disc pl-5 space-y-1">
+                  {liveInsight.recommendations.map((r, i) => (
+                    <li key={i}>{r}</li>
+                  ))}
+                </ul>
+              </div>
+            ) : null}
+          </div>
+        </div>
+      )}
+
       {/* Progress Header */}
       <div className="mb-8">
         <div className="flex items-center justify-between mb-4">
