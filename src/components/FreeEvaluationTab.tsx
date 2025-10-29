@@ -1,11 +1,14 @@
 'use client';
 
 import SurveyForm from './SurveyForm';
+import { LiveInsightsPanel } from './LiveInsightsPanel';
+import { LiveInsightsProvider } from '@/contexts/LiveInsightsContext';
 
 export function FreeEvaluationTab() {
   return (
-    <div className="py-12">
-      <div className="mx-auto max-w-6xl px-6">
+    <LiveInsightsProvider>
+      <div className="py-12">
+        <div className="mx-auto max-w-6xl px-6">
         {/* Psychology-Optimized Header */}
         <div className="text-center mb-12">
           <h2 className="text-4xl font-bold text-gray-900 mb-4">
@@ -86,6 +89,9 @@ export function FreeEvaluationTab() {
           </div>
         </div>
         
+        {/* Live Insights Panel */}
+        <LiveInsightsPanel />
+
         {/* Assessment Form */}
         <div className="bg-white rounded-2xl shadow-xl p-8">
           <div className="text-center mb-6">
@@ -98,7 +104,8 @@ export function FreeEvaluationTab() {
           </div>
           <SurveyForm />
         </div>
+        </div>
       </div>
-    </div>
+    </LiveInsightsProvider>
   );
 }
