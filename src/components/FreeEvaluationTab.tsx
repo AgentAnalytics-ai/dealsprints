@@ -1,14 +1,18 @@
 'use client';
 
+import React from 'react';
 import SurveyForm from './SurveyForm';
 import { LiveInsightsPanel } from './LiveInsightsPanel';
 import { LiveInsightsProvider } from '@/contexts/LiveInsightsContext';
+import { LiveIndustryStats } from './LiveIndustryStats';
+import { FormDataProvider, useFormData } from '@/contexts/FormDataContext';
 
-export function FreeEvaluationTab() {
+const FreeEvaluationContent = () => {
+  const { formData } = useFormData();
+  
   return (
-    <LiveInsightsProvider>
-      <div className="py-12">
-        <div className="mx-auto max-w-6xl px-6">
+    <div className="py-12">
+      <div className="mx-auto max-w-6xl px-6">
         {/* Psychology-Optimized Header */}
         <div className="text-center mb-12">
           <h2 className="text-4xl font-bold text-gray-900 mb-4">
@@ -89,8 +93,13 @@ export function FreeEvaluationTab() {
           </div>
         </div>
         
-        {/* Live Insights Panel */}
-        <LiveInsightsPanel />
+        {/* Live Industry Stats Panel */}
+        <LiveIndustryStats 
+          industry={formData.industry}
+          revenue={formData.annual_revenue}
+          employees={formData.employee_count}
+          location={formData.location}
+        />
 
         {/* Assessment Form */}
         <div className="bg-white rounded-2xl shadow-xl p-8">
@@ -104,8 +113,17 @@ export function FreeEvaluationTab() {
           </div>
           <SurveyForm />
         </div>
-        </div>
       </div>
-    </LiveInsightsProvider>
+    </div>
+  );
+};
+
+export function FreeEvaluationTab() {
+  return (
+    <FormDataProvider>
+      <LiveInsightsProvider>
+        <FreeEvaluationContent />
+      </LiveInsightsProvider>
+    </FormDataProvider>
   );
 }

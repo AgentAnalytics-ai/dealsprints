@@ -8,6 +8,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLiveInsights } from '@/contexts/LiveInsightsContext';
+import { useFormData } from '@/contexts/FormDataContext';
 import { 
   Building, 
   MapPin, 
@@ -46,24 +47,9 @@ interface SurveyData {
 
 export default function SurveyForm() {
   const { updateInsights } = useLiveInsights();
+  const { formData: contextFormData, updateFormData } = useFormData();
   const [currentStep, setCurrentStep] = useState(0);
-  const [formData, setFormData] = useState<SurveyData>({
-    business_name: '',
-    industry: '',
-    location: '',
-    years_in_business: 0,
-    annual_revenue: '',
-    employee_count: '',
-    business_type: 'llc',
-    reason_for_selling: '',
-    timeline: '',
-    key_assets: [],
-    challenges: [],
-    growth_opportunities: [],
-    contact_email: '',
-    contact_phone: '',
-    additional_info: ''
-  });
+  const [formData, setFormData] = useState<SurveyData>(contextFormData);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submissionStatus, setSubmissionStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
@@ -179,6 +165,7 @@ export default function SurveyForm() {
   const handleInputChange = (field: keyof SurveyData, value: any) => {
     const newFormData = { ...formData, [field]: value };
     setFormData(newFormData);
+    updateFormData(newFormData); // Update context for live stats
     // trigger preview for relevant fields
     if (['industry', 'annual_revenue', 'employee_count', 'location', 'business_name'].includes(field)) {
       updateInsights(newFormData);
