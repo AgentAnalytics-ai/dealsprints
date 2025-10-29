@@ -200,11 +200,7 @@ export default function SurveyForm() {
         employee_count: formData.employee_count,
       };
 
-      // only call when at least one meaningful field present
-      if (!payload.industry && !payload.annual_revenue && !payload.location) {
-        setLiveInsight(null);
-        return;
-      }
+      // Always call preview API - it handles empty data gracefully
 
       setLiveLoading(true);
       const res = await fetch('/api/assessment/preview', {
@@ -222,6 +218,11 @@ export default function SurveyForm() {
       setLiveLoading(false);
     }
   };
+
+  // Trigger initial preview on mount
+  useEffect(() => {
+    fetchPreview();
+  }, []);
 
   const handleInputChange = (field: keyof SurveyData, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
