@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Member } from '@/lib/data/mockFeed';
 import { MemberCard } from './MemberCard';
-import { Search, SlidersHorizontal } from 'lucide-react';
+import { Search } from 'lucide-react';
 
 interface MemberGridProps {
   members: Member[];
@@ -44,72 +44,48 @@ export function MemberGrid({ members, showFilters = true }: MemberGridProps) {
 
   return (
     <div className="space-y-6">
-      {/* Filters */}
+      {/* Simple Dropdown Filters */}
       {showFilters && (
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-          <div className="flex items-center gap-2 mb-4">
-            <SlidersHorizontal className="w-5 h-5 text-gray-600" />
-            <h3 className="font-semibold text-gray-900">Filter Members</h3>
+        <div className="flex flex-col sm:flex-row gap-3 mb-6">
+          {/* Search */}
+          <div className="relative flex-1">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Search businesses..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full rounded-xl border-2 border-gray-200 pl-12 pr-4 py-3 text-gray-700 font-medium focus:border-brand focus:outline-none transition-colors bg-white"
+            />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {/* Search */}
-            <div>
-              <label htmlFor="search" className="block text-sm font-medium text-gray-700 mb-2">
-                Search
-              </label>
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                <input
-                  id="search"
-                  type="text"
-                  placeholder="Business name..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full rounded-lg border border-gray-300 pl-10 pr-4 py-2 focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
-                />
-              </div>
-            </div>
+          {/* Category dropdown */}
+          <select
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            className="flex-1 rounded-xl border-2 border-gray-200 px-4 py-3 text-gray-700 font-medium focus:border-brand focus:outline-none transition-colors bg-white"
+          >
+            <option value="all">📂 All Categories</option>
+            {categories.map(category => (
+              <option key={category} value={category}>
+                {category}
+              </option>
+            ))}
+          </select>
 
-            {/* Category filter */}
-            <div>
-              <label htmlFor="category-filter" className="block text-sm font-medium text-gray-700 mb-2">
-                Category
-              </label>
-              <select
-                id="category-filter"
-                value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
-                className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
-              >
-                <option value="all">All Categories</option>
-                {categories.map(category => (
-                  <option key={category} value={category}>
-                    {category}
-                  </option>
-                ))}
-              </select>
-            </div>
+          {/* Plan dropdown */}
+          <select
+            value={selectedPlan}
+            onChange={(e) => setSelectedPlan(e.target.value)}
+            className="flex-1 rounded-xl border-2 border-gray-200 px-4 py-3 text-gray-700 font-medium focus:border-brand focus:outline-none transition-colors bg-white"
+          >
+            <option value="all">👥 All Members</option>
+            <option value="pro">⭐ Pro Members</option>
+            <option value="verified">✓ Verified Members</option>
+            <option value="free">Free Members</option>
+          </select>
 
-            {/* Plan filter */}
-            <div>
-              <label htmlFor="plan-filter" className="block text-sm font-medium text-gray-700 mb-2">
-                Membership
-              </label>
-              <select
-                id="plan-filter"
-                value={selectedPlan}
-                onChange={(e) => setSelectedPlan(e.target.value)}
-                className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
-              >
-                <option value="all">All Members</option>
-                <option value="pro">Pro Members</option>
-                <option value="verified">Verified Members</option>
-                <option value="free">Free Members</option>
-              </select>
-            </div>
-          </div>
-
+          {/* Clear button */}
           {(searchTerm || selectedCategory !== 'all' || selectedPlan !== 'all') && (
             <button
               onClick={() => {
@@ -117,9 +93,9 @@ export function MemberGrid({ members, showFilters = true }: MemberGridProps) {
                 setSelectedCategory('all');
                 setSelectedPlan('all');
               }}
-              className="mt-4 text-sm font-medium text-brand hover:text-brand/80 transition-colors"
+              className="px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-xl transition-colors whitespace-nowrap"
             >
-              Clear filters
+              Clear
             </button>
           )}
         </div>
