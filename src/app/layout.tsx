@@ -2,33 +2,33 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "DealSprints - Professional Business Valuation & M&A Advisory",
-  description: "Get your business valued by certified professionals. Confidential process, pre-qualified acquirers, 60-day close guarantee.",
-  keywords: "business valuation, M&A advisory, business broker, sell business, confidential process",
-  authors: [{ name: "DealSprints" }],
+  title: "OKC Pulse - Oklahoma City's Feed of Developments, Openings & Business Network | DealSprints",
+  description: "Stay updated on Oklahoma City's latest business developments, grand openings, and expansions. Join OKC's verified network of local entrepreneurs and business owners.",
+  keywords: "OKC business news, Oklahoma City developments, local business network, OKC entrepreneurs, business openings OKC, Oklahoma City business community",
+  authors: [{ name: "DealSprints OKC" }],
   creator: "DealSprints",
   publisher: "DealSprints",
   openGraph: {
     type: "website",
     locale: "en_US",
     url: "https://dealsprints.com",
-    siteName: "DealSprints",
-    title: "Professional Business Valuation & M&A Advisory",
-    description: "Get your business valued by certified professionals. Confidential process, pre-qualified acquirers, 60-day close guarantee.",
+    siteName: "DealSprints OKC Pulse",
+    title: "OKC Pulse - Your City's Business Growth Feed",
+    description: "Oklahoma City's fast feed of exciting developments, new business openings, and verified network of local entrepreneurs.",
     images: [
       {
-        url: "https://dealsprints.com/og/home.png",
+        url: "https://dealsprints.com/og/okc-pulse.png",
         width: 1200,
         height: 630,
-        alt: "DealSprints - Professional Business Valuation & M&A Advisory",
+        alt: "OKC Pulse - Oklahoma City Business Feed & Network",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Professional Business Valuation & M&A Advisory",
-    description: "Get your business valued by certified professionals. Confidential process, pre-qualified acquirers, 60-day close guarantee.",
-    images: ["https://dealsprints.com/og/home.png"],
+    title: "OKC Pulse - Oklahoma City Business Feed",
+    description: "Stay updated on OKC's latest developments, openings, and connect with verified local business owners.",
+    images: ["https://dealsprints.com/og/okc-pulse.png"],
   },
   robots: {
     index: true,
@@ -59,11 +59,17 @@ export default function RootLayout({
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "Organization",
-              "name": "DealSprints",
+              "name": "DealSprints OKC",
+              "alternateName": "OKC Pulse",
               "url": "https://dealsprints.com",
               "logo": "https://dealsprints.com/logo.png",
-              "description": "Professional business valuation and M&A advisory services",
+              "description": "Oklahoma City's pulse on business growth - featuring local developments, new openings, and a verified network of entrepreneurs",
               "foundingDate": "2024",
+              "areaServed": {
+                "@type": "City",
+                "name": "Oklahoma City",
+                "sameAs": "https://en.wikipedia.org/wiki/Oklahoma_City"
+              },
               "sameAs": [
                 "https://twitter.com/dealsprints",
                 "https://linkedin.com/company/dealsprints"

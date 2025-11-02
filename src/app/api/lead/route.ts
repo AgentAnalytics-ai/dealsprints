@@ -21,15 +21,30 @@ export async function POST(request: Request) {
     const category = leadScore?.category || 'Standard';
     const priority = leadScore?.total >= 70 ? 'HIGH' : leadScore?.total >= 50 ? 'MEDIUM' : 'LOW';
     
+    // Detect if this is an OKC Pulse waitlist submission
+    const isOKCPulse = category === 'OKC Pulse' || goal?.includes('OKC Network') || goal?.includes('OKC Pulse');
+    
     // Create subject line based on lead quality
-    const subject = `${priority} PRIORITY ${category.toUpperCase()} LEAD: ${company} - ${industry} (Score: ${leadScore?.total}/100)`;
+    const subject = isOKCPulse 
+      ? `🚀 OKC PULSE WAITLIST: ${company} - ${industry} (${goal})`
+      : `${priority} PRIORITY ${category.toUpperCase()} LEAD: ${company} - ${industry} (Score: ${leadScore?.total}/100)`;
 
     // Create detailed email content
     const emailContent = `
       <div style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto;">
-        <h2 style="color: #2563eb; border-bottom: 2px solid #2563eb; padding-bottom: 10px;">
-          ${priority} PRIORITY LEAD - ${category.toUpperCase()} QUALITY
-        </h2>
+        ${isOKCPulse ? `
+          <h2 style="color: #6A7CFF; border-bottom: 3px solid #6A7CFF; padding-bottom: 10px;">
+            🚀 OKC PULSE WAITLIST SUBMISSION
+          </h2>
+          <div style="background: linear-gradient(135deg, #6A7CFF 0%, #9333EA 100%); padding: 20px; border-radius: 12px; margin: 20px 0;">
+            <p style="color: white; font-size: 18px; margin: 0;"><strong>${company}</strong> wants to join OKC Pulse!</p>
+            <p style="color: rgba(255,255,255,0.9); margin: 8px 0 0 0;">${goal}</p>
+          </div>
+        ` : `
+          <h2 style="color: #2563eb; border-bottom: 2px solid #2563eb; padding-bottom: 10px;">
+            ${priority} PRIORITY LEAD - ${category.toUpperCase()} QUALITY
+          </h2>
+        `}
         
         <div style="background: #f8fafc; padding: 20px; border-radius: 8px; margin: 20px 0;">
           <h3 style="color: #1e40af; margin-top: 0;">Lead Score: ${leadScore?.total}/100</h3>
