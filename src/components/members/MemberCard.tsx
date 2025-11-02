@@ -1,3 +1,5 @@
+"use client";
+
 import { Member } from '@/lib/data/mockFeed';
 import { Building2, CheckCircle, ExternalLink, Instagram, Linkedin, Facebook } from 'lucide-react';
 import Link from 'next/link';
