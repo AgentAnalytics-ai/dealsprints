@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { Sparkles, CheckCircle, Send, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { Header } from '@/components/Header';
+import { Footer } from '@/components/Footer';
 
 export default function WaitlistPage() {
   const [formData, setFormData] = useState({
@@ -73,7 +75,9 @@ export default function WaitlistPage() {
 
   if (isSubmitted) {
     return (
-      <main className="min-h-screen bg-gradient-to-br from-brand to-purple-600 flex items-center justify-center px-6">
+      <>
+        <Header />
+        <main className="min-h-screen bg-gradient-to-br from-brand to-purple-600 flex items-center justify-center px-6">
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -105,12 +109,16 @@ export default function WaitlistPage() {
             </div>
           </div>
         </motion.div>
-      </main>
+        </main>
+        <Footer />
+      </>
     );
   }
 
   return (
-    <main className="min-h-screen bg-gray-50">
+    <>
+      <Header />
+      <main className="min-h-screen bg-gray-50">
       {/* Header */}
       <div className="bg-white border-b border-gray-200">
         <div className="max-w-3xl mx-auto px-6 py-8">
@@ -129,11 +137,11 @@ export default function WaitlistPage() {
             </span>
           </div>
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            Join the OKC Pulse Waitlist
+            Join the DealSprints OKC Waitlist
           </h1>
           <p className="text-xl text-gray-600">
             Be among the first to join Oklahoma City's network of verified business owners, 
-            get featured in the pulse feed, and connect with your local community.
+            get featured in the feed, and connect with your local community.
           </p>
         </div>
       </div>
@@ -330,6 +338,8 @@ export default function WaitlistPage() {
         </form>
       </div>
     </main>
+    <Footer />
+    </>
   );
 }
 

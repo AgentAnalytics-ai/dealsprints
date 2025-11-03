@@ -1,6 +1,7 @@
 import { MOCK_POSTS, getRecentPosts, getStats, getVerifiedMembers } from '@/lib/data/mockFeed';
 import { FeedCard } from '@/components/feed/FeedCard';
 import { MemberCard } from '@/components/members/MemberCard';
+import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { Rss, Users, TrendingUp, Sparkles, ArrowRight, CheckCircle, Zap } from 'lucide-react';
 import Link from 'next/link';
@@ -12,6 +13,7 @@ export default function HomePage() {
 
   return (
     <main className="min-h-screen">
+      <Header />
       {/* Hero Section */}
       <div className="relative overflow-hidden bg-gradient-to-br from-brand via-purple-600 to-brand">
         {/* Background Pattern */}
@@ -26,16 +28,16 @@ export default function HomePage() {
           <div className="text-center max-w-4xl mx-auto">
             <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full text-white text-sm font-semibold mb-8">
               <Sparkles className="w-4 h-4" />
-              Oklahoma City's Pulse on Growth
+              Oklahoma City's Business Growth Network
             </div>
             
             <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
-              OKC Pulse
+              DealSprints OKC
             </h1>
             
             <p className="text-xl md:text-2xl text-white/90 mb-12 leading-relaxed">
-              The city's fast, visual feed of exciting developments, new business openings, 
-              and a verified network of local entrepreneurs.
+              Your pulse on Oklahoma City's latest developments, business openings, 
+              and verified network of local entrepreneurs.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">

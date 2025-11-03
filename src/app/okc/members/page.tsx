@@ -1,6 +1,8 @@
 import { Metadata } from 'next';
 import { MOCK_MEMBERS, getStats, getVerifiedMembers } from '@/lib/data/mockFeed';
 import { MemberGrid } from '@/components/members/MemberGrid';
+import { Header } from '@/components/Header';
+import { Footer } from '@/components/Footer';
 import { Users, CheckCircle, TrendingUp, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 
@@ -28,7 +30,8 @@ export default function OKCMembersPage() {
 
   return (
     <main className="min-h-screen bg-gray-50">
-      {/* Header */}
+      <Header />
+      {/* Page Header */}
       <div className="bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-6 py-12">
           <div className="flex items-start justify-between">
@@ -147,6 +150,8 @@ export default function OKCMembersPage() {
           </div>
         </div>
       </div>
+
+      <Footer />
     </main>
   );
 }

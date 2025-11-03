@@ -1,18 +1,20 @@
 import { Metadata } from 'next';
 import { MOCK_POSTS } from '@/lib/data/mockFeed';
 import { FeedList } from '@/components/feed/FeedList';
+import { Header } from '@/components/Header';
+import { Footer } from '@/components/Footer';
 import { Rss, Send } from 'lucide-react';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'OKC Pulse Feed - Latest Developments, Openings & Business News | DealSprints',
+  title: 'Feed - Latest OKC Developments & Openings | DealSprints OKC',
   description: 'Stay updated on Oklahoma City\'s latest business developments, grand openings, expansions, and market insights. Your pulse on OKC growth.',
   alternates: {
     canonical: 'https://dealsprints.com/okc/feed',
   },
   openGraph: {
-    title: 'OKC Pulse Feed - Latest Business News',
-    description: 'Oklahoma City\'s fast feed of new developments, openings, and business wins.',
+    title: 'DealSprints OKC Feed - Latest Business News',
+    description: 'Oklahoma City\'s latest developments, openings, and business wins.',
     url: 'https://dealsprints.com/okc/feed',
     siteName: 'DealSprints OKC',
     locale: 'en_US',
@@ -25,6 +27,7 @@ export const revalidate = 3600; // Revalidate every hour
 export default function OKCFeedPage() {
   return (
     <main className="min-h-screen bg-gray-50">
+      <Header />
       {/* Header */}
       <div className="bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-6 py-12">
@@ -37,10 +40,10 @@ export default function OKCFeedPage() {
                 </span>
               </div>
               <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-                OKC Pulse Feed
+                DealSprints OKC Feed
               </h1>
               <p className="text-xl text-gray-600 max-w-3xl">
-                Your real-time source for Oklahoma City developments, new business openings, 
+                Your source for Oklahoma City developments, new business openings, 
                 expansions, and market insights. Updated weekly.
               </p>
             </div>
@@ -89,6 +92,8 @@ export default function OKCFeedPage() {
           </Link>
         </div>
       </div>
+
+      <Footer />
     </main>
   );
 }
