@@ -225,7 +225,7 @@ export default function MemberProfilePage({ params }: PageProps) {
 
       {/* CTA Section */}
       <div className="max-w-5xl mx-auto px-6 py-12">
-        <div className="bg-gradient-to-br from-brand to-purple-600 rounded-2xl p-8 md:p-12 text-center">
+        <div className="bg-gradient-to-br from-pink-500 via-purple-500 to-blue-500 rounded-2xl p-8 md:p-12 text-center">
           <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
             Join the OKC Network
           </h2>

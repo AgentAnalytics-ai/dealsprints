@@ -15,7 +15,7 @@ export default function HomePage() {
     <main className="min-h-screen">
       <Header />
       {/* Hero Section */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-brand via-purple-600 to-brand">
+      <div className="relative overflow-hidden bg-gradient-to-br from-pink-500 via-purple-500 to-blue-500">
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute inset-0" style={{
@@ -43,7 +43,7 @@ export default function HomePage() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 href="/okc/feed"
-                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-brand rounded-xl font-bold text-lg hover:bg-gray-50 transition-colors shadow-xl"
+                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-gray-900 rounded-xl font-bold text-lg hover:bg-gray-50 transition-colors shadow-xl"
               >
                 <Rss className="w-5 h-5" />
                 Browse the Feed
@@ -223,7 +223,7 @@ export default function HomePage() {
       </div>
 
       {/* Final CTA */}
-      <div className="bg-gradient-to-br from-brand to-purple-600">
+      <div className="bg-gradient-to-br from-pink-500 via-purple-500 to-blue-500">
         <div className="max-w-7xl mx-auto px-6 py-20 text-center">
           <div className="max-w-3xl mx-auto">
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
@@ -266,8 +266,8 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-      </div>
-
+          </div>
+      
       <Footer />
     </main>
   );

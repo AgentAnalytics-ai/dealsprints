@@ -14,7 +14,9 @@ export function Header() {
             />
             <div className="flex flex-col">
               <span className="font-bold text-xl text-gray-900">DealSprints</span>
-              <span className="text-xs font-semibold" style={{ color: '#6A7CFF' }}>OKC Pulse</span>
+              <span className="text-xs font-semibold bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 bg-clip-text text-transparent">
+                OKC Pulse
+              </span>
             </div>
           </Link>
 
@@ -40,8 +42,7 @@ export function Header() {
             </Link>
             <Link 
               href="/waitlist" 
-              className="px-4 py-2 text-white rounded-lg font-semibold transition-colors hover:opacity-90"
-              style={{ backgroundColor: '#6A7CFF' }}
+              className="px-4 py-2 bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-white rounded-lg font-semibold transition-opacity hover:opacity-90"
             >
               Join Waitlist
             </Link>

@@ -99,7 +99,7 @@ export default function OKCMembersPage() {
       </div>
 
       {/* Join CTA */}
-      <div className="bg-gradient-to-br from-brand to-purple-600">
+      <div className="bg-gradient-to-br from-pink-500 via-purple-500 to-blue-500">
         <div className="max-w-7xl mx-auto px-6 py-16 text-center">
           <div className="max-w-3xl mx-auto">
             <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full text-white text-sm font-semibold mb-6">

@@ -77,7 +77,7 @@ export default function WaitlistPage() {
     return (
       <>
         <Header />
-        <main className="min-h-screen bg-gradient-to-br from-brand to-purple-600 flex items-center justify-center px-6">
+        <main className="min-h-screen bg-gradient-to-br from-pink-500 via-purple-500 to-blue-500 flex items-center justify-center px-6">
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
