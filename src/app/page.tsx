@@ -33,12 +33,12 @@ export default function HomePage() {
 
         <div className="relative max-w-7xl mx-auto px-6 py-32 md:py-40">
           <div className="text-center max-w-5xl mx-auto">
-            {/* Large Centered Logo */}
-            <div className="mb-12 animate-fade-in">
+            {/* Extra Large Centered Logo */}
+            <div className="mb-16 animate-fade-in">
               <img 
                 src="/logo.png" 
                 alt="DealSprints" 
-                className="w-48 h-48 md:w-64 md:h-64 mx-auto object-contain drop-shadow-2xl"
+                className="w-64 h-64 md:w-80 md:h-80 lg:w-96 lg:h-96 mx-auto object-contain drop-shadow-2xl"
               />
             </div>
 
