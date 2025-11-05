@@ -77,7 +77,7 @@ export default function WaitlistPage() {
     return (
       <>
         <Header />
-        <main className="min-h-screen bg-gradient-to-br from-pink-500 via-purple-500 to-blue-500 flex items-center justify-center px-6">
+        <main className="min-h-screen bg-gradient-to-br from-[#4338ca] via-[#7c3aed] to-[#2563eb] flex items-center justify-center px-6">
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -96,13 +96,13 @@ export default function WaitlistPage() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 href="/okc/feed"
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-white rounded-xl font-semibold hover:opacity-90 transition-opacity"
+                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-gray-900 rounded-2xl font-bold hover:scale-105 transition-all shadow-xl"
               >
                 Browse the Feed
               </Link>
               <Link
                 href="/okc/members"
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gray-100 text-gray-700 rounded-xl font-semibold hover:bg-gray-200 transition-colors"
+                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white/20 backdrop-blur-md border-2 border-white/30 text-white rounded-2xl font-bold hover:bg-white/30 transition-all"
               >
                 View Members
               </Link>
@@ -316,7 +316,7 @@ export default function WaitlistPage() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-white rounded-xl font-bold text-lg hover:opacity-90 transition-opacity shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-gradient-to-r from-indigo-600 via-purple-600 to-blue-600 text-white rounded-2xl font-bold text-lg hover:scale-105 transition-all shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
             >
               {isSubmitting ? (
                 <>
