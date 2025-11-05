@@ -5,19 +5,12 @@ export function Header() {
     <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex items-center justify-between h-16">
-          {/* Logo + Brand */}
-          <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-            <img 
-              src="/logo.png" 
-              alt="DealSprints" 
-              className="w-10 h-10 object-contain"
-            />
-            <div className="flex flex-col">
-              <span className="font-bold text-xl text-gray-900">DealSprints</span>
-              <span className="text-xs font-semibold bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 bg-clip-text text-transparent">
-                OKC Pulse
-              </span>
-            </div>
+          {/* Brand Name Only */}
+          <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+            <span className="font-bold text-xl text-gray-900">DealSprints</span>
+            <span className="text-sm font-semibold bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 bg-clip-text text-transparent">
+              OKC
+            </span>
           </Link>
 
           {/* Navigation */}

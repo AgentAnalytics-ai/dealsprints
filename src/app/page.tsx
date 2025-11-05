@@ -26,6 +26,15 @@ export default function HomePage() {
 
         <div className="relative max-w-7xl mx-auto px-6 py-20 md:py-32">
           <div className="text-center max-w-4xl mx-auto">
+            {/* Logo centered */}
+            <div className="mb-8">
+              <img 
+                src="/logo.png" 
+                alt="DealSprints" 
+                className="w-24 h-24 md:w-32 md:h-32 mx-auto object-contain"
+              />
+            </div>
+
             <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full text-white text-sm font-semibold mb-8">
               <Sparkles className="w-4 h-4" />
               Oklahoma City's Business Growth Network
@@ -102,7 +111,7 @@ export default function HomePage() {
             </div>
             <Link
               href="/okc/feed"
-              className="hidden md:inline-flex items-center gap-2 px-6 py-3 bg-brand text-white rounded-xl font-semibold hover:bg-brand/90 transition-colors"
+              className="hidden md:inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-white rounded-xl font-semibold hover:opacity-90 transition-opacity"
             >
               View All
               <ArrowRight className="w-4 h-4" />
@@ -118,7 +127,7 @@ export default function HomePage() {
           <div className="text-center md:hidden">
             <Link
               href="/okc/feed"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-brand text-white rounded-xl font-semibold hover:bg-brand/90 transition-colors"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-white rounded-xl font-semibold hover:opacity-90 transition-opacity"
             >
               View All Updates
               <ArrowRight className="w-4 h-4" />
@@ -145,7 +154,7 @@ export default function HomePage() {
             </div>
             <Link
               href="/okc/members"
-              className="hidden md:inline-flex items-center gap-2 px-6 py-3 bg-brand text-white rounded-xl font-semibold hover:bg-brand/90 transition-colors"
+              className="hidden md:inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-white rounded-xl font-semibold hover:opacity-90 transition-opacity"
             >
               View Directory
               <ArrowRight className="w-4 h-4" />
@@ -161,7 +170,7 @@ export default function HomePage() {
           <div className="text-center md:hidden">
             <Link
               href="/okc/members"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-brand text-white rounded-xl font-semibold hover:bg-brand/90 transition-colors"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-white rounded-xl font-semibold hover:opacity-90 transition-opacity"
             >
               View All Members
               <ArrowRight className="w-4 h-4" />

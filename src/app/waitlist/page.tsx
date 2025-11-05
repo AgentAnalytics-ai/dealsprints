@@ -96,7 +96,7 @@ export default function WaitlistPage() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 href="/okc/feed"
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-brand text-white rounded-xl font-semibold hover:bg-brand/90 transition-colors"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-white rounded-xl font-semibold hover:opacity-90 transition-opacity"
               >
                 Browse the Feed
               </Link>
@@ -316,7 +316,7 @@ export default function WaitlistPage() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-brand text-white rounded-xl font-bold text-lg hover:bg-brand/90 transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-white rounded-xl font-bold text-lg hover:opacity-90 transition-opacity shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSubmitting ? (
                 <>

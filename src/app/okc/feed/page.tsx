@@ -53,14 +53,14 @@ export default function OKCFeedPage() {
           <div className="mt-8 flex flex-col sm:flex-row gap-4">
             <Link
               href="/waitlist"
-              className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-brand text-white rounded-xl font-semibold hover:bg-brand/90 transition-colors shadow-sm"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-white rounded-xl font-semibold hover:opacity-90 transition-opacity shadow-sm"
             >
               <Send className="w-4 h-4" />
               Submit a Tip
             </Link>
             <Link
               href="/okc/members"
-              className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white border border-gray-300 text-gray-700 rounded-xl font-semibold hover:border-brand hover:text-brand transition-colors"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white border-2 border-gray-300 text-gray-700 rounded-xl font-semibold hover:border-purple-500 transition-colors"
             >
               View Member Directory
             </Link>
@@ -85,7 +85,7 @@ export default function OKCFeedPage() {
           </p>
           <Link
             href="/waitlist"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-brand text-white rounded-xl font-semibold hover:bg-brand/90 transition-colors shadow-sm"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-white rounded-xl font-semibold hover:opacity-90 transition-opacity shadow-sm"
           >
             <Send className="w-4 h-4" />
             Submit a Tip
