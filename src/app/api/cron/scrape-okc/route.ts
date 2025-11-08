@@ -190,8 +190,10 @@ function extractTags(title: string, content: string): string[] {
 export async function GET(request: NextRequest) {
   try {
     // Verify cron secret (security)
-    const authHeader = request.headers.get('authorization');
-    if (authHeader !== `Bearer ${CRON_SECRET}`) {
+    const { searchParams } = new URL(request.url);
+    const providedSecret = searchParams.get('secret');
+    
+    if (providedSecret !== CRON_SECRET) {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
