@@ -1,4 +1,6 @@
-import { MOCK_POSTS, getRecentPosts, getStats, getVerifiedMembers } from '@/lib/data/mockFeed';
+import { supabase } from '@/lib/supabase';
+import { MOCK_MEMBERS, getVerifiedMembers, getStats as getMockStats } from '@/lib/data/mockFeed';
+import { Post } from '@/lib/data/mockFeed';
 import { FeedCard } from '@/components/feed/FeedCard';
 import { MemberCard } from '@/components/members/MemberCard';
 import { Header } from '@/components/Header';
@@ -6,10 +8,42 @@ import { Footer } from '@/components/Footer';
 import { Rss, Users, TrendingUp, Sparkles, ArrowRight, CheckCircle, Zap } from 'lucide-react';
 import Link from 'next/link';
 
-export default function HomePage() {
-  const recentPosts = getRecentPosts(6);
+export default async function HomePage() {
+  // Fetch recent published posts from Supabase
+  const { data: scrapedPosts } = await supabase
+    .from('scraped_posts')
+    .select('*')
+    .eq('status', 'published')
+    .order('published_at', { ascending: false })
+    .limit(6);
+
+  // Transform to Post format
+  const recentPosts: Post[] = (scrapedPosts || []).map(p => ({
+    id: p.id,
+    kind: (p.ai_category || 'opening') as Post['kind'],
+    title: p.scraped_title,
+    location: p.ai_location || 'Oklahoma City, OK',
+    date: p.published_at || p.scraped_date,
+    summary: p.ai_summary,
+    source: p.source_name,
+    sourceUrl: p.source_url,
+    tags: p.ai_tags || [],
+    imageUrl: p.photo_url || undefined,
+  }));
+
   const verifiedMembers = getVerifiedMembers().slice(0, 6);
-  const stats = getStats();
+  
+  // Get stats (mix of real posts + mock members for now)
+  const mockStats = getMockStats();
+  const { count: publishedCount } = await supabase
+    .from('scraped_posts')
+    .select('*', { count: 'exact', head: true })
+    .eq('status', 'published');
+  
+  const stats = {
+    ...mockStats,
+    totalPosts: publishedCount || mockStats.totalPosts,
+  };
 
   return (
     <main className="min-h-screen">

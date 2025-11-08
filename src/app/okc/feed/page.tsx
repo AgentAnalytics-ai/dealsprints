@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
-import { MOCK_POSTS } from '@/lib/data/mockFeed';
+import { supabase } from '@/lib/supabase';
+import { Post } from '@/lib/data/mockFeed';
 import { FeedList } from '@/components/feed/FeedList';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
@@ -24,7 +25,29 @@ export const metadata: Metadata = {
 
 export const revalidate = 3600; // Revalidate every hour
 
-export default function OKCFeedPage() {
+export default async function OKCFeedPage() {
+  // Fetch published posts from Supabase
+  const { data: scrapedPosts } = await supabase
+    .from('scraped_posts')
+    .select('*')
+    .eq('status', 'published')
+    .order('published_at', { ascending: false })
+    .limit(100);
+
+  // Transform to match Post interface
+  const posts: Post[] = (scrapedPosts || []).map(p => ({
+    id: p.id,
+    kind: (p.ai_category || 'opening') as Post['kind'],
+    title: p.scraped_title,
+    location: p.ai_location || 'Oklahoma City, OK',
+    date: p.published_at || p.scraped_date,
+    summary: p.ai_summary,
+    source: p.source_name,
+    sourceUrl: p.source_url,
+    tags: p.ai_tags || [],
+    imageUrl: p.photo_url || undefined,
+  }));
+
   return (
     <main className="min-h-screen bg-gray-50">
       <Header />
