@@ -9,11 +9,16 @@ import { Rss, Users, TrendingUp, Sparkles, ArrowRight, CheckCircle, Zap } from '
 import Link from 'next/link';
 
 export default async function HomePage() {
-  // Fetch recent published posts from Supabase
+  // Calculate date 30 days ago
+  const thirtyDaysAgo = new Date();
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+  
+  // Fetch recent published posts from Supabase (last 30 days only)
   const { data: scrapedPosts } = await supabase
     .from('scraped_posts')
     .select('*')
     .eq('status', 'published')
+    .gte('published_at', thirtyDaysAgo.toISOString())
     .order('published_at', { ascending: false })
     .limit(6);
 
@@ -38,7 +43,8 @@ export default async function HomePage() {
   const { count: publishedCount } = await supabase
     .from('scraped_posts')
     .select('*', { count: 'exact', head: true })
-    .eq('status', 'published');
+    .eq('status', 'published')
+    .gte('published_at', thirtyDaysAgo.toISOString());
   
   const stats = {
     ...mockStats,

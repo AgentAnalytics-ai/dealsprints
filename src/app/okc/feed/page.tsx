@@ -26,11 +26,16 @@ export const metadata: Metadata = {
 export const revalidate = 3600; // Revalidate every hour
 
 export default async function OKCFeedPage() {
-  // Fetch published posts from Supabase
+  // Calculate date 30 days ago
+  const thirtyDaysAgo = new Date();
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+  
+  // Fetch published posts from Supabase (last 30 days only)
   const { data: scrapedPosts } = await supabase
     .from('scraped_posts')
     .select('*')
     .eq('status', 'published')
+    .gte('published_at', thirtyDaysAgo.toISOString())
     .order('published_at', { ascending: false })
     .limit(100);
 
