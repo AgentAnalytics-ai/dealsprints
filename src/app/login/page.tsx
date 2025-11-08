@@ -17,24 +17,34 @@ export default function LoginPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log('🔵 Login form submitted');
+    console.log('🔵 Email:', email);
+    
     setError('');
     setLoading(true);
 
     try {
+      console.log('🔵 Calling signIn function...');
       const { user, error: signInError } = await signIn({ email, password });
+      
+      console.log('🔵 signIn response:', { user, error: signInError });
 
       if (signInError) {
+        console.error('❌ Sign in error:', signInError);
         setError('Invalid email or password');
         setLoading(false);
         return;
       }
 
       if (user) {
+        console.log('✅ Sign in successful! User:', user.id);
+        console.log('🔵 Redirecting to dashboard...');
         // Redirect to dashboard
         router.push('/dashboard');
         router.refresh();
       }
     } catch (err) {
+      console.error('❌ Caught error:', err);
       setError('An error occurred. Please try again.');
       setLoading(false);
     }
