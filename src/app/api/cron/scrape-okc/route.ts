@@ -44,18 +44,19 @@ async function fetchRSS(url: string): Promise<RSSItem[]> {
     const response = await fetch(url);
     const text = await response.text();
     
-    // Simple RSS parsing (you can use a library if needed)
+    // Simple RSS parsing - ES5 compatible
     const items: RSSItem[] = [];
-    const itemMatches = text.matchAll(/<item>(.*?)<\/item>/gs);
+    const itemRegex = /<item>([\s\S]*?)<\/item>/g;
+    let match;
     
-    for (const match of itemMatches) {
+    while ((match = itemRegex.exec(text)) !== null) {
       const itemXml = match[1];
-      const title = itemXml.match(/<title><!\[CDATA\[(.*?)\]\]><\/title>/)?.[1] || 
-                    itemXml.match(/<title>(.*?)<\/title>/)?.[1] || '';
+      const title = (itemXml.match(/<title><!\[CDATA\[(.*?)\]\]><\/title>/) || 
+                    itemXml.match(/<title>(.*?)<\/title>/))?.[1] || '';
       const link = itemXml.match(/<link>(.*?)<\/link>/)?.[1] || '';
       const pubDate = itemXml.match(/<pubDate>(.*?)<\/pubDate>/)?.[1] || '';
-      const contentSnippet = itemXml.match(/<description><!\[CDATA\[(.*?)\]\]><\/description>/)?.[1] ||
-                             itemXml.match(/<description>(.*?)<\/description>/)?.[1] || '';
+      const contentSnippet = (itemXml.match(/<description><!\[CDATA\[(.*?)\]\]><\/description>/) ||
+                             itemXml.match(/<description>(.*?)<\/description>/))?.[1] || '';
       
       if (title && link) {
         items.push({ title, link, pubDate, contentSnippet });
