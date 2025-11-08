@@ -1,7 +1,5 @@
 import { NextRequest } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase';
-import { writeFile } from 'fs/promises';
-import { join } from 'path';
 
 export async function POST(request: NextRequest) {
   try {
@@ -13,39 +11,66 @@ export async function POST(request: NextRequest) {
       return Response.json({ error: 'Missing photo or postId' }, { status: 400 });
     }
 
+    console.log('📸 Uploading photo:', { postId, filename: photo.name, size: photo.size });
+
     // Generate unique filename
     const timestamp = Date.now();
     const extension = photo.name.split('.').pop();
     const filename = `post-${postId.slice(0, 8)}-${timestamp}.${extension}`;
     
-    // Convert File to Buffer
+    // Convert File to ArrayBuffer
     const bytes = await photo.arrayBuffer();
-    const buffer = Buffer.from(bytes);
 
-    // Save to public/images directory
-    const publicPath = join(process.cwd(), 'public', 'images', filename);
-    await writeFile(publicPath, buffer);
-    
-    const photoUrl = `/images/${filename}`;
+    // Upload to Supabase Storage
+    const { data: uploadData, error: uploadError } = await supabaseAdmin
+      .storage
+      .from('post-images')
+      .upload(filename, bytes, {
+        contentType: photo.type,
+        upsert: false
+      });
 
-    // Update Supabase with photo URL
-    const { error } = await supabaseAdmin
+    if (uploadError) {
+      console.error('❌ Supabase Storage upload error:', uploadError);
+      throw uploadError;
+    }
+
+    console.log('✅ Upload successful:', uploadData);
+
+    // Get public URL
+    const { data: { publicUrl } } = supabaseAdmin
+      .storage
+      .from('post-images')
+      .getPublicUrl(filename);
+
+    console.log('🔗 Public URL:', publicUrl);
+
+    // Update Supabase post with photo URL
+    const { error: updateError } = await supabaseAdmin
       .from('scraped_posts')
-      .update({ photo_url: photoUrl })
+      .update({ photo_url: publicUrl, updated_at: new Date().toISOString() })
       .eq('id', postId);
 
-    if (error) throw error;
+    if (updateError) {
+      console.error('❌ Database update error:', updateError);
+      throw updateError;
+    }
+
+    console.log('✅ Post updated with photo URL');
 
     return Response.json({ 
       success: true, 
-      photoUrl,
+      photoUrl: publicUrl,
       message: 'Photo uploaded successfully' 
     });
 
   } catch (error) {
-    console.error('Photo upload error:', error);
+    console.error('❌ Photo upload error:', error);
     return Response.json(
-      { error: 'Failed to upload photo' },
+      { 
+        error: 'Failed to upload photo',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      },
       { status: 500 }
     );
   }
