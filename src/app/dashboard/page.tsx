@@ -1,20 +1,65 @@
-import { redirect } from 'next/navigation';
-import { getSession, getMemberProfile, signOut } from '@/lib/auth';
+'use client';
+
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { getSession, getMemberProfile, signOut, type Member } from '@/lib/auth';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import Link from 'next/link';
 import { Building2, Mail, Phone, Globe, Instagram, Facebook, Linkedin, Edit, LogOut, BadgeCheck, Crown } from 'lucide-react';
 
-export default async function DashboardPage() {
-  // Check authentication
-  const { session } = await getSession();
-  
-  if (!session) {
-    redirect('/login');
-  }
+export default function DashboardPage() {
+  const router = useRouter();
+  const [member, setMember] = useState<Member | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  // Get member profile
-  const member = await getMemberProfile(session.user.id);
+  useEffect(() => {
+    async function loadMemberData() {
+      try {
+        console.log('🔵 Dashboard: Checking session...');
+        const { session } = await getSession();
+        
+        if (!session) {
+          console.log('❌ Dashboard: No session found, redirecting to login');
+          router.push('/login');
+          return;
+        }
+
+        console.log('✅ Dashboard: Session found, loading profile...');
+        const memberData = await getMemberProfile(session.user.id);
+        
+        if (!memberData) {
+          console.log('❌ Dashboard: Profile not found');
+          setLoading(false);
+          return;
+        }
+
+        console.log('✅ Dashboard: Profile loaded:', memberData.business_name);
+        setMember(memberData);
+        setLoading(false);
+      } catch (error) {
+        console.error('❌ Dashboard error:', error);
+        setLoading(false);
+      }
+    }
+
+    loadMemberData();
+  }, [router]);
+
+  if (loading) {
+    return (
+      <main className="min-h-screen bg-gray-50">
+        <Header />
+        <div className="max-w-4xl mx-auto px-6 py-24 flex items-center justify-center">
+          <div className="text-center">
+            <div className="w-16 h-16 border-4 border-purple-600 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+            <p className="text-gray-600">Loading your dashboard...</p>
+          </div>
+        </div>
+        <Footer />
+      </main>
+    );
+  }
 
   if (!member) {
     return (
@@ -30,6 +75,12 @@ export default async function DashboardPage() {
       </main>
     );
   }
+
+  const handleSignOut = async () => {
+    await signOut();
+    router.push('/login');
+    router.refresh();
+  };
 
   return (
     <main className="min-h-screen bg-gray-50">
@@ -118,19 +169,13 @@ export default async function DashboardPage() {
               )}
 
               {/* Logout */}
-              <form action={async () => {
-                'use server';
-                await signOut();
-                redirect('/login');
-              }}>
-                <button
-                  type="submit"
-                  className="w-full text-center text-red-600 hover:text-red-700 font-medium py-2 px-4 rounded-lg hover:bg-red-50 transition-colors flex items-center justify-center gap-2"
-                >
-                  <LogOut className="w-4 h-4" />
-                  Sign Out
-                </button>
-              </form>
+              <button
+                onClick={handleSignOut}
+                className="w-full text-center text-red-600 hover:text-red-700 font-medium py-2 px-4 rounded-lg hover:bg-red-50 transition-colors flex items-center justify-center gap-2"
+              >
+                <LogOut className="w-4 h-4" />
+                Sign Out
+              </button>
             </div>
           </div>
 
