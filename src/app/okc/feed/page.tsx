@@ -93,7 +93,7 @@ export default async function OKCFeedPage() {
 
       {/* Feed Content */}
       <div className="max-w-7xl mx-auto px-6 py-12">
-        <FeedList posts={MOCK_POSTS} showFilters={true} />
+        <FeedList posts={posts} showFilters={true} />
       </div>
 
       {/* Bottom CTA */}
