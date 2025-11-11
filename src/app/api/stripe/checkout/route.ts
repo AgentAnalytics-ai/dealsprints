@@ -25,6 +25,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Ensure site URL has https:// scheme
+    let siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://dealsprints.com';
+    if (!siteUrl.startsWith('http://') && !siteUrl.startsWith('https://')) {
+      siteUrl = `https://${siteUrl}`;
+    }
+    console.log('🌐 Using site URL:', siteUrl);
+
     // Create Stripe checkout session
     const checkoutSession = await stripe.checkout.sessions.create({
       mode: 'subscription',
@@ -35,8 +42,8 @@ export async function POST(request: NextRequest) {
           quantity: 1,
         },
       ],
-      success_url: `${process.env.NEXT_PUBLIC_SITE_URL}/dashboard?session_id={CHECKOUT_SESSION_ID}&success=true`,
-      cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/pricing?canceled=true`,
+      success_url: `${siteUrl}/dashboard?session_id={CHECKOUT_SESSION_ID}&success=true`,
+      cancel_url: `${siteUrl}/pricing?canceled=true`,
       customer_email: memberEmail,
       client_reference_id: memberId || userId,
       metadata: {
