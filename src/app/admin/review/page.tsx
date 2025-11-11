@@ -229,7 +229,7 @@ export default function AdminReviewPage() {
                   key={post.id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden"
+                  className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden flex flex-col"
                 >
                   {/* Photo Upload Area */}
                   <div className="relative bg-gray-100 h-64 flex items-center justify-center group">
@@ -292,16 +292,18 @@ export default function AdminReviewPage() {
                   </div>
 
                   {/* Content */}
-                  <div className="p-6">
-                    {/* Title */}
-                    <h3 className="text-xl font-bold text-gray-900 mb-3 leading-tight">
-                      {post.scraped_title}
-                    </h3>
+                  <div className="p-6 flex-1 flex flex-col">
+                    {/* Content Area (grows to push buttons down) */}
+                    <div className="flex-1">
+                      {/* Title */}
+                      <h3 className="text-xl font-bold text-gray-900 mb-3 leading-tight">
+                        {post.scraped_title}
+                      </h3>
 
-                    {/* AI Summary */}
-                    <p className="text-gray-700 mb-4 leading-relaxed">
-                      {post.ai_summary}
-                    </p>
+                      {/* AI Summary */}
+                      <p className="text-gray-700 mb-4 leading-relaxed">
+                        {post.ai_summary}
+                      </p>
 
                     {/* Metadata */}
                     <div className="space-y-2 mb-4 text-sm">
@@ -329,16 +331,17 @@ export default function AdminReviewPage() {
                       )}
                     </div>
 
-                    {/* Source Link */}
-                    <a
-                      href={post.source_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 text-sm font-semibold text-indigo-600 hover:text-purple-600 transition-colors mb-6"
-                    >
-                      <ExternalLink className="w-4 h-4" />
-                      View source at {post.source_name}
-                    </a>
+                      {/* Source Link */}
+                      <a
+                        href={post.source_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 text-sm font-semibold text-indigo-600 hover:text-purple-600 transition-colors mb-4"
+                      >
+                        <ExternalLink className="w-4 h-4" />
+                        View source at {post.source_name}
+                      </a>
+                    </div>
 
                     {/* Preview Button */}
                     <div className="mb-4">
