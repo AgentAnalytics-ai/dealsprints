@@ -66,12 +66,30 @@ const RSS_SOURCES = [
     url: 'https://journalrecord.com/category/real-estate/feed/',
   },
   {
+    name: 'Journal Record - Construction',
+    url: 'https://journalrecord.com/category/construction/feed/',
+  },
+  {
     name: 'Journal Record - Finance',
     url: 'https://journalrecord.com/category/finance/feed/',
   },
   {
     name: 'Journal Record - Energy',
     url: 'https://journalrecord.com/category/energy/feed/',
+  },
+  
+  // Industry-Specific (High Value)
+  {
+    name: 'Journal Record - Technology',
+    url: 'https://journalrecord.com/category/technology/feed/',
+  },
+  {
+    name: 'Journal Record - Healthcare',
+    url: 'https://journalrecord.com/category/healthcare/feed/',
+  },
+  {
+    name: 'Journal Record - Retail',
+    url: 'https://journalrecord.com/category/retail/feed/',
   },
   
   // Economic Development & Projects
@@ -82,6 +100,22 @@ const RSS_SOURCES = [
   {
     name: 'Downtown OKC Inc',
     url: 'https://www.downtownokc.com/news-updates/feed/',
+  },
+  
+  // Official & Local
+  {
+    name: 'City of OKC News',
+    url: 'https://www.okc.gov/news/feed/',
+  },
+  {
+    name: 'Oklahoma Gazette',
+    url: 'https://okgazette.com/feed/',
+  },
+  
+  // Innovation & Startups
+  {
+    name: 'i2E - Innovation to Enterprise',
+    url: 'https://i2e.org/feed/',
   },
 ];
 
