@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { CheckCircle, X, ExternalLink, Upload, Calendar, MapPin, Tag, Eye } from 'lucide-react';
+import { CheckCircle, X, ExternalLink, Upload, Calendar, MapPin, Tag, Eye, RefreshCw } from 'lucide-react';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 
@@ -34,7 +34,11 @@ export default function AdminReviewPage() {
 
   async function fetchPendingPosts() {
     try {
-      const response = await fetch('/api/admin/pending-posts');
+      // Add timestamp to bust cache
+      const timestamp = new Date().getTime();
+      const response = await fetch(`/api/admin/pending-posts?t=${timestamp}`, {
+        cache: 'no-store'
+      });
       const data = await response.json();
       setPosts(data.posts || []);
     } catch (error) {
@@ -61,10 +65,8 @@ export default function AdminReviewPage() {
       const data = await response.json();
       
       if (data.success) {
-        // Update local state
-        setPosts(posts.map(p => 
-          p.id === postId ? { ...p, photo_url: data.photoUrl } : p
-        ));
+        // Refetch to get latest data from database
+        await fetchPendingPosts();
       } else {
         alert('Failed to upload photo');
       }
@@ -146,13 +148,22 @@ export default function AdminReviewPage() {
       <main className="min-h-screen bg-gray-50 py-12">
         <div className="max-w-7xl mx-auto px-6">
           {/* Header */}
-          <div className="mb-12">
-            <h1 className="text-4xl font-bold text-gray-900 mb-3">
-              Review Queue
-            </h1>
-            <p className="text-xl text-gray-600">
-              {posts.length} posts pending review — Add photos and approve to publish
-            </p>
+          <div className="mb-12 flex items-start justify-between">
+            <div>
+              <h1 className="text-4xl font-bold text-gray-900 mb-3">
+                Review Queue
+              </h1>
+              <p className="text-xl text-gray-600">
+                {posts.length} posts pending review — Add photos and approve to publish
+              </p>
+            </div>
+            <button
+              onClick={() => fetchPendingPosts()}
+              className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+            >
+              <RefreshCw className="w-5 h-5" />
+              Refresh
+            </button>
           </div>
 
           {/* Posts Grid */}
