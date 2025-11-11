@@ -12,6 +12,26 @@ import { generateText } from 'ai';
 // Vercel Cron secret for security
 const CRON_SECRET = process.env.CRON_SECRET || 'your-secret-key-here';
 
+// Decode HTML entities (fixes &#8216; curly quotes, etc.)
+function decodeHtmlEntities(text: string): string {
+  const entities: Record<string, string> = {
+    '&#8216;': ''',
+    '&#8217;': ''',
+    '&#8220;': '"',
+    '&#8221;': '"',
+    '&#8211;': '–',
+    '&#8212;': '—',
+    '&amp;': '&',
+    '&lt;': '<',
+    '&gt;': '>',
+    '&quot;': '"',
+    '&apos;': "'",
+    '&#39;': "'",
+  };
+  
+  return text.replace(/&#?\w+;/g, (match) => entities[match] || match);
+}
+
 // RSS Sources
 const RSS_SOURCES = [
   {
@@ -59,8 +79,9 @@ async function fetchRSS(url: string): Promise<RSSItem[]> {
     
     while ((match = itemRegex.exec(text)) !== null) {
       const itemXml = match[1];
-      const title = (itemXml.match(/<title><!\[CDATA\[(.*?)\]\]><\/title>/) || 
+      const rawTitle = (itemXml.match(/<title><!\[CDATA\[(.*?)\]\]><\/title>/) || 
                     itemXml.match(/<title>(.*?)<\/title>/))?.[1] || '';
+      const title = decodeHtmlEntities(rawTitle); // Decode HTML entities
       const link = itemXml.match(/<link>(.*?)<\/link>/)?.[1] || '';
       const pubDate = itemXml.match(/<pubDate>(.*?)<\/pubDate>/)?.[1] || '';
       const contentSnippet = (itemXml.match(/<description><!\[CDATA\[(.*?)\]\]><\/description>/) ||
