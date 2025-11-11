@@ -2,10 +2,11 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { getSession, getMemberProfile, type Member } from '@/lib/auth';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
-import { Check, X, Sparkles, BadgeCheck, Crown, AlertCircle, Building } from 'lucide-react';
+import { Check, X, BadgeCheck, Crown, AlertCircle, Building } from 'lucide-react';
 
 export default function PricingPage() {
   const router = useRouter();
@@ -42,7 +43,7 @@ export default function PricingPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          priceId: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID,
+          priceId: 'price_1SRHGN2fq8sWUTjaxi9dnPsT',
           memberEmail: session.user.email,
           memberId: member?.id,
         }),
@@ -74,7 +75,6 @@ export default function PricingPage() {
         {/* Header */}
         <div className="text-center mb-16">
           <div className="inline-flex items-center gap-2 bg-purple-100 text-purple-700 px-4 py-2 rounded-full font-semibold mb-4">
-            <Sparkles className="w-5 h-5" />
             Simple, Transparent Pricing
           </div>
           <h1 className="text-5xl font-bold text-gray-900 mb-4">
@@ -266,7 +266,9 @@ export default function PricingPage() {
 
         {/* Bottom CTA */}
         <div className="text-center mt-16">
-          <p className="text-gray-600 mb-4">Questions? Email us at <a href="mailto:billing@agentanalyticsai.com" className="text-purple-600 hover:text-purple-700 font-semibold">billing@agentanalyticsai.com</a></p>
+          <p className="text-gray-600 mb-4">
+            Questions? <Link href="/contact" className="text-purple-600 hover:text-purple-700 font-semibold">Contact Support</Link>
+          </p>
         </div>
       </div>
 
