@@ -1,12 +1,23 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { getSession } from '@/lib/auth';
 
 export function Header() {
   const pathname = usePathname();
   const isHomepage = pathname === '/';
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   
+  useEffect(() => {
+    async function checkAuth() {
+      const { session } = await getSession();
+      setIsLoggedIn(!!session);
+    }
+    checkAuth();
+  }, []);
+
   return (
     <header className={`${isHomepage ? 'absolute bg-transparent' : 'relative bg-white border-b border-gray-200'} top-0 left-0 right-0 z-50`}>
       <div className="max-w-7xl mx-auto px-6">
@@ -32,10 +43,10 @@ export function Header() {
               About
             </Link>
             <Link 
-              href={isHomepage ? "/signup" : "/dashboard"}
+              href={isLoggedIn ? "/dashboard" : "/signup"}
               className={`px-5 py-2.5 ${isHomepage ? 'bg-white/20 border-white/30 text-white hover:bg-white/30' : 'bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700'} backdrop-blur-md border rounded-full font-semibold transition-all shadow-lg`}
             >
-              {isHomepage ? 'Get Started' : 'Dashboard'}
+              {isLoggedIn ? 'Dashboard' : 'Get Started'}
             </Link>
           </nav>
 
