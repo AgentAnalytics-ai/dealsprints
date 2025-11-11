@@ -136,17 +136,18 @@ export default function DashboardPage() {
               <div className="space-y-2 mb-4">
                 <Link
                   href={`/okc/members/${member.slug}`}
-                  className="block w-full text-center bg-gray-100 hover:bg-gray-200 text-gray-900 font-medium py-2 px-4 rounded-lg transition-colors"
+                  className="block w-full text-center bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
                 >
                   View Public Profile
                 </Link>
-                <Link
+                {/* Edit Profile - Coming Soon */}
+                {/* <Link
                   href="/dashboard/edit"
-                  className="block w-full text-center bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
+                  className="block w-full text-center bg-gray-100 hover:bg-gray-200 text-gray-900 font-medium py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
                 >
                   <Edit className="w-4 h-4" />
                   Edit Profile
-                </Link>
+                </Link> */}
               </div>
 
               {/* Upgrade CTA (if free) */}
