@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 import { supabase } from '@/lib/supabase';
 import { Post } from '@/lib/data/mockFeed';
-import { FeedList } from '@/components/feed/FeedList';
+import { FeedWithPaywall } from '@/components/feed/FeedWithPaywall';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { Rss, Send } from 'lucide-react';
@@ -97,8 +97,8 @@ export default async function OKCFeedPage() {
       </div>
 
       {/* Feed Content */}
-      <div className="max-w-7xl mx-auto px-6 py-12">
-        <FeedList posts={posts} showFilters={true} />
+      <div className="max-w-4xl mx-auto px-6 py-12">
+        <FeedWithPaywall allPosts={posts} freeLimit={5} />
       </div>
 
       {/* Bottom CTA */}

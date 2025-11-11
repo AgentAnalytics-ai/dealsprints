@@ -20,10 +20,10 @@ export function Header() {
               Feed
             </Link>
             <Link 
-              href="/okc/members" 
+              href="/pricing" 
               className={`${isHomepage ? 'text-white/90 hover:text-white' : 'text-gray-700 hover:text-gray-900'} font-medium transition-all`}
             >
-              Members
+              Pricing
             </Link>
             <Link 
               href="/about" 
@@ -32,10 +32,10 @@ export function Header() {
               About
             </Link>
             <Link 
-              href={isHomepage ? "/waitlist" : "/dashboard"}
+              href={isHomepage ? "/signup" : "/dashboard"}
               className={`px-5 py-2.5 ${isHomepage ? 'bg-white/20 border-white/30 text-white hover:bg-white/30' : 'bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700'} backdrop-blur-md border rounded-full font-semibold transition-all shadow-lg`}
             >
-              {isHomepage ? 'Join Waitlist' : 'Dashboard'}
+              {isHomepage ? 'Get Started' : 'Dashboard'}
             </Link>
           </nav>
 

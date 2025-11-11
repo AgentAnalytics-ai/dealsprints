@@ -104,8 +104,8 @@ export default function SignupPage() {
       <div className="max-w-2xl mx-auto px-6 py-24">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">Join DealSprints OKC</h1>
-          <p className="text-gray-600">Create your member profile and get discovered</p>
+          <h1 className="text-4xl font-bold text-gray-900 mb-2">Create Your Account</h1>
+          <p className="text-gray-600">Get started with free access to OKC development news</p>
         </div>
 
         {/* Signup Form */}
@@ -118,10 +118,10 @@ export default function SignupPage() {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Business Name */}
+            {/* Business Name (Optional) */}
             <div>
               <label htmlFor="businessName" className="block text-sm font-medium text-gray-700 mb-2">
-                Business Name <span className="text-red-500">*</span>
+                Business Name <span className="text-gray-400 text-xs">(optional)</span>
               </label>
               <div className="relative">
                 <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -131,7 +131,6 @@ export default function SignupPage() {
                   type="text"
                   value={formData.businessName}
                   onChange={handleChange}
-                  required
                   className="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                   placeholder="Revive MedSpa"
                 />
@@ -141,7 +140,7 @@ export default function SignupPage() {
             {/* Owner Name */}
             <div>
               <label htmlFor="ownerName" className="block text-sm font-medium text-gray-700 mb-2">
-                Your Name
+                Your Name <span className="text-gray-400 text-xs">(optional)</span>
               </label>
               <div className="relative">
                 <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -180,7 +179,7 @@ export default function SignupPage() {
             {/* Phone */}
             <div>
               <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
-                Phone Number
+                Phone Number <span className="text-gray-400 text-xs">(optional)</span>
               </label>
               <div className="relative">
                 <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
