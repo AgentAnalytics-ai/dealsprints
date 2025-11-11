@@ -1,12 +1,12 @@
 import { Metadata } from "next";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { Rss, Users, MapPin, BadgeCheck, TrendingUp, Heart } from "lucide-react";
+import { Rss, Clock, TrendingUp, Shield, Zap } from "lucide-react";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "About DealSprints OKC | Oklahoma City's Business Network",
-  description: "Learn about DealSprints OKC - your source for Oklahoma City developments, business openings, and a verified network of local entrepreneurs.",
+  title: "About DealSprints OKC | Oklahoma City Business News",
+  description: "Learn about DealSprints OKC - your daily source for curated Oklahoma City business developments, openings, and market intelligence.",
   alternates: { 
     canonical: "https://dealsprints.com/about" 
   },
@@ -22,7 +22,7 @@ export default function AboutPage() {
         <div className="max-w-4xl mx-auto px-6 text-center">
           <h1 className="text-5xl font-bold mb-6">About DealSprints OKC</h1>
           <p className="text-xl text-white/90 leading-relaxed">
-            Your pulse on Oklahoma City's business community—stay informed, get discovered, and connect with local entrepreneurs.
+            Oklahoma City's most comprehensive source for business development news—everything you need to stay ahead, delivered daily.
           </p>
         </div>
       </section>
@@ -32,13 +32,16 @@ export default function AboutPage() {
         <div className="max-w-4xl mx-auto px-6">
           <h2 className="text-3xl font-bold text-gray-900 mb-6">Our Mission</h2>
           <p className="text-lg text-gray-700 leading-relaxed mb-6">
-            DealSprints OKC was created to solve a simple problem: it's hard to stay on top of what's happening 
-            in Oklahoma City's business community. New developments, grand openings, expansions—they're scattered 
-            across multiple sources and easy to miss.
+            DealSprints OKC was created to solve a simple but critical problem: staying informed about Oklahoma City's 
+            business landscape shouldn't require checking 18 different sources every morning.
+          </p>
+          <p className="text-lg text-gray-700 leading-relaxed mb-6">
+            Business developments, grand openings, real estate deals, and market shifts are scattered across local news sites, 
+            industry publications, and government channels. Missing even one story could mean missing a major opportunity.
           </p>
           <p className="text-lg text-gray-700 leading-relaxed">
-            We aggregate, curate, and deliver Oklahoma City's most important business news in one place, 
-            while building a verified network of local business owners who want to connect, collaborate, and grow together.
+            We monitor all the sources that matter, curate only the most relevant OKC business news, and deliver it to you 
+            every morning at 6am. One feed. Complete coverage. Zero hassle.
           </p>
         </div>
       </section>
@@ -46,168 +49,172 @@ export default function AboutPage() {
       {/* What We Do */}
       <section className="py-20 bg-gray-50">
         <div className="max-w-6xl mx-auto px-6">
-          <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">What We Offer</h2>
+          <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">How It Works</h2>
           
           <div className="grid md:grid-cols-3 gap-8">
-            {/* Feed */}
+            {/* Monitor */}
             <div className="bg-white rounded-2xl p-8 shadow-lg">
               <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mb-4">
                 <Rss className="w-6 h-6 text-purple-600" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">Curated News Feed</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-3">We Monitor 18 Sources</h3>
               <p className="text-gray-600 leading-relaxed">
-                Daily updates on Oklahoma City developments, business openings, expansions, and market insights. 
-                AI-summarized for quick reading.
+                Every day, our team tracks Oklahoma City Business Journal, Journal Record, NonDoc, city government channels, 
+                real estate news, and 13 other premium sources.
               </p>
             </div>
 
-            {/* Directory */}
+            {/* Curate */}
             <div className="bg-white rounded-2xl p-8 shadow-lg">
               <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mb-4">
-                <Users className="w-6 h-6 text-blue-600" />
+                <Shield className="w-6 h-6 text-blue-600" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">Business Directory</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-3">We Filter the Noise</h3>
               <p className="text-gray-600 leading-relaxed">
-                Verified profiles of Oklahoma City business owners. Connect directly with peers, 
-                discover partners, and build your local network.
+                Not every article is relevant. We curate only stories about OKC business developments, openings, 
+                expansions, deals, and market trends that actually matter.
               </p>
             </div>
 
-            {/* Community */}
+            {/* Deliver */}
             <div className="bg-white rounded-2xl p-8 shadow-lg">
               <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mb-4">
-                <MapPin className="w-6 h-6 text-green-600" />
+                <Clock className="w-6 h-6 text-green-600" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">Local Focus</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-3">You Get It at 6am</h3>
               <p className="text-gray-600 leading-relaxed">
-                Hyper-focused on the OKC metro: Bricktown, Midtown, Plaza District, Edmond, Norman, 
-                and everywhere in between. By locals, for locals.
+                Start your day informed. Fresh updates delivered every morning before the market opens. 
+                Read at your pace, on any device.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* How It Works */}
+      {/* Our Sources */}
       <section className="py-20">
         <div className="max-w-4xl mx-auto px-6">
-          <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">How It Works</h2>
-          
-          <div className="space-y-8">
-            <div className="flex gap-6">
-              <div className="w-12 h-12 bg-purple-600 text-white rounded-full flex items-center justify-center font-bold flex-shrink-0">
-                1
-              </div>
-              <div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">We Aggregate</h3>
-                <p className="text-gray-600 leading-relaxed">
-                  Our system monitors news sources, press releases, and public records for Oklahoma City 
-                  business developments. AI helps us identify and summarize the most relevant stories.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex gap-6">
-              <div className="w-12 h-12 bg-purple-600 text-white rounded-full flex items-center justify-center font-bold flex-shrink-0">
-                2
-              </div>
-              <div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">We Curate</h3>
-                <p className="text-gray-600 leading-relaxed">
-                  Every post is reviewed by our team. We add professional photos, verify details, and ensure 
-                  quality before publishing. No spam, no fluff—just valuable local intel.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex gap-6">
-              <div className="w-12 h-12 bg-purple-600 text-white rounded-full flex items-center justify-center font-bold flex-shrink-0">
-                3
-              </div>
-              <div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">You Connect</h3>
-                <p className="text-gray-600 leading-relaxed">
-                  Members get verified profiles in our directory. Connect with other local business owners, 
-                  find partners, and grow your network in Oklahoma City's tight-knit business community.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Who We Serve */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-4xl mx-auto px-6">
-          <h2 className="text-3xl font-bold text-gray-900 mb-6">Who We Serve</h2>
-          <p className="text-lg text-gray-700 leading-relaxed mb-8">
-            DealSprints OKC is built for Oklahoma City business owners, commercial real estate professionals, 
-            developers, investors, and anyone who needs to stay informed about local business activity.
+          <h2 className="text-3xl font-bold text-gray-900 mb-6 text-center">Our Sources</h2>
+          <p className="text-center text-gray-600 mb-12">
+            We monitor the most trusted Oklahoma City business and development sources:
           </p>
           
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="bg-white rounded-xl p-6 shadow-md">
-              <h3 className="font-bold text-gray-900 mb-2">Business Owners</h3>
-              <p className="text-gray-600">
-                Stay ahead of market trends, discover partnership opportunities, and network with peers.
-              </p>
+          <div className="grid md:grid-cols-2 gap-4">
+            <div className="bg-gray-50 rounded-lg p-4">
+              <h4 className="font-semibold text-gray-900">Premium Business News</h4>
+              <ul className="mt-2 text-gray-600 text-sm space-y-1">
+                <li>• The Journal Record (Real Estate, Finance, Energy, Construction, Tech, Healthcare, Retail)</li>
+                <li>• Oklahoma City Business Journal</li>
+                <li>• NonDoc</li>
+              </ul>
             </div>
-            <div className="bg-white rounded-xl p-6 shadow-md">
-              <h3 className="font-bold text-gray-900 mb-2">Real Estate Professionals</h3>
-              <p className="text-gray-600">
-                Track new developments, identify opportunities, and connect with expanding businesses.
-              </p>
+            
+            <div className="bg-gray-50 rounded-lg p-4">
+              <h4 className="font-semibold text-gray-900">Innovation & Government</h4>
+              <ul className="mt-2 text-gray-600 text-sm space-y-1">
+                <li>• i2E (Oklahoma Innovation & Entrepreneurship)</li>
+                <li>• City of OKC Official News</li>
+                <li>• INCOG (Indian Nations Council of Governments)</li>
+              </ul>
             </div>
-            <div className="bg-white rounded-xl p-6 shadow-md">
-              <h3 className="font-bold text-gray-900 mb-2">Investors & Developers</h3>
-              <p className="text-gray-600">
-                Monitor market activity, spot trends early, and network with the local business community.
-              </p>
+            
+            <div className="bg-gray-50 rounded-lg p-4">
+              <h4 className="font-semibold text-gray-900">Development & Growth</h4>
+              <ul className="mt-2 text-gray-600 text-sm space-y-1">
+                <li>• OKC Economic Development</li>
+                <li>• Metro Commercial Real Estate</li>
+                <li>• Local construction & planning news</li>
+              </ul>
             </div>
-            <div className="bg-white rounded-xl p-6 shadow-md">
-              <h3 className="font-bold text-gray-900 mb-2">Service Providers</h3>
-              <p className="text-gray-600">
-                Get discovered by businesses who need your services. Build credibility with a verified profile.
-              </p>
+            
+            <div className="bg-gray-50 rounded-lg p-4">
+              <h4 className="font-semibold text-gray-900">Community & Trends</h4>
+              <ul className="mt-2 text-gray-600 text-sm space-y-1">
+                <li>• Local business openings</li>
+                <li>• Market trend analysis</li>
+                <li>• Industry-specific updates</li>
+              </ul>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Why DealSprints */}
+      {/* Why We Built This */}
+      <section className="py-20 bg-gray-50">
+        <div className="max-w-4xl mx-auto px-6">
+          <h2 className="text-3xl font-bold text-gray-900 mb-6">Why We Built This</h2>
+          <div className="bg-white rounded-xl p-8 shadow-lg border-l-4 border-purple-600">
+            <p className="text-lg text-gray-700 leading-relaxed mb-4">
+              <strong>The founder of DealSprints OKC</strong> spent years as a real estate agent and business consultant 
+              in Oklahoma City. Every morning started the same way: coffee in hand, opening 15+ browser tabs to check 
+              Journal Record, OCBJ, city news, and a dozen other sites.
+            </p>
+            <p className="text-lg text-gray-700 leading-relaxed mb-4">
+              It took 30-45 minutes just to <em>find</em> the news—before even reading it. That's <strong>15+ hours per month</strong> 
+              of pure browsing time. Time that could've been spent calling clients, viewing properties, or closing deals.
+            </p>
+            <p className="text-lg text-gray-700 leading-relaxed">
+              DealSprints OKC exists because <strong>your time is worth more than browsing tabs</strong>. We do the monitoring, 
+              you get the intel. Simple as that.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Who It's For */}
       <section className="py-20">
         <div className="max-w-4xl mx-auto px-6">
-          <h2 className="text-3xl font-bold text-gray-900 mb-6">Why DealSprints OKC</h2>
+          <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">Who Uses DealSprints OKC</h2>
           
-          <div className="space-y-6">
+          <div className="grid md:grid-cols-2 gap-6">
             <div className="flex items-start gap-4">
-              <BadgeCheck className="w-8 h-8 text-purple-600 flex-shrink-0" />
+              <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
+                <Zap className="w-5 h-5 text-purple-600" />
+              </div>
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Verified Community</h3>
-                <p className="text-gray-600">
-                  All member profiles are verified. No spam, no fake accounts—just real Oklahoma City business owners.
+                <h4 className="font-bold text-gray-900 mb-1">Real Estate Professionals</h4>
+                <p className="text-gray-600 text-sm">
+                  Agents, brokers, and investors who need to know about new developments, commercial deals, 
+                  and market shifts before their competitors.
                 </p>
               </div>
             </div>
-
+            
             <div className="flex items-start gap-4">
-              <TrendingUp className="w-8 h-8 text-blue-600 flex-shrink-0" />
+              <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                <TrendingUp className="w-5 h-5 text-blue-600" />
+              </div>
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Always Current</h3>
-                <p className="text-gray-600">
-                  Our feed is updated daily with the latest OKC business news. Posts auto-archive after 30 days 
-                  to keep content fresh and relevant.
+                <h4 className="font-bold text-gray-900 mb-1">Business Owners</h4>
+                <p className="text-gray-600 text-sm">
+                  Entrepreneurs and operators tracking local market trends, competitor moves, 
+                  and new business opportunities in OKC.
                 </p>
               </div>
             </div>
-
+            
             <div className="flex items-start gap-4">
-              <Heart className="w-8 h-8 text-red-600 flex-shrink-0" />
+              <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
+                <Shield className="w-5 h-5 text-green-600" />
+              </div>
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Built by Locals</h3>
-                <p className="text-gray-600">
-                  We're Oklahoma City natives who care about our community. DealSprints OKC is operated by 
-                  Agent Analytics LLC, a local technology company.
+                <h4 className="font-bold text-gray-900 mb-1">Economic Developers</h4>
+                <p className="text-gray-600 text-sm">
+                  Officials and consultants monitoring OKC's growth, tracking investments, 
+                  and identifying development patterns.
+                </p>
+              </div>
+            </div>
+            
+            <div className="flex items-start gap-4">
+              <div className="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center flex-shrink-0">
+                <Rss className="w-5 h-5 text-yellow-600" />
+              </div>
+              <div>
+                <h4 className="font-bold text-gray-900 mb-1">Investors & Analysts</h4>
+                <p className="text-gray-600 text-sm">
+                  Anyone making decisions based on Oklahoma City market intelligence who can't afford 
+                  to miss critical development news.
                 </p>
               </div>
             </div>
@@ -217,23 +224,23 @@ export default function AboutPage() {
 
       {/* CTA */}
       <section className="py-20 bg-gradient-to-br from-purple-600 to-blue-600 text-white">
-        <div className="max-w-3xl mx-auto px-6 text-center">
-          <h2 className="text-4xl font-bold mb-6">Ready to Join?</h2>
+        <div className="max-w-4xl mx-auto px-6 text-center">
+          <h2 className="text-4xl font-bold mb-6">Ready to Stay Informed?</h2>
           <p className="text-xl text-white/90 mb-8">
-            Get verified, connect with Oklahoma City's business community, and stay ahead of the market.
+            Join Oklahoma City professionals who start their day with DealSprints OKC
           </p>
-          <div className="flex gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
-              href="/signup"
-              className="bg-white text-purple-600 font-semibold px-8 py-3 rounded-lg hover:bg-gray-100 transition-colors"
+              href="/okc/feed"
+              className="px-8 py-4 bg-white text-purple-600 font-bold rounded-lg hover:bg-gray-100 transition-all shadow-lg"
             >
-              Get Started Free
+              Browse Feed
             </Link>
             <Link
               href="/pricing"
-              className="bg-white/20 backdrop-blur-md border border-white/30 text-white font-semibold px-8 py-3 rounded-lg hover:bg-white/30 transition-colors"
+              className="px-8 py-4 bg-white/20 backdrop-blur-lg border-2 border-white/30 text-white font-bold rounded-lg hover:bg-white/30 transition-all"
             >
-              View Pricing
+              See Pricing
             </Link>
           </div>
         </div>

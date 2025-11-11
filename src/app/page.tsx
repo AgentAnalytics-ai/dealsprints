@@ -96,7 +96,7 @@ export default async function HomePage() {
               </div>
               <div className="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20">
                 <TrendingUp className="w-10 h-10 text-white mx-auto mb-3" />
-                <h3 className="text-white font-semibold text-lg mb-2">AI-Curated</h3>
+                <h3 className="text-white font-semibold text-lg mb-2">Expertly Curated</h3>
                 <p className="text-white/80 text-sm">Only the most relevant OKC updates</p>
               </div>
             </div>
