@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 
 export const metadata: Metadata = {
@@ -11,7 +12,8 @@ export const metadata: Metadata = {
 
 export default function TermsPage() {
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen bg-white">
+      <Header />
       <section className="py-20">
         <div className="mx-auto max-w-4xl px-6">
           <h1 className="font-display text-4xl font-medium mb-8">Terms of Service</h1>

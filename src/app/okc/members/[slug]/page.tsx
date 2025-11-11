@@ -1,6 +1,8 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getMemberBySlug, MOCK_MEMBERS } from '@/lib/data/mockFeed';
+import { Header } from '@/components/Header';
+import { Footer } from '@/components/Footer';
 import { Building2, CheckCircle, ExternalLink, Instagram, Linkedin, Facebook, Mail, Phone, MapPin, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 
@@ -67,6 +69,7 @@ export default function MemberProfilePage({ params }: PageProps) {
 
   return (
     <main className="min-h-screen bg-gray-50">
+      <Header />
       {/* Back Navigation */}
       <div className="bg-white border-b border-gray-200">
         <div className="max-w-5xl mx-auto px-6 py-4">
@@ -240,6 +243,8 @@ export default function MemberProfilePage({ params }: PageProps) {
           </Link>
         </div>
       </div>
+
+      <Footer />
     </main>
   );
 }
