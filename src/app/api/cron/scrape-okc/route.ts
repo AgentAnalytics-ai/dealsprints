@@ -149,23 +149,35 @@ async function rewriteSummary(title: string, content: string): Promise<string> {
 function categorizeArticle(title: string, content: string): string {
   const text = `${title} ${content}`.toLowerCase();
   
-  if (text.includes('open') || text.includes('opening') || text.includes('opens')) {
-    return 'opening';
-  }
-  if (text.includes('expan') || text.includes('adds') || text.includes('grow')) {
-    return 'expansion';
-  }
-  if (text.includes('develop') || text.includes('construction') || text.includes('build')) {
-    return 'development';
-  }
+  // Events/Programs first (most specific)
   if (text.includes('event') || text.includes('festival') || text.includes('conference')) {
     return 'event';
   }
+  if (text.includes('program') || text.includes('launch') || text.includes('initiative') || text.includes('drive')) {
+    return 'event'; // Programs, launches, initiatives, drives are all events
+  }
+  
+  // Business openings (more specific check)
+  if (text.includes('opening') || text.includes('opens') || text.includes('now open') || text.includes('grand opening')) {
+    return 'opening';
+  }
+  
+  // Business expansions
+  if (text.includes('expan') || text.includes('adds') || text.includes('grow')) {
+    return 'expansion';
+  }
+  
+  // Real estate development
+  if (text.includes('develop') || text.includes('construction') || text.includes('build')) {
+    return 'development';
+  }
+  
+  // Data/reports
   if (text.includes('data') || text.includes('report') || text.includes('statistic')) {
     return 'data-insight';
   }
   
-  return 'opening'; // Default
+  return 'event'; // Better default than 'opening'
 }
 
 // Extract location from text
