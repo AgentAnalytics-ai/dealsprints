@@ -46,23 +46,31 @@ export default function PricingPage() {
           priceId: 'price_1SRHGN2fq8sWUTjaxi9dnPsT',
           memberEmail: session.user.email,
           memberId: member?.id,
+          userId: session.user.id,
         }),
       });
 
       const data = await response.json();
 
+      console.log('Checkout API response:', { status: response.status, data });
+
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to create checkout');
+        const errorMsg = data.details || data.error || 'Failed to create checkout';
+        console.error('Checkout error:', errorMsg);
+        throw new Error(errorMsg);
       }
 
       // Redirect to Stripe Checkout
       if (data.url) {
+        console.log('Redirecting to Stripe:', data.url);
         window.location.href = data.url;
+      } else {
+        throw new Error('No checkout URL returned');
       }
 
-    } catch (err) {
+    } catch (err: any) {
       console.error('Upgrade error:', err);
-      setError('Failed to start checkout. Please try again.');
+      setError(err.message || 'Failed to start checkout. Please try again.');
       setLoading(false);
     }
   };

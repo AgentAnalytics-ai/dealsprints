@@ -5,7 +5,6 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
-import { getSession } from '@/lib/auth';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2025-10-29.clover',
@@ -13,17 +12,18 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 
 export async function POST(request: NextRequest) {
   try {
-    // Get current user session
-    const { session: authSession } = await getSession();
-    
-    if (!authSession) {
-      return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
-    }
-
     const body = await request.json();
-    const { priceId, memberEmail, memberId } = body;
+    const { priceId, memberEmail, memberId, userId } = body;
 
-    console.log('🔵 Creating checkout session:', { priceId, memberEmail, memberId });
+    console.log('🔵 Creating checkout session:', { priceId, memberEmail, memberId, userId });
+
+    // Validate required fields
+    if (!memberEmail || !userId) {
+      return NextResponse.json(
+        { error: 'Missing required fields: memberEmail or userId' },
+        { status: 400 }
+      );
+    }
 
     // Create Stripe checkout session
     const checkoutSession = await stripe.checkout.sessions.create({
@@ -37,20 +37,20 @@ export async function POST(request: NextRequest) {
       ],
       success_url: `${process.env.NEXT_PUBLIC_SITE_URL}/dashboard?session_id={CHECKOUT_SESSION_ID}&success=true`,
       cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/pricing?canceled=true`,
-      customer_email: memberEmail || authSession.user.email,
-      client_reference_id: memberId,
+      customer_email: memberEmail,
+      client_reference_id: memberId || userId,
       metadata: {
         brand: 'dealsprints',
         product_line: 'okc_membership',
-        member_id: memberId,
-        user_id: authSession.user.id,
+        member_id: memberId || '',
+        user_id: userId,
       },
       subscription_data: {
         metadata: {
           brand: 'dealsprints',
           product_line: 'okc_membership',
-          member_id: memberId,
-          user_id: authSession.user.id,
+          member_id: memberId || '',
+          user_id: userId,
         },
       },
     });
@@ -62,12 +62,14 @@ export async function POST(request: NextRequest) {
       url: checkoutSession.url 
     });
 
-  } catch (error) {
+  } catch (error: any) {
     console.error('❌ Stripe checkout error:', error);
     return NextResponse.json(
-      { error: 'Failed to create checkout session' },
+      { 
+        error: 'Failed to create checkout session',
+        details: error.message 
+      },
       { status: 500 }
     );
   }
 }
-
