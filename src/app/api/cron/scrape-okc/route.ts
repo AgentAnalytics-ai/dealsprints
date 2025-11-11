@@ -15,12 +15,12 @@ const CRON_SECRET = process.env.CRON_SECRET || 'your-secret-key-here';
 // Decode HTML entities (fixes &#8216; curly quotes, etc.)
 function decodeHtmlEntities(text: string): string {
   const entities: Record<string, string> = {
-    '&#8216;': ''',
-    '&#8217;': ''',
-    '&#8220;': '"',
-    '&#8221;': '"',
-    '&#8211;': '–',
-    '&#8212;': '—',
+    '&#8216;': '\u2018', // left single quote
+    '&#8217;': '\u2019', // right single quote
+    '&#8220;': '\u201C', // left double quote
+    '&#8221;': '\u201D', // right double quote
+    '&#8211;': '\u2013', // en dash
+    '&#8212;': '\u2014', // em dash
     '&amp;': '&',
     '&lt;': '<',
     '&gt;': '>',
