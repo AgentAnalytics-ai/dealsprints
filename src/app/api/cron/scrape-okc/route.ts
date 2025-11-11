@@ -34,6 +34,7 @@ function decodeHtmlEntities(text: string): string {
 
 // RSS Sources
 const RSS_SOURCES = [
+  // Core News Sources
   {
     name: 'Journal Record',
     url: 'https://journalrecord.com/feed/',
@@ -46,7 +47,6 @@ const RSS_SOURCES = [
     name: 'OKC Friday',
     url: 'https://www.okcfriday.com/feed/',
   },
-  // Phase 1 Expansion - High-quality OKC sources
   {
     name: 'NonDoc',
     url: 'https://nondoc.com/feed/',
@@ -59,8 +59,30 @@ const RSS_SOURCES = [
     name: 'Oklahoma City Business Journal',
     url: 'https://www.bizjournals.com/oklahomacity/feed',
   },
-  // Phase 2 (add later after testing Phase 1)
-  // Greater OKC Partnership, Oklahoma Gazette, City of OKC News
+  
+  // Real Estate & Deals (HIGH VALUE!)
+  {
+    name: 'Journal Record - Real Estate',
+    url: 'https://journalrecord.com/category/real-estate/feed/',
+  },
+  {
+    name: 'Journal Record - Finance',
+    url: 'https://journalrecord.com/category/finance/feed/',
+  },
+  {
+    name: 'Journal Record - Energy',
+    url: 'https://journalrecord.com/category/energy/feed/',
+  },
+  
+  // Economic Development & Projects
+  {
+    name: 'Greater OKC Partnership',
+    url: 'https://greateroklahomacity.com/news/feed/',
+  },
+  {
+    name: 'Downtown OKC Inc',
+    url: 'https://www.downtownokc.com/news-updates/feed/',
+  },
 ];
 
 // OKC Metro cities to filter for
