@@ -46,8 +46,21 @@ const RSS_SOURCES = [
     name: 'OKC Friday',
     url: 'https://www.okcfriday.com/feed/',
   },
-  // OKC Talk doesn't have a public RSS feed, but these others do:
-  // Add more as you find them
+  // Phase 1 Expansion - High-quality OKC sources
+  {
+    name: 'NonDoc',
+    url: 'https://nondoc.com/feed/',
+  },
+  {
+    name: 'OKC Chamber',
+    url: 'https://www.okcchamber.com/feed/',
+  },
+  {
+    name: 'Oklahoma City Business Journal',
+    url: 'https://www.bizjournals.com/oklahomacity/feed',
+  },
+  // Phase 2 (add later after testing Phase 1)
+  // Greater OKC Partnership, Oklahoma Gazette, City of OKC News
 ];
 
 // OKC Metro cities to filter for
