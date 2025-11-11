@@ -8,7 +8,7 @@ import Stripe from 'stripe';
 
 export async function GET() {
   try {
-    const checks = {
+    const checks: any = {
       stripeSecretKey: !!process.env.STRIPE_SECRET_KEY,
       stripeWebhookSecret: !!process.env.STRIPE_WEBHOOK_SECRET,
       stripePriceId: !!process.env.STRIPE_PRICE_ID,
@@ -32,7 +32,7 @@ export async function GET() {
       );
       
       stripeInitialized = true;
-      checks['priceCheck'] = {
+      checks.priceCheck = {
         id: price.id,
         amount: price.unit_amount,
         currency: price.currency,
