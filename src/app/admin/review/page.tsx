@@ -57,6 +57,8 @@ export default function AdminReviewPage() {
     setUploadingId(postId);
     
     try {
+      console.log('📸 Uploading photo for post:', postId);
+      
       const formData = new FormData();
       formData.append('photo', file);
       formData.append('postId', postId);
@@ -68,17 +70,37 @@ export default function AdminReviewPage() {
       
       const data = await response.json();
       
+      console.log('📸 Upload response:', data);
+      
       if (data.success) {
-        // Refetch to get latest data from database
-        await fetchPendingPosts();
+        console.log('✅ Photo uploaded successfully!', data.photoUrl);
+        // Update local state immediately
+        setPosts(posts.map(p => 
+          p.id === postId ? { ...p, photo_url: data.photoUrl } : p
+        ));
       } else {
-        alert('Failed to upload photo');
+        console.error('❌ Upload failed:', data);
+        alert('Failed to upload photo: ' + (data.error || 'Unknown error'));
       }
     } catch (error) {
-      console.error('Upload error:', error);
-      alert('Error uploading photo');
+      console.error('❌ Upload error:', error);
+      alert('Error uploading photo. Check console for details.');
     } finally {
       setUploadingId(null);
+    }
+  }
+
+  // Handle photo removal
+  async function handleRemovePhoto(postId: string) {
+    if (!confirm('Remove this photo? You can upload a different one.')) return;
+    
+    try {
+      // Just update local state to remove photo
+      setPosts(posts.map(p => 
+        p.id === postId ? { ...p, photo_url: null } : p
+      ));
+    } catch (error) {
+      console.error('Remove photo error:', error);
     }
   }
 
@@ -210,15 +232,40 @@ export default function AdminReviewPage() {
                   className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden"
                 >
                   {/* Photo Upload Area */}
-                  <div className="relative bg-gray-100 h-64 flex items-center justify-center">
+                  <div className="relative bg-gray-100 h-64 flex items-center justify-center group">
                     {post.photo_url ? (
-                      <img 
-                        src={post.photo_url} 
-                        alt={post.scraped_title}
-                        className="w-full h-full object-cover"
-                      />
+                      <>
+                        <img 
+                          src={post.photo_url} 
+                          alt={post.scraped_title}
+                          className="w-full h-full object-cover"
+                        />
+                        {/* Photo Controls Overlay */}
+                        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
+                          <button
+                            onClick={() => handleRemovePhoto(post.id)}
+                            className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition-colors flex items-center gap-2"
+                          >
+                            <X className="w-4 h-4" />
+                            Remove Photo
+                          </button>
+                          <label className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors flex items-center gap-2 cursor-pointer">
+                            <Upload className="w-4 h-4" />
+                            Change Photo
+                            <input
+                              type="file"
+                              accept="image/*"
+                              className="hidden"
+                              onChange={(e) => {
+                                const file = e.target.files?.[0];
+                                if (file) handlePhotoUpload(post.id, file);
+                              }}
+                            />
+                          </label>
+                        </div>
+                      </>
                     ) : (
-                      <label className="cursor-pointer flex flex-col items-center gap-3 p-8 hover:bg-gray-200 transition-colors rounded-xl">
+                      <label className="cursor-pointer flex flex-col items-center gap-3 p-8 hover:bg-gray-200 transition-colors rounded-xl w-full h-full">
                         <Upload className="w-12 h-12 text-gray-400" />
                         <span className="text-sm font-medium text-gray-600">
                           {uploadingId === post.id ? 'Uploading...' : 'Click to upload photo'}
@@ -294,17 +341,16 @@ export default function AdminReviewPage() {
                     </a>
 
                     {/* Preview Button */}
-                    {post.photo_url && (
-                      <div className="mb-4">
-                        <button
-                          onClick={() => handlePreview(post)}
-                          className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-medium transition-colors"
-                        >
-                          <Eye className="w-5 h-5" />
-                          Preview How This Will Look on Feed
-                        </button>
-                      </div>
-                    )}
+                    <div className="mb-4">
+                      <button
+                        onClick={() => handlePreview(post)}
+                        disabled={!post.photo_url}
+                        className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-purple-100 hover:bg-purple-200 text-purple-700 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        <Eye className="w-5 h-5" />
+                        {post.photo_url ? 'Preview How This Will Look on Feed' : 'Upload Photo to Enable Preview'}
+                      </button>
+                    </div>
 
                     {/* Actions */}
                     <div className="flex gap-3 pt-4 border-t border-gray-200">
