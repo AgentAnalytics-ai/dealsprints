@@ -18,8 +18,16 @@ const RSS_SOURCES = [
     name: 'Journal Record',
     url: 'https://journalrecord.com/feed/',
   },
-  // Add more sources later:
-  // { name: 'The Oklahoman', url: 'https://oklahoman.com/rss/' },
+  {
+    name: 'The Oklahoman',
+    url: 'https://www.oklahoman.com/business/feed/',
+  },
+  {
+    name: 'OKC Friday',
+    url: 'https://www.okcfriday.com/feed/',
+  },
+  // OKC Talk doesn't have a public RSS feed, but these others do:
+  // Add more as you find them
 ];
 
 // OKC Metro cities to filter for
