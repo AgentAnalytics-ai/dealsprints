@@ -90,17 +90,17 @@ export default function PricingPage() {
           <div className="bg-white rounded-xl p-6 shadow-md text-center">
             <Zap className="w-10 h-10 text-purple-600 mx-auto mb-3" />
             <h3 className="font-semibold text-gray-900 mb-2">Save Time</h3>
-            <p className="text-sm text-gray-600">We monitor 18 sources daily so you don't have to</p>
+            <p className="text-sm text-gray-600">All OKC business news in one place</p>
           </div>
           <div className="bg-white rounded-xl p-6 shadow-md text-center">
             <Clock className="w-10 h-10 text-purple-600 mx-auto mb-3" />
-            <h3 className="font-semibold text-gray-900 mb-2">Stay Ahead</h3>
-            <p className="text-sm text-gray-600">Get development news before your competitors</p>
+            <h3 className="font-semibold text-gray-900 mb-2">Stay Informed</h3>
+            <p className="text-sm text-gray-600">Never miss important OKC developments</p>
           </div>
           <div className="bg-white rounded-xl p-6 shadow-md text-center">
             <TrendingUp className="w-10 h-10 text-purple-600 mx-auto mb-3" />
-            <h3 className="font-semibold text-gray-900 mb-2">Make Better Decisions</h3>
-            <p className="text-sm text-gray-600">Access complete market intelligence in one place</p>
+            <h3 className="font-semibold text-gray-900 mb-2">Unlimited Access</h3>
+            <p className="text-sm text-gray-600">Read as much as you want, whenever you want</p>
           </div>
         </div>
 
@@ -167,27 +167,23 @@ export default function PricingPage() {
             <ul className="space-y-4 mb-8">
               <li className="flex items-start gap-3">
                 <Check className="w-5 h-5 text-white flex-shrink-0 mt-0.5" />
-                <span><strong>Unlimited posts</strong> — never hit a limit</span>
+                <span><strong>Unlimited posts</strong> — read everything</span>
               </li>
               <li className="flex items-start gap-3">
                 <Check className="w-5 h-5 text-white flex-shrink-0 mt-0.5" />
-                <span><strong>Full 30-day archive</strong> — catch up on what you missed</span>
+                <span><strong>Full archive</strong> — browse past 30 days</span>
               </li>
               <li className="flex items-start gap-3">
                 <Check className="w-5 h-5 text-white flex-shrink-0 mt-0.5" />
-                <span><strong>Daily updates at 6am</strong> — start your day informed</span>
+                <span><strong>Regular updates</strong> — fresh OKC news</span>
               </li>
               <li className="flex items-start gap-3">
                 <Check className="w-5 h-5 text-white flex-shrink-0 mt-0.5" />
-                <span><strong>18 premium sources</strong> — Journal Record, OCBJ & more</span>
+                <span><strong>Multiple sources</strong> — comprehensive coverage</span>
               </li>
               <li className="flex items-start gap-3">
                 <Check className="w-5 h-5 text-white flex-shrink-0 mt-0.5" />
-                <span><strong>Searchable content</strong> — find specific developments</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <Check className="w-5 h-5 text-white flex-shrink-0 mt-0.5" />
-                <span><strong>Cancel anytime</strong> — no long-term commitment</span>
+                <span><strong>Cancel anytime</strong> — no commitment</span>
               </li>
             </ul>
 
@@ -225,26 +221,6 @@ export default function PricingPage() {
           </div>
         </div>
 
-        {/* ROI Calculator */}
-        <div className="max-w-3xl mx-auto mb-16 bg-gradient-to-br from-purple-50 to-blue-50 border-2 border-purple-200 rounded-xl p-8">
-          <h3 className="text-2xl font-bold text-gray-900 mb-4 text-center">Is $9/month worth it?</h3>
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="bg-white rounded-lg p-4">
-              <p className="text-sm text-gray-600 mb-2">Time saved per month:</p>
-              <p className="text-3xl font-bold text-purple-600">15 hours</p>
-              <p className="text-xs text-gray-500 mt-1">30 min/day × 30 days checking 18 sources</p>
-            </div>
-            <div className="bg-white rounded-lg p-4">
-              <p className="text-sm text-gray-600 mb-2">Cost per day:</p>
-              <p className="text-3xl font-bold text-purple-600">$0.30</p>
-              <p className="text-xs text-gray-500 mt-1">Less than a cup of coffee</p>
-            </div>
-          </div>
-          <p className="text-center text-gray-600 mt-6">
-            If even <strong>one deal opportunity</strong> comes from our intel, you've made your money back 100x.
-          </p>
-        </div>
-
         {/* Billing Notice */}
         <div className="max-w-3xl mx-auto mb-12 bg-blue-50 border-2 border-blue-200 rounded-xl p-4 flex items-start gap-3">
           <Building className="w-6 h-6 text-blue-600 flex-shrink-0 mt-0.5" />
@@ -264,35 +240,33 @@ export default function PricingPage() {
           
           <div className="space-y-4">
             <div className="bg-white rounded-xl p-6 shadow-md">
-              <h3 className="font-semibold text-gray-900 mb-2">How do you get the news?</h3>
+              <h3 className="font-semibold text-gray-900 mb-2">What do I get with Pro?</h3>
               <p className="text-gray-600">
-                We monitor 18 premium Oklahoma City news sources daily, including Journal Record, Oklahoma City Business Journal, 
-                NonDoc, i2E, and official city channels. Our team curates only the most relevant business development stories 
-                for you, saving you hours of browsing.
+                Pro members get unlimited access to all OKC business development posts—no limits. Free users can read 5 posts, 
+                then hit a paywall. Pro unlocks everything, including the full 30-day archive.
               </p>
             </div>
 
             <div className="bg-white rounded-xl p-6 shadow-md">
               <h3 className="font-semibold text-gray-900 mb-2">Can I cancel anytime?</h3>
               <p className="text-gray-600">
-                Absolutely! Cancel from your dashboard at any time. Your access continues until the end of your billing period, 
-                then automatically reverts to the Free tier (5 posts). No contracts, no commitments, no hassle.
+                Yes! Cancel from your dashboard whenever you want. Your access continues until the end of your billing period, 
+                then reverts to the Free tier. No contracts.
               </p>
             </div>
 
             <div className="bg-white rounded-xl p-6 shadow-md">
               <h3 className="font-semibold text-gray-900 mb-2">What payment methods do you accept?</h3>
               <p className="text-gray-600">
-                We accept all major credit cards (Visa, Mastercard, American Express, Discover) via Stripe, 
-                a trusted payment processor used by millions of businesses. Your payment info is never stored on our servers.
+                We accept all major credit cards via Stripe. Your payment info is never stored on our servers.
               </p>
             </div>
 
             <div className="bg-white rounded-xl p-6 shadow-md">
-              <h3 className="font-semibold text-gray-900 mb-2">Why will my statement show "Agent Analytics LLC"?</h3>
+              <h3 className="font-semibold text-gray-900 mb-2">Why does my statement show "Agent Analytics LLC"?</h3>
               <p className="text-gray-600">
-                Agent Analytics LLC is our parent company that handles all billing and payment processing for legal and 
-                accounting purposes. This is standard practice and ensures secure, professional payment handling.
+                Agent Analytics LLC is the parent company that processes billing for DealSprints OKC. 
+                This is standard practice for secure payment handling.
               </p>
             </div>
           </div>
