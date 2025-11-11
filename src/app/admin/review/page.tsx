@@ -5,6 +5,8 @@ import { motion } from 'framer-motion';
 import { CheckCircle, X, ExternalLink, Upload, Calendar, MapPin, Tag, Eye, RefreshCw } from 'lucide-react';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
+import { PreviewModal } from '@/components/admin/PreviewModal';
+import { Post } from '@/lib/data/mockFeed';
 
 interface PendingPost {
   id: string;
@@ -26,6 +28,8 @@ export default function AdminReviewPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [uploadingId, setUploadingId] = useState<string | null>(null);
   const [publishingId, setPublishingId] = useState<string | null>(null);
+  const [previewPost, setPreviewPost] = useState<Post | null>(null);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
   // Fetch pending posts
   useEffect(() => {
@@ -129,6 +133,29 @@ export default function AdminReviewPage() {
     } catch (error) {
       console.error('Reject error:', error);
     }
+  }
+
+  // Convert PendingPost to Post format for preview
+  function convertToPost(pendingPost: PendingPost): Post {
+    return {
+      id: pendingPost.id,
+      kind: (pendingPost.ai_category || 'opening') as Post['kind'],
+      title: pendingPost.scraped_title,
+      location: pendingPost.ai_location || 'Oklahoma City, OK',
+      date: pendingPost.scraped_date,
+      summary: pendingPost.ai_summary,
+      source: pendingPost.source_name,
+      sourceUrl: pendingPost.source_url,
+      tags: pendingPost.ai_tags || [],
+      imageUrl: pendingPost.photo_url || undefined,
+    };
+  }
+
+  // Handle preview
+  function handlePreview(pendingPost: PendingPost) {
+    const post = convertToPost(pendingPost);
+    setPreviewPost(post);
+    setIsPreviewOpen(true);
   }
 
   if (isLoading) {
@@ -266,6 +293,19 @@ export default function AdminReviewPage() {
                       View source at {post.source_name}
                     </a>
 
+                    {/* Preview Button */}
+                    {post.photo_url && (
+                      <div className="mb-4">
+                        <button
+                          onClick={() => handlePreview(post)}
+                          className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-medium transition-colors"
+                        >
+                          <Eye className="w-5 h-5" />
+                          Preview How This Will Look on Feed
+                        </button>
+                      </div>
+                    )}
+
                     {/* Actions */}
                     <div className="flex gap-3 pt-4 border-t border-gray-200">
                       <button
@@ -302,6 +342,23 @@ export default function AdminReviewPage() {
         </div>
       </main>
       <Footer />
+
+      {/* Preview Modal */}
+      {previewPost && (
+        <PreviewModal
+          post={previewPost}
+          isOpen={isPreviewOpen}
+          onClose={() => {
+            setIsPreviewOpen(false);
+            setPreviewPost(null);
+          }}
+          onPublish={() => {
+            if (previewPost) {
+              handlePublish(previewPost.id);
+            }
+          }}
+        />
+      )}
     </>
   );
 }
