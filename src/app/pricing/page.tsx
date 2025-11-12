@@ -93,24 +93,6 @@ export default function PricingPage() {
           </p>
         </div>
 
-        {/* Value Props - Why Pay? */}
-        <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto mb-16">
-          <div className="bg-white rounded-xl p-6 shadow-md text-center">
-            <Zap className="w-10 h-10 text-purple-600 mx-auto mb-3" />
-            <h3 className="font-semibold text-gray-900 mb-2">Save Time</h3>
-            <p className="text-sm text-gray-600">All OKC business news in one place</p>
-          </div>
-          <div className="bg-white rounded-xl p-6 shadow-md text-center">
-            <Clock className="w-10 h-10 text-purple-600 mx-auto mb-3" />
-            <h3 className="font-semibold text-gray-900 mb-2">Stay Informed</h3>
-            <p className="text-sm text-gray-600">Never miss important OKC developments</p>
-          </div>
-          <div className="bg-white rounded-xl p-6 shadow-md text-center">
-            <TrendingUp className="w-10 h-10 text-purple-600 mx-auto mb-3" />
-            <h3 className="font-semibold text-gray-900 mb-2">Unlimited Access</h3>
-            <p className="text-sm text-gray-600">Read as much as you want, whenever you want</p>
-          </div>
-        </div>
 
         {/* Pricing Cards */}
         <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto mb-12">
