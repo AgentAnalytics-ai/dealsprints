@@ -3,6 +3,7 @@ import { Post } from '@/lib/data/mockFeed';
 import { FeedCard } from '@/components/feed/FeedCard';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
+import { GetStartedButton } from '@/components/home/GetStartedButton';
 import { Rss, CheckCircle, Zap, TrendingUp, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 
@@ -197,17 +198,12 @@ export default async function HomePage() {
                 </div>
               </div>
 
-              <Link
-                href="/pricing"
-                className="inline-block px-10 py-5 bg-white text-purple-600 font-bold rounded-xl hover:bg-gray-100 transition-all shadow-lg text-lg"
-              >
-                Get Started
-              </Link>
+              <GetStartedButton />
             </div>
           </div>
         </div>
-      </div>
-
+          </div>
+      
       <Footer />
     </main>
   );
