@@ -82,15 +82,91 @@ async function handleCheckoutComplete(session: Stripe.Checkout.Session) {
     const userId = session.metadata?.user_id;
     const customerId = session.customer as string;
     const subscriptionId = session.subscription as string;
+    const isAnonymous = session.metadata?.is_anonymous_checkout === 'true';
+    const customerEmail = session.customer_details?.email || session.customer_email;
 
-    if (!userId) {
-      console.error('❌ No user_id in metadata');
+    console.log('💳 Processing checkout:', { userId, isAnonymous, customerEmail });
+
+    // SCENARIO 1: Anonymous checkout (no pre-existing account)
+    if (isAnonymous || !userId) {
+      console.log('🆕 Creating new account for anonymous checkout');
+      
+      if (!customerEmail) {
+        console.error('❌ No customer email provided');
+        return;
+      }
+
+      // Check if user already exists
+      const { data: existingMember } = await supabaseAdmin
+        .from('members')
+        .select('*')
+        .eq('email', customerEmail)
+        .single();
+
+      if (existingMember) {
+        console.log('✅ Existing member found, upgrading...');
+        // Just upgrade existing account
+        await supabaseAdmin
+          .from('members')
+          .update({
+            plan: 'member',
+            is_verified: true,
+            stripe_customer_id: customerId,
+            stripe_subscription_id: subscriptionId,
+            updated_at: new Date().toISOString(),
+          })
+          .eq('id', existingMember.id);
+      } else {
+        console.log('🆕 Creating new Supabase user and member record');
+        
+        // Create Supabase auth user (password-less, will use magic link)
+        const { data: authData, error: authError } = await supabaseAdmin.auth.admin.createUser({
+          email: customerEmail,
+          email_confirm: true, // Auto-confirm email
+        });
+
+        if (authError || !authData.user) {
+          console.error('❌ Failed to create auth user:', authError);
+          return;
+        }
+
+        // Create member record
+        const slug = customerEmail.split('@')[0] + '-okc';
+        const { error: memberError } = await supabaseAdmin
+          .from('members')
+          .insert({
+            user_id: authData.user.id,
+            business_name: customerEmail.split('@')[0], // Use email prefix as placeholder
+            slug,
+            email: customerEmail,
+            plan: 'member',
+            is_verified: true,
+            is_active: true,
+            stripe_customer_id: customerId,
+            stripe_subscription_id: subscriptionId,
+          });
+
+        if (memberError) {
+          console.error('❌ Failed to create member:', memberError);
+          return;
+        }
+
+        console.log('✅ New member created successfully!');
+      }
+
+      // Send magic link email for first login
+      await supabaseAdmin.auth.admin.generateLink({
+        type: 'magiclink',
+        email: customerEmail,
+      });
+
+      console.log('📧 Magic link email sent to:', customerEmail);
       return;
     }
 
-    console.log('🔄 Updating member to paid plan:', { userId, customerId, subscriptionId });
+    // SCENARIO 2: Existing user upgrading
+    console.log('🔄 Upgrading existing user:', userId);
 
-    // Update member record
     const { error } = await supabaseAdmin
       .from('members')
       .update({
@@ -108,9 +184,6 @@ async function handleCheckoutComplete(session: Stripe.Checkout.Session) {
     }
 
     console.log('✅ Member upgraded successfully!');
-
-    // TODO: Send welcome email here
-    // await sendWelcomeEmail(memberEmail);
 
   } catch (error) {
     console.error('❌ handleCheckoutComplete error:', error);

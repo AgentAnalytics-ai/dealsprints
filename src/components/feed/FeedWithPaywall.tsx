@@ -18,14 +18,19 @@ export function FeedWithPaywall({ allPosts, freeLimit = 5 }: FeedWithPaywallProp
   useEffect(() => {
     async function checkProStatus() {
       try {
+        // Check if user is logged in AND has Pro plan
         const { session } = await getSession();
         
         if (session) {
           const member = await getMemberProfile(session.user.id);
           setIsPro(member?.plan === 'member');
+        } else {
+          // Not logged in = show free preview
+          setIsPro(false);
         }
       } catch (error) {
         console.error('Error checking pro status:', error);
+        setIsPro(false);
       } finally {
         setIsLoading(false);
       }
@@ -34,6 +39,7 @@ export function FeedWithPaywall({ allPosts, freeLimit = 5 }: FeedWithPaywallProp
     checkProStatus();
   }, []);
 
+  // Show first 5 posts while checking auth status
   if (isLoading) {
     return (
       <div className="space-y-8">
@@ -44,17 +50,18 @@ export function FeedWithPaywall({ allPosts, freeLimit = 5 }: FeedWithPaywallProp
     );
   }
 
+  // IMPORTANT: Anonymous users see 5 posts (no login required!)
   const postsToShow = isPro ? allPosts : allPosts.slice(0, freeLimit);
   const hasMore = allPosts.length > freeLimit;
 
   return (
     <div className="space-y-8">
-      {/* Show posts (5 for free, all for Pro) */}
+      {/* Show posts (5 for everyone, unlimited for Pro) */}
       {postsToShow.map((post) => (
         <FeedCard key={post.id} post={post} />
       ))}
 
-      {/* Paywall for free users */}
+      {/* Paywall for non-Pro users (including anonymous) */}
       {!isPro && hasMore && (
         <>
           {/* Subtle fade effect */}
@@ -72,7 +79,7 @@ export function FeedWithPaywall({ allPosts, freeLimit = 5 }: FeedWithPaywallProp
         </>
       )}
 
-      {/* No paywall for Pro users */}
+      {/* Pro user message */}
       {isPro && (
         <div className="text-center py-8 text-gray-600">
           <p className="text-sm">
@@ -83,4 +90,3 @@ export function FeedWithPaywall({ allPosts, freeLimit = 5 }: FeedWithPaywallProp
     </div>
   );
 }
-

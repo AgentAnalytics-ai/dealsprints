@@ -105,7 +105,12 @@ export default function SignupPage() {
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-gray-900 mb-2">Create Your Account</h1>
-          <p className="text-gray-600">Get started with free access to OKC development news</p>
+          <p className="text-gray-600">Set up your account to manage your subscription</p>
+          <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+            <p className="text-sm text-blue-800">
+              <strong>New to DealSprints?</strong> No signup needed! Browse the feed and upgrade when ready.
+            </p>
+          </div>
         </div>
 
         {/* Signup Form */}
