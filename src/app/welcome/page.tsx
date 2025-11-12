@@ -1,28 +1,14 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { Suspense } from 'react';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { CheckCircle, Mail, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 
-export default function WelcomePage() {
-  const searchParams = useSearchParams();
-  const sessionId = searchParams.get('session_id');
-  const [email, setEmail] = useState('');
-
-  useEffect(() => {
-    // Try to get email from URL params or session
-    const checkSession = async () => {
-      // You could optionally verify the Stripe session here
-      // For now, just show success message
-    };
-    checkSession();
-  }, []);
-
+function WelcomeContent() {
   return (
-    <main className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50">
+    <>
       <Header />
       
       <div className="max-w-2xl mx-auto px-6 py-24">
@@ -87,6 +73,20 @@ export default function WelcomePage() {
       </div>
 
       <Footer />
+    </>
+  );
+}
+
+export default function WelcomePage() {
+  return (
+    <main className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50">
+      <Suspense fallback={
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="w-12 h-12 border-4 border-purple-600 border-t-transparent rounded-full animate-spin" />
+        </div>
+      }>
+        <WelcomeContent />
+      </Suspense>
     </main>
   );
 }

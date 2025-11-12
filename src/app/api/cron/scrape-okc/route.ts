@@ -9,6 +9,9 @@ import { supabaseAdmin } from '@/lib/supabase';
 import { openai } from '@ai-sdk/openai';
 import { generateText } from 'ai';
 
+// This route uses request.url (dynamic)
+export const dynamic = 'force-dynamic';
+
 // Vercel Cron secret for security
 const CRON_SECRET = process.env.CRON_SECRET || 'your-secret-key-here';
 
