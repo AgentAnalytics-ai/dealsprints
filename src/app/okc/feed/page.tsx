@@ -5,7 +5,6 @@ import { FeedWithPaywall } from '@/components/feed/FeedWithPaywall';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { Rss } from 'lucide-react';
-import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Feed - Latest OKC Developments & Openings | DealSprints OKC',
@@ -83,26 +82,6 @@ export default async function OKCFeedPage() {
       {/* Feed Content */}
       <div className="max-w-4xl mx-auto px-6 py-12">
         <FeedWithPaywall allPosts={posts} freeLimit={5} />
-      </div>
-
-      {/* Bottom CTA */}
-      <div className="bg-white border-t border-gray-200">
-        <div className="max-w-7xl mx-auto px-6 py-12 text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            Know about a development or opening?
-          </h2>
-          <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
-            Help us keep OKC Pulse accurate and complete. Submit tips on new projects, 
-            business openings, expansions, or market data.
-          </p>
-          <Link
-            href="/waitlist"
-            className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-indigo-600 via-purple-600 to-blue-600 text-white rounded-2xl font-bold hover:scale-105 transition-all shadow-xl"
-          >
-            <Send className="w-5 h-5" />
-            Submit a Tip
-          </Link>
-        </div>
       </div>
 
       <Footer />
