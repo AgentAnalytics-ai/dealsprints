@@ -4,7 +4,7 @@ import { Post } from '@/lib/data/mockFeed';
 import { FeedWithPaywall } from '@/components/feed/FeedWithPaywall';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
-import { Rss, Send } from 'lucide-react';
+import { Rss } from 'lucide-react';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
@@ -77,22 +77,6 @@ export default async function OKCFeedPage() {
             </div>
           </div>
 
-          {/* CTA Bar */}
-          <div className="mt-8 flex flex-col sm:flex-row gap-4">
-            <Link
-              href="/waitlist"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-indigo-600 via-purple-600 to-blue-600 text-white rounded-2xl font-bold hover:scale-105 transition-all shadow-xl"
-            >
-              <Send className="w-5 h-5" />
-              Submit a Tip
-            </Link>
-            <Link
-              href="/okc/members"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white border-2 border-gray-300 text-gray-700 rounded-2xl font-bold hover:border-indigo-500 hover:scale-105 transition-all"
-            >
-              View Member Directory
-            </Link>
-          </div>
         </div>
       </div>
 

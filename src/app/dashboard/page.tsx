@@ -154,12 +154,36 @@ export default function DashboardPage() {
                 <p className="text-gray-700 mb-4">
                   Get unlimited access to all OKC business development news, full archive, and regular updates.
                 </p>
-                <Link
-                  href="/pricing"
+                <button
+                  onClick={async () => {
+                    // Go straight to Stripe checkout
+                    try {
+                      const { session } = await getSession();
+                      if (!session) return;
+
+                      const response = await fetch('/api/stripe/checkout', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                          priceId: 'price_1SRHGN2fq8sWUTjaxi9dnPsT',
+                          memberEmail: session.user.email,
+                          memberId: member?.id,
+                          userId: session.user.id,
+                        }),
+                      });
+
+                      const data = await response.json();
+                      if (data.url) {
+                        window.location.href = data.url;
+                      }
+                    } catch (error) {
+                      console.error('Upgrade error:', error);
+                    }
+                  }}
                   className="block w-full text-center bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-all"
                 >
                   Upgrade Now - $9/month
-                </Link>
+                </button>
               </div>
             )}
 
@@ -178,21 +202,19 @@ export default function DashboardPage() {
             <div className="bg-white rounded-2xl shadow-lg p-6">
               <h3 className="text-lg font-bold text-gray-900 mb-4">Account</h3>
               
-              <div className="space-y-3">
-                <div className="flex items-start gap-3">
-                  <Mail className="w-5 h-5 text-gray-400 flex-shrink-0 mt-0.5" />
-                  <div className="min-w-0">
-                    <p className="text-sm text-gray-600">Email</p>
-                    <p className="text-sm font-medium text-gray-900 break-all">
-                      {member.email}
-                    </p>
-                  </div>
+              <div className="space-y-3 mb-6">
+                <div className="flex items-center gap-2">
+                  <Mail className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                  <p className="text-xs text-gray-600">Email</p>
                 </div>
+                <p className="text-sm font-medium text-gray-900 break-words">
+                  {member.email}
+                </p>
               </div>
 
               <button
                 onClick={handleSignOut}
-                className="mt-6 w-full flex items-center justify-center gap-2 py-2 px-4 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+                className="w-full flex items-center justify-center gap-2 py-2 px-4 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
               >
                 <LogOut className="w-4 h-4" />
                 Sign Out
