@@ -140,10 +140,10 @@ async function rewriteSummary(title: string, content: string): Promise<string> {
         },
         {
           role: 'user',
-          content: `Rewrite this news: ${title}\n\n${content.substring(0, 500)}`
+          content: `Rewrite this article:\n\nTitle: ${title}\n\nContent: ${content.substring(0, 500)}\n\nWrite your rewrite now (2-3 sentences):`
         }
       ],
-      maxTokens: 150,
+      temperature: 0.7,
     });
     
     return result.text;
