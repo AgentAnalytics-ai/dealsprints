@@ -15,6 +15,9 @@ export function FeedWithPaywall({ allPosts, freeLimit = 5 }: FeedWithPaywallProp
   const [isPro, setIsPro] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
+  // Ensure freeLimit is at least 5
+  const actualFreeLimit = Math.max(freeLimit, 5);
+
   useEffect(() => {
     async function checkProStatus() {
       try {
@@ -39,11 +42,11 @@ export function FeedWithPaywall({ allPosts, freeLimit = 5 }: FeedWithPaywallProp
     checkProStatus();
   }, []);
 
-  // Show first 5 posts while checking auth status
+  // Show first 5 posts while checking auth status (always show freeLimit posts)
   if (isLoading) {
     return (
       <div className="space-y-8">
-        {allPosts.slice(0, freeLimit).map((post) => (
+        {allPosts.slice(0, actualFreeLimit).map((post) => (
           <FeedCard key={post.id} post={post} />
         ))}
       </div>
@@ -51,9 +54,9 @@ export function FeedWithPaywall({ allPosts, freeLimit = 5 }: FeedWithPaywallProp
   }
 
   // SECURITY: Filter posts based on user plan
-  // Pro users see all posts, free users see only first 5
-  const postsToShow = isPro ? allPosts : allPosts.slice(0, freeLimit);
-  const hasMore = !isPro && allPosts.length > freeLimit; // Show paywall if free user and there are more posts
+  // Pro users see all posts, free users see only first 5 (or actualFreeLimit)
+  const postsToShow = isPro ? allPosts : allPosts.slice(0, actualFreeLimit);
+  const hasMore = !isPro && allPosts.length > actualFreeLimit; // Show paywall if free user and there are more posts
 
   return (
     <div className="space-y-8">
@@ -65,7 +68,7 @@ export function FeedWithPaywall({ allPosts, freeLimit = 5 }: FeedWithPaywallProp
       {/* Paywall for non-Pro users (including anonymous) */}
       {!isPro && hasMore && (
         <PaywallCard 
-          lockedPostCount={allPosts.length - freeLimit}
+          lockedPostCount={allPosts.length - actualFreeLimit}
           totalPosts={allPosts.length}
         />
       )}
