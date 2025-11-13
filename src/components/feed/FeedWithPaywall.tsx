@@ -64,20 +64,10 @@ export function FeedWithPaywall({ allPosts, freeLimit = 5 }: FeedWithPaywallProp
 
       {/* Paywall for non-Pro users (including anonymous) */}
       {!isPro && hasMore && (
-        <>
-          {/* Subtle fade effect */}
-          <div className="h-32 bg-gradient-to-b from-transparent to-gray-50 -mt-32 relative z-10 pointer-events-none" />
-          
-          {/* Paywall Card */}
-          <PaywallCard />
-          
-          {/* Show count of locked posts */}
-          <div className="text-center text-gray-600 py-8">
-            <p className="text-lg">
-              <strong>{allPosts.length - freeLimit} more posts</strong> available with Pro access
-            </p>
-          </div>
-        </>
+        <PaywallCard 
+          lockedPostCount={allPosts.length - freeLimit}
+          totalPosts={allPosts.length}
+        />
       )}
 
       {/* Pro user message */}
