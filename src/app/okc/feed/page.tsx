@@ -5,8 +5,6 @@ import { FeedWithPaywall } from '@/components/feed/FeedWithPaywall';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { Rss } from 'lucide-react';
-import { cookies } from 'next/headers';
-import { createServerClient } from '@supabase/ssr';
 
 export const metadata: Metadata = {
   title: 'Feed - Latest OKC Developments & Openings | DealSprints OKC',
@@ -27,42 +25,10 @@ export const metadata: Metadata = {
 export const revalidate = 3600; // Revalidate every hour
 
 export default async function OKCFeedPage() {
-  // SECURITY: Check user auth server-side to determine post limit
-  const cookieStore = await cookies();
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        get(name: string) {
-          return cookieStore.get(name)?.value;
-        },
-      },
-    }
-  );
-
-  const { data: { session } } = await supabase.auth.getSession();
-  
-  // Check if user has Pro plan
-  let isPro = false;
-  if (session) {
-    const { data: member } = await supabaseAdmin
-      .from('members')
-      .select('plan')
-      .eq('user_id', session.user.id)
-      .single();
-    
-    isPro = member?.plan === 'member';
-  }
-
-  // Calculate date 30 days ago
+  // Fetch published posts (up to 100)
+  // Client-side component handles Pro/free filtering and paywall
   const thirtyDaysAgo = new Date();
   thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-  
-  // SECURITY: Limit posts based on user plan (server-side enforcement)
-  // Free users get configurable limit (default 5), Pro users get unlimited
-  const FREE_POST_LIMIT = parseInt(process.env.FREE_POST_LIMIT || '5', 10);
-  const postLimit = isPro ? 100 : FREE_POST_LIMIT; // Pro users get 100, free users get configurable limit
   
   // Fetch published posts from Supabase
   const { data: scrapedPosts } = await supabaseAdmin
@@ -71,7 +37,7 @@ export default async function OKCFeedPage() {
     .eq('status', 'published')
     .gte('published_at', thirtyDaysAgo.toISOString())
     .order('published_at', { ascending: false })
-    .limit(postLimit); // SERVER-SIDE LIMIT: Free users can't get more than 5 posts
+    .limit(100); // Fetch up to 100 posts (client will filter for free users)
 
   // Transform to match Post interface
   const posts: Post[] = (scrapedPosts || []).map(p => ({
@@ -86,6 +52,9 @@ export default async function OKCFeedPage() {
     tags: p.ai_tags || [],
     imageUrl: p.photo_url || undefined,
   }));
+
+  // Configurable free post limit (default 5)
+  const FREE_POST_LIMIT = parseInt(process.env.FREE_POST_LIMIT || '5', 10);
 
   return (
     <main className="min-h-screen bg-gray-50">
