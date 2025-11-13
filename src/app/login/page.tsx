@@ -10,7 +10,13 @@ import { Mail, Lock, AlertCircle, LogIn } from 'lucide-react';
 
 export default function LoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState('');
+  // Remember email from localStorage (better UX)
+  const [email, setEmail] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('dealsprints_email') || '';
+    }
+    return '';
+  });
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -38,6 +44,10 @@ export default function LoginPage() {
 
       if (user) {
         console.log('✅ Sign in successful! User:', user.id);
+        // Remember email in localStorage
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('dealsprints_email', email);
+        }
         console.log('🔵 Redirecting to dashboard...');
         // Redirect to dashboard
         router.push('/dashboard');
@@ -129,6 +139,16 @@ export default function LoginPage() {
               )}
             </button>
           </form>
+
+          {/* Forgot Password */}
+          <div className="mt-4 text-center">
+            <Link
+              href="/auth/forgot-password"
+              className="text-sm text-purple-600 hover:text-purple-700 font-medium"
+            >
+              Forgot password? Use magic link instead
+            </Link>
+          </div>
 
           {/* Footer Links */}
           <div className="mt-6 text-center space-y-2">

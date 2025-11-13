@@ -33,12 +33,13 @@ function WelcomeContent() {
               <h3 className="font-bold text-gray-900">Check Your Email</h3>
             </div>
             <p className="text-gray-700 text-sm mb-3">
-              We've sent you a login link to access your account. Click the link in the email to:
+              We've sent you a magic link to log in. Click the link in your email to:
             </p>
             <ul className="text-gray-700 text-sm space-y-2 ml-6">
-              <li>• Set up your password (optional)</li>
+              <li>• Log in instantly (no password needed)</li>
               <li>• Access unlimited posts</li>
-              <li>• Manage your subscription</li>
+              <li>• Set up a password for easier login next time (optional)</li>
+              <li>• Manage your subscription from your dashboard</li>
             </ul>
           </div>
 
@@ -56,7 +57,7 @@ function WelcomeContent() {
 
             <Link
               href="/login"
-              className="block w-full py-3 px-6 bg-gray-100 text-gray-700 font-semibold rounded-lg hover:bg-gray-200 transition-all"
+              className="block w-full py-3 px-6 bg-gray-100 text-gray-700 font-semibold rounded-lg hover:bg-gray-200 transition-all text-center"
             >
               Sign In to Dashboard
             </Link>
@@ -65,8 +66,8 @@ function WelcomeContent() {
           {/* Support */}
           <p className="text-sm text-gray-500 mt-8">
             Didn't receive the email? Check your spam folder or{' '}
-            <Link href="/contact" className="text-purple-600 hover:text-purple-700 underline">
-              contact support
+            <Link href="/auth/forgot-password" className="text-purple-600 hover:text-purple-700 underline">
+              request a new magic link
             </Link>
           </p>
         </div>
@@ -90,4 +91,3 @@ export default function WelcomePage() {
     </main>
   );
 }
-
