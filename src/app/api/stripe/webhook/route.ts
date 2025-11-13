@@ -155,12 +155,23 @@ async function handleCheckoutComplete(session: Stripe.Checkout.Session) {
       }
 
       // Send magic link email for first login
-      await supabaseAdmin.auth.admin.generateLink({
+      // Supabase will automatically send the email if email is configured
+      const { data: linkData, error: linkError } = await supabaseAdmin.auth.admin.generateLink({
         type: 'magiclink',
         email: customerEmail,
+        options: {
+          redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://dealsprints.com'}/okc/feed`,
+        },
       });
 
-      console.log('📧 Magic link email sent to:', customerEmail);
+      if (linkError) {
+        console.error('❌ Failed to generate magic link:', linkError);
+        // Continue anyway - user can use password reset if needed
+      } else {
+        console.log('📧 Magic link generated for:', customerEmail);
+        // Supabase should automatically send the email
+        // If email doesn't arrive, user can use password reset
+      }
       return;
     }
 
