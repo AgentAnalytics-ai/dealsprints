@@ -75,10 +75,10 @@ export default async function OKCFeedPage() {
               </h1>
               <p className="text-xl text-gray-600 max-w-3xl">
                 Your source for Oklahoma City developments, new business openings, 
-                expansions, and market insights. Updated weekly.
+                expansions, and market insights. Updated daily.
               </p>
               <p className="text-sm text-gray-500 mt-2">
-                Free users can view 5 posts • Pro members get unlimited access
+                Free preview available • Upgrade for unlimited access
               </p>
             </div>
           </div>

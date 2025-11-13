@@ -119,7 +119,7 @@ export default async function HomePage() {
 
             {/* Trust Signal */}
             <p className="text-white/70 text-sm">
-              Browse 5 posts free • No signup required • Upgrade anytime for $9/month
+              Browse free • No signup required • Upgrade anytime for $9/month
             </p>
           </div>
         </div>
@@ -150,11 +150,11 @@ export default async function HomePage() {
               href="/okc/feed"
               className="inline-flex items-center gap-2 px-8 py-4 bg-purple-600 text-white font-bold rounded-xl hover:bg-purple-700 transition-all shadow-lg text-lg"
             >
-              View 5 Free Posts
+              View Feed
               <ArrowRight className="w-5 h-5" />
             </Link>
             <p className="text-sm text-gray-500 mt-3">
-              See 5 posts free • Upgrade for unlimited access
+              Browse free • Upgrade anytime for unlimited access
             </p>
           </div>
         </div>

@@ -113,7 +113,7 @@ export default function AboutPage() {
                 </div>
                 <div>
                   <h4 className="font-bold text-gray-900 mb-1">Browse Free</h4>
-                  <p className="text-gray-600">Read 5 posts without signing up. See if you like it.</p>
+                  <p className="text-gray-600">Browse free preview. See if you like it.</p>
                 </div>
               </div>
               

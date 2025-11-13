@@ -129,9 +129,9 @@ export function PaywallCard({ lockedPostCount = 0, totalPosts = 0 }: PaywallCard
             </div>
             <div className="bg-white/10 backdrop-blur-md rounded-xl p-5 border border-white/20 hover:bg-white/15 transition-all">
               <Sparkles className="w-8 h-8 mx-auto mb-3 text-yellow-300" />
-              <h3 className="font-bold mb-2 text-lg">18 Premium Sources</h3>
+              <h3 className="font-bold mb-2 text-lg">Premium Sources</h3>
               <p className="text-sm text-white/80 leading-relaxed">
-                Journal Record, OCBJ, NonDoc, OKC Chamber & more—all in one place
+                Curated news from trusted OKC business sources—all in one place
               </p>
             </div>
             <div className="bg-white/10 backdrop-blur-md rounded-xl p-5 border border-white/20 hover:bg-white/15 transition-all">
