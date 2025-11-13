@@ -108,8 +108,10 @@ export default function AdminPublishedPage() {
     }
   }
 
-  // Handle fix category/tags
+  // Handle fix category/tags for single post
   async function handleFixCategory(postId: string) {
+    if (!confirm('Fix category and tags for this post? This will update the category and add missing tags.')) return;
+    
     try {
       const response = await fetch('/api/admin/fix-post-category', {
         method: 'POST',
@@ -130,6 +132,41 @@ export default function AdminPublishedPage() {
       console.error('Fix category error:', error);
       alert('Error fixing category. Check console for details.');
     }
+  }
+
+  // Handle fix ALL posts
+  async function handleFixAllPosts() {
+    if (!confirm(`Fix category and tags for ALL ${posts.length} published posts? This will update categories and add missing tags.`)) return;
+    
+    let fixed = 0;
+    let failed = 0;
+    
+    for (const post of posts) {
+      try {
+        const response = await fetch('/api/admin/fix-post-category', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ postId: post.id }),
+        });
+        
+        const data = await response.json();
+        if (data.success) {
+          fixed++;
+        } else {
+          failed++;
+        }
+        
+        // Small delay to avoid overwhelming the server
+        await new Promise(resolve => setTimeout(resolve, 200));
+      } catch (error) {
+        console.error(`Error fixing post ${post.id}:`, error);
+        failed++;
+      }
+    }
+    
+    // Refresh posts
+    await fetchPublishedPosts();
+    alert(`✅ Fixed ${fixed} posts. ${failed > 0 ? `${failed} failed.` : 'All successful!'}`);
   }
 
   // Handle unpublish
@@ -171,22 +208,42 @@ export default function AdminPublishedPage() {
       <main className="min-h-screen bg-gray-50 py-12">
         <div className="max-w-7xl mx-auto px-6">
           {/* Header */}
-          <div className="mb-12 flex items-start justify-between">
-            <div>
-              <h1 className="text-4xl font-bold text-gray-900 mb-3">
-                Published Posts
-              </h1>
-              <p className="text-xl text-gray-600">
-                {posts.length} posts live — Edit photos or unpublish if needed
-              </p>
+          <div className="mb-12">
+            <div className="flex items-start justify-between mb-4">
+              <div>
+                <h1 className="text-4xl font-bold text-gray-900 mb-3">
+                  Published Posts
+                </h1>
+                <p className="text-xl text-gray-600">
+                  {posts.length} posts live — Edit photos, fix categories, or unpublish if needed
+                </p>
+              </div>
+              <div className="flex gap-3">
+                {posts.length > 0 && (
+                  <button
+                    onClick={handleFixAllPosts}
+                    className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                  >
+                    <CheckCircle className="w-5 h-5" />
+                    Fix All Categories
+                  </button>
+                )}
+                <button
+                  onClick={() => fetchPublishedPosts()}
+                  className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+                >
+                  <RefreshCw className="w-5 h-5" />
+                  Refresh
+                </button>
+              </div>
             </div>
-            <button
-              onClick={() => fetchPublishedPosts()}
-              className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
-            >
-              <RefreshCw className="w-5 h-5" />
-              Refresh
-            </button>
+            {posts.length > 0 && (
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                <p className="text-sm text-blue-800">
+                  <strong>Note:</strong> Existing posts won't auto-update. Click "Fix Category/Tags" on individual posts or "Fix All Categories" above to update categories and add missing OKC tags.
+                </p>
+              </div>
+            )}
           </div>
 
           {/* Posts Grid */}
@@ -317,19 +374,19 @@ export default function AdminPublishedPage() {
                     </div>
 
                     {/* Actions */}
-                    <div className="flex gap-3 pt-4 border-t border-gray-200">
+                    <div className="pt-4 border-t border-gray-200 space-y-2">
                       <button
                         onClick={() => handleFixCategory(post.id)}
-                        className="flex-1 px-4 py-2 bg-blue-100 text-blue-700 rounded-lg font-semibold hover:bg-blue-200 transition-colors flex items-center justify-center gap-2"
+                        className="w-full px-4 py-2.5 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors flex items-center justify-center gap-2 shadow-sm"
                       >
-                        <Edit className="w-4 h-4" />
-                        Fix Category/Tags
+                        <CheckCircle className="w-4 h-4" />
+                        Fix Category & Tags
                       </button>
                       <button
                         onClick={() => handleUnpublish(post.id)}
-                        className="flex-1 px-4 py-2 bg-red-100 text-red-700 rounded-lg font-semibold hover:bg-red-200 transition-colors flex items-center justify-center gap-2"
+                        className="w-full px-4 py-2 bg-red-100 text-red-700 rounded-lg font-semibold hover:bg-red-200 transition-colors flex items-center justify-center gap-2"
                       >
-                        <Edit className="w-4 h-4" />
+                        <Trash2 className="w-4 h-4" />
                         Unpublish
                       </button>
                     </div>
