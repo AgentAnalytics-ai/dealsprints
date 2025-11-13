@@ -1,10 +1,12 @@
 import { Metadata } from 'next';
-import { supabase } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabase';
 import { Post } from '@/lib/data/mockFeed';
 import { FeedWithPaywall } from '@/components/feed/FeedWithPaywall';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { Rss } from 'lucide-react';
+import { cookies } from 'next/headers';
+import { createServerClient } from '@supabase/ssr';
 
 export const metadata: Metadata = {
   title: 'Feed - Latest OKC Developments & Openings | DealSprints OKC',
@@ -25,18 +27,51 @@ export const metadata: Metadata = {
 export const revalidate = 3600; // Revalidate every hour
 
 export default async function OKCFeedPage() {
+  // SECURITY: Check user auth server-side to determine post limit
+  const cookieStore = await cookies();
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        get(name: string) {
+          return cookieStore.get(name)?.value;
+        },
+      },
+    }
+  );
+
+  const { data: { session } } = await supabase.auth.getSession();
+  
+  // Check if user has Pro plan
+  let isPro = false;
+  if (session) {
+    const { data: member } = await supabaseAdmin
+      .from('members')
+      .select('plan')
+      .eq('user_id', session.user.id)
+      .single();
+    
+    isPro = member?.plan === 'member';
+  }
+
   // Calculate date 30 days ago
   const thirtyDaysAgo = new Date();
   thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
   
-  // Fetch published posts from Supabase (last 30 days only)
-  const { data: scrapedPosts } = await supabase
+  // SECURITY: Limit posts based on user plan (server-side enforcement)
+  // Free users get configurable limit (default 5), Pro users get unlimited
+  const FREE_POST_LIMIT = parseInt(process.env.FREE_POST_LIMIT || '5', 10);
+  const postLimit = isPro ? 100 : FREE_POST_LIMIT; // Pro users get 100, free users get configurable limit
+  
+  // Fetch published posts from Supabase
+  const { data: scrapedPosts } = await supabaseAdmin
     .from('scraped_posts')
     .select('*')
     .eq('status', 'published')
     .gte('published_at', thirtyDaysAgo.toISOString())
     .order('published_at', { ascending: false })
-    .limit(100);
+    .limit(postLimit); // SERVER-SIDE LIMIT: Free users can't get more than 5 posts
 
   // Transform to match Post interface
   const posts: Post[] = (scrapedPosts || []).map(p => ({
@@ -81,11 +116,10 @@ export default async function OKCFeedPage() {
 
       {/* Feed Content */}
       <div className="max-w-4xl mx-auto px-6 py-12">
-        <FeedWithPaywall allPosts={posts} freeLimit={5} />
+        <FeedWithPaywall allPosts={posts} freeLimit={FREE_POST_LIMIT} />
       </div>
 
       <Footer />
     </main>
   );
 }
-
