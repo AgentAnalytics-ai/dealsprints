@@ -50,11 +50,10 @@ export function FeedWithPaywall({ allPosts, freeLimit = 5 }: FeedWithPaywallProp
     );
   }
 
-  // IMPORTANT: Server already limits posts, but client-side checks auth for display
-  // If user is Pro, server sends all posts. If free, server sends only 5.
-  // Client-side only handles display logic (paywall card, messaging)
-  const postsToShow = allPosts; // Server already filtered correctly
-  const hasMore = !isPro && allPosts.length >= freeLimit; // Show paywall if free user has max posts
+  // SECURITY: Filter posts based on user plan
+  // Pro users see all posts, free users see only first 5
+  const postsToShow = isPro ? allPosts : allPosts.slice(0, freeLimit);
+  const hasMore = !isPro && allPosts.length > freeLimit; // Show paywall if free user and there are more posts
 
   return (
     <div className="space-y-8">
