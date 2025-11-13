@@ -1,5 +1,6 @@
 import { NextRequest } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase';
+import { revalidatePath } from 'next/cache';
 
 export async function POST(request: NextRequest) {
   try {
@@ -12,6 +13,31 @@ export async function POST(request: NextRequest) {
     }
 
     console.log('📸 Uploading photo:', { postId, filename: photo.name, size: photo.size });
+
+    // Check if post exists and get its status
+    const { data: post } = await supabaseAdmin
+      .from('scraped_posts')
+      .select('status, photo_url')
+      .eq('id', postId)
+      .single();
+
+    if (!post) {
+      return Response.json({ error: 'Post not found' }, { status: 404 });
+    }
+
+    // If post has an old photo, delete it from storage
+    if (post.photo_url) {
+      try {
+        const oldUrl = post.photo_url;
+        const oldFilename = oldUrl.split('/').pop()?.split('?')[0];
+        if (oldFilename) {
+          await supabaseAdmin.storage.from('post-images').remove([oldFilename]);
+          console.log('🗑️ Deleted old photo:', oldFilename);
+        }
+      } catch (deleteError) {
+        console.warn('⚠️ Could not delete old photo (non-critical):', deleteError);
+      }
+    }
 
     // Generate unique filename
     const timestamp = Date.now();
@@ -48,7 +74,10 @@ export async function POST(request: NextRequest) {
     // Update Supabase post with photo URL
     const { error: updateError } = await supabaseAdmin
       .from('scraped_posts')
-      .update({ photo_url: publicUrl, updated_at: new Date().toISOString() })
+      .update({ 
+        photo_url: publicUrl, 
+        updated_at: new Date().toISOString()
+      })
       .eq('id', postId);
 
     if (updateError) {
@@ -57,6 +86,13 @@ export async function POST(request: NextRequest) {
     }
 
     console.log('✅ Post updated with photo URL');
+
+    // Revalidate feed pages if post is published
+    if (post.status === 'published') {
+      revalidatePath('/okc/feed');
+      revalidatePath('/');
+      console.log('🔄 Revalidated feed cache');
+    }
 
     return Response.json({ 
       success: true, 

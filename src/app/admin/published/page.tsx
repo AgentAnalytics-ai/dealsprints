@@ -68,9 +68,9 @@ export default function AdminPublishedPage() {
         setPosts(posts.map(p => 
           p.id === postId ? { ...p, photo_url: data.photoUrl } : p
         ));
-        alert('Photo updated successfully!');
+        alert('✅ Photo updated successfully! The feed has been updated and will show the new photo within a few seconds.');
       } else {
-        alert('Failed to upload photo');
+        alert('Failed to upload photo: ' + (data.error || 'Unknown error'));
       }
     } catch (error) {
       console.error('Upload error:', error);
@@ -85,12 +85,26 @@ export default function AdminPublishedPage() {
     if (!confirm('Remove this photo? You can upload a new one.')) return;
     
     try {
-      setPosts(posts.map(p => 
-        p.id === postId ? { ...p, photo_url: null } : p
-      ));
-      alert('Photo removed! Upload a new one and save.');
+      const response = await fetch('/api/admin/remove-photo', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ postId }),
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        // Update local state
+        setPosts(posts.map(p => 
+          p.id === postId ? { ...p, photo_url: null } : p
+        ));
+        alert('✅ Photo removed! The feed has been updated. Upload a new photo when ready.');
+      } else {
+        alert('Failed to remove photo: ' + (data.error || 'Unknown error'));
+      }
     } catch (error) {
       console.error('Remove photo error:', error);
+      alert('Error removing photo. Check console for details.');
     }
   }
 
