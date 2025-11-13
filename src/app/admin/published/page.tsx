@@ -108,6 +108,30 @@ export default function AdminPublishedPage() {
     }
   }
 
+  // Handle fix category/tags
+  async function handleFixCategory(postId: string) {
+    try {
+      const response = await fetch('/api/admin/fix-post-category', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ postId }),
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        // Refresh posts to show updated category/tags
+        await fetchPublishedPosts();
+        alert(`✅ Fixed! Category: ${data.category}, Tags: ${data.tags.join(', ')}`);
+      } else {
+        alert('Failed to fix category: ' + (data.error || 'Unknown error'));
+      }
+    } catch (error) {
+      console.error('Fix category error:', error);
+      alert('Error fixing category. Check console for details.');
+    }
+  }
+
   // Handle unpublish
   async function handleUnpublish(postId: string) {
     if (!confirm('Unpublish this post? It will go back to pending review.')) return;
@@ -294,6 +318,13 @@ export default function AdminPublishedPage() {
 
                     {/* Actions */}
                     <div className="flex gap-3 pt-4 border-t border-gray-200">
+                      <button
+                        onClick={() => handleFixCategory(post.id)}
+                        className="flex-1 px-4 py-2 bg-blue-100 text-blue-700 rounded-lg font-semibold hover:bg-blue-200 transition-colors flex items-center justify-center gap-2"
+                      >
+                        <Edit className="w-4 h-4" />
+                        Fix Category/Tags
+                      </button>
                       <button
                         onClick={() => handleUnpublish(post.id)}
                         className="flex-1 px-4 py-2 bg-red-100 text-red-700 rounded-lg font-semibold hover:bg-red-200 transition-colors flex items-center justify-center gap-2"

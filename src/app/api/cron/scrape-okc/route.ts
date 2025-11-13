@@ -221,7 +221,15 @@ async function rewriteSummary(title: string, content: string): Promise<string> {
 function categorizeArticle(title: string, content: string): string {
   const text = `${title} ${content}`.toLowerCase();
   
-  // Events/Programs first (most specific)
+  // Real estate development FIRST (before events, since "design" could match both)
+  // Arena, stadium, facility, project, design, construction, building, development
+  if (text.includes('arena') || text.includes('stadium') || text.includes('facility') || 
+      text.includes('project') || text.includes('design') || text.includes('develop') || 
+      text.includes('construction') || text.includes('build') || text.includes('building')) {
+    return 'development';
+  }
+  
+  // Events/Programs (most specific)
   if (text.includes('event') || text.includes('festival') || text.includes('conference')) {
     return 'event';
   }
@@ -237,11 +245,6 @@ function categorizeArticle(title: string, content: string): string {
   // Business expansions
   if (text.includes('expan') || text.includes('adds') || text.includes('grow')) {
     return 'expansion';
-  }
-  
-  // Real estate development
-  if (text.includes('develop') || text.includes('construction') || text.includes('build')) {
-    return 'development';
   }
   
   // Data/reports
@@ -281,6 +284,13 @@ function extractTags(title: string, content: string): string[] {
   const text = `${title} ${content}`.toLowerCase();
   const tags: string[] = [];
   
+  // Always add OKC tag if it's Oklahoma City related
+  // Check for OKC, Oklahoma City, or if location extraction found OKC
+  if (text.includes('okc') || text.includes('oklahoma city') || 
+      text.includes('downtown okc') || text.includes('downtown oklahoma city')) {
+    tags.push('okc');
+  }
+  
   // Industry tags
   if (text.includes('retail') || text.includes('shop') || text.includes('store')) tags.push('retail');
   if (text.includes('restaurant') || text.includes('food') || text.includes('dining')) tags.push('food-beverage');
@@ -289,7 +299,7 @@ function extractTags(title: string, content: string): string[] {
   if (text.includes('real estate') || text.includes('apartment') || text.includes('housing')) tags.push('real-estate');
   if (text.includes('hotel') || text.includes('hospitality')) tags.push('hospitality');
   
-  // Location tags
+  // Location tags (neighborhoods)
   if (text.includes('downtown')) tags.push('downtown');
   if (text.includes('edmond')) tags.push('edmond');
   if (text.includes('norman')) tags.push('norman');
