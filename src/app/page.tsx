@@ -1,6 +1,4 @@
 import { supabase } from '@/lib/supabase';
-import { Post } from '@/lib/data/mockFeed';
-import { FeedCard } from '@/components/feed/FeedCard';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { GetStartedButton } from '@/components/home/GetStartedButton';
@@ -12,30 +10,7 @@ export default async function HomePage() {
   const thirtyDaysAgo = new Date();
   thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
   
-  // Fetch recent published posts from Supabase (last 30 days, limit to 3 for preview)
-  const { data: scrapedPosts } = await supabase
-    .from('scraped_posts')
-    .select('*')
-    .eq('status', 'published')
-    .gte('published_at', thirtyDaysAgo.toISOString())
-    .order('published_at', { ascending: false })
-    .limit(3);
-
-  // Transform to Post format
-  const recentPosts: Post[] = (scrapedPosts || []).map(p => ({
-    id: p.id,
-    kind: (p.ai_category || 'opening') as Post['kind'],
-    title: p.scraped_title,
-    location: p.ai_location || 'Oklahoma City, OK',
-    date: p.published_at || p.scraped_date,
-    summary: p.ai_summary,
-    source: p.source_name,
-    sourceUrl: p.source_url,
-    tags: p.ai_tags || [],
-    imageUrl: p.photo_url || undefined,
-  }));
-  
-  // Get total count
+  // Get total count for stats
   const { count: publishedCount } = await supabase
     .from('scraped_posts')
     .select('*', { count: 'exact', head: true })
@@ -125,59 +100,25 @@ export default async function HomePage() {
         </div>
       </div>
 
-      {/* Recent Posts Preview */}
+      {/* Trust Signals Section */}
       <div className="bg-gray-50 py-24">
-        <div className="max-w-4xl mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              Latest OKC Updates
-            </h2>
-            <p className="text-xl text-gray-600">
-              See what's happening right now
-            </p>
-          </div>
-
-          {/* Show 3 recent posts */}
-          <div className="space-y-8">
-            {recentPosts.map((post) => (
-              <FeedCard key={post.id} post={post} />
-            ))}
-          </div>
-
-          {/* CTA to view more */}
-          <div className="text-center mt-12">
-            <Link
-              href="/okc/feed"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-purple-600 text-white font-bold rounded-xl hover:bg-purple-700 transition-all shadow-lg text-lg"
-            >
-              View Feed
-              <ArrowRight className="w-5 h-5" />
-            </Link>
-            <p className="text-sm text-gray-500 mt-3">
-              Browse free • Upgrade anytime for unlimited access
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Simple Value Prop Section */}
-      <div className="bg-white py-24">
         <div className="max-w-4xl mx-auto px-6 text-center">
-          <h2 className="text-4xl font-bold text-gray-900 mb-6">
-            Why OKC Professionals Use DealSprints
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
+            Trusted by OKC Professionals
           </h2>
           <p className="text-xl text-gray-600 mb-12 max-w-2xl mx-auto">
             Real estate agents, investors, and business owners rely on DealSprints to stay informed about Oklahoma City's growth.
           </p>
 
+          {/* Stats */}
           <div className="grid md:grid-cols-3 gap-8 mb-12">
+            <div className="text-center">
+              <div className="text-5xl font-bold text-purple-600 mb-2">{publishedCount || 0}+</div>
+              <p className="text-gray-600">Stories this month</p>
+            </div>
             <div className="text-center">
               <div className="text-5xl font-bold text-purple-600 mb-2">2 min</div>
               <p className="text-gray-600">Daily reading time</p>
-            </div>
-            <div className="text-center">
-              <div className="text-5xl font-bold text-purple-600 mb-2">$9</div>
-              <p className="text-gray-600">Per month</p>
             </div>
             <div className="text-center">
               <div className="text-5xl font-bold text-purple-600 mb-2">100%</div>
@@ -185,9 +126,17 @@ export default async function HomePage() {
             </div>
           </div>
 
-          <GetStartedButton />
+          {/* CTA */}
+          <Link
+            href="/okc/feed"
+            className="inline-flex items-center gap-2 px-10 py-5 bg-purple-600 text-white font-bold rounded-xl hover:bg-purple-700 transition-all shadow-lg text-lg"
+          >
+            View Feed
+            <ArrowRight className="w-5 h-5" />
+          </Link>
         </div>
       </div>
+
 
       <Footer />
     </main>
