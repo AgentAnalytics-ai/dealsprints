@@ -128,27 +128,34 @@ function filterRecentArticles(items: RSSItem[], monthsBack: number = 2): RSSItem
   });
 }
 
-// AI rewrite summary
-async function rewriteSummary(title: string, content: string): Promise<string> {
+// Generate original insight (not rewriting copyrighted content)
+async function generateOriginalInsight(title: string, content: string): Promise<string> {
   try {
     const result = await generateText({
       model: openai('gpt-4o-mini'),
       messages: [
         {
           role: 'system',
-          content: `You rewrite news as a local OKC business insider. Write 2-3 sentences maximum. Always mention the specific neighborhood or area. Use original words, be conversational but professional.`
+          content: `You're an OKC business intelligence analyst. Write original insights from development/economic news.
+Focus on what this means for OKC businesses, opportunities, and growth.
+Write 2-3 sentences. Be specific about neighborhoods, areas, and business implications.
+This is YOUR original analysis of public information, not a rewrite of copyrighted content.`
         },
         {
           role: 'user',
-          content: `Rewrite this article:\n\nTitle: ${title}\n\nContent: ${content.substring(0, 500)}\n\nWrite your rewrite now (2-3 sentences):`
+          content: `Development/Economic News:
+Title: ${title}
+Content: ${content.substring(0, 500)}
+
+Write an original insight about what this means for OKC businesses and opportunities.`
         }
       ],
       temperature: 0.7,
     });
     
-    return result.text;
+    return result.text.trim();
   } catch (error) {
-    console.error('❌ AI rewrite error:', error);
+    console.error('❌ AI generation error:', error);
     return content.substring(0, 280); // Fallback
   }
 }
@@ -255,12 +262,14 @@ export async function POST(request: NextRequest) {
     console.log(`📅 Fetching posts from past ${monthsBack} months`);
     console.log(`📰 Source: ${sourceName}`);
 
-    // Map of source names to RSS URLs
+    // Map of source names to RSS URLs (LEGAL SOURCES ONLY)
+    // Removed copyrighted news sources - only keeping development/economic development feeds
     const RSS_SOURCES: Record<string, string> = {
       'OKC Chamber': 'https://www.okcchamber.com/feed/',
-      'Journal Record': 'https://journalrecord.com/feed/',
-      'NonDoc': 'https://nondoc.com/feed/',
-      'The Oklahoman': 'https://www.oklahoman.com/business/feed/',
+      'City of OKC News': 'https://www.okc.gov/news/feed/',
+      'Greater OKC Partnership': 'https://greateroklahomacity.com/news/feed/',
+      'Downtown OKC Inc': 'https://www.downtownokc.com/news-updates/feed/',
+      'i2E - Innovation to Enterprise': 'https://i2e.org/feed/',
     };
 
     const RSS_URL = RSS_SOURCES[sourceName] || 'https://www.okcchamber.com/feed/';
@@ -294,8 +303,8 @@ export async function POST(request: NextRequest) {
         
         console.log(`   ✨ Processing new article: ${article.title}`);
         
-        // AI rewrite summary
-        const aiSummary = await rewriteSummary(
+        // Generate original insight (not rewriting)
+        const aiSummary = await generateOriginalInsight(
           article.title, 
           article.contentSnippet || ''
         );
@@ -318,6 +327,7 @@ export async function POST(request: NextRequest) {
             ai_location: location,
             ai_tags: tags,
             status: 'pending_photo',
+            data_type: 'rss', // Mark as RSS source
           });
         
         if (error) {

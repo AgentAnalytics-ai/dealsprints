@@ -77,9 +77,10 @@ export default function BackfillPage() {
                   disabled={isRunning}
                 >
                   <option value="OKC Chamber">OKC Chamber</option>
-                  <option value="Journal Record">Journal Record</option>
-                  <option value="NonDoc">NonDoc</option>
-                  <option value="The Oklahoman">The Oklahoman</option>
+                  <option value="City of OKC News">City of OKC News</option>
+                  <option value="Greater OKC Partnership">Greater OKC Partnership</option>
+                  <option value="Downtown OKC Inc">Downtown OKC Inc</option>
+                  <option value="i2E - Innovation to Enterprise">i2E - Innovation to Enterprise</option>
                 </select>
               </div>
               <div>
