@@ -173,6 +173,21 @@ interface RSSItem {
   contentSnippet?: string;
 }
 
+interface PublicDataRecord {
+  id: string; // Unique identifier for this record
+  type: PublicDataSource['type'];
+  source: string;
+  title: string;
+  address?: string;
+  value?: number;
+  date: string;
+  rawData: Record<string, any>; // Store original data for reference
+  location?: string;
+  category?: string;
+  businessName?: string;
+  permitNumber?: string;
+}
+
 interface ProcessingStats {
   rssScraped: number;
   rssNew: number;
@@ -327,6 +342,8 @@ async function savePost(post: {
   ai_tags: string[];
   status: string;
   data_type?: string;
+  data_value?: number;
+  data_address?: string;
 }): Promise<boolean> {
   try {
     const { error } = await supabaseAdmin
@@ -342,6 +359,187 @@ async function savePost(post: {
   } catch (error) {
     console.error('Save post error:', error);
     return false;
+  }
+}
+
+// ============================================================================
+// PUBLIC DATA SCRAPING (Government Data Sources)
+// ============================================================================
+
+/**
+ * Scrape building permits from OKC.gov
+ * Legal: Public records, no authentication required
+ * 
+ * Note: Actual HTML structure needs to be inspected and parser adjusted
+ */
+async function scrapeBuildingPermits(url: string, sourceName: string): Promise<PublicDataRecord[]> {
+  try {
+    console.log(`   📡 Fetching ${sourceName}...`);
+    
+    const response = await fetch(url, {
+      headers: {
+        'User-Agent': 'DealSprints OKC Intelligence Bot/1.0 (contact@dealsprints.com)',
+        'Accept': 'text/html,application/xhtml+xml',
+      },
+      next: { revalidate: 0 },
+    });
+
+    if (!response.ok) {
+      console.error(`   ❌ HTTP ${response.status} from ${sourceName}`);
+      return [];
+    }
+
+    const html = await response.text();
+    const records: PublicDataRecord[] = [];
+
+    // TODO: Inspect actual OKC.gov building permits page structure
+    // This is a flexible parser that can be adjusted based on actual HTML
+    
+    // Try to find permit listings - adjust selectors based on actual page
+    // Common patterns: tables, divs with class names, data attributes
+    
+    // Example pattern (adjust based on actual site):
+    // Look for permit entries - this is a template that needs site-specific adjustment
+    const permitPatterns = [
+      /<tr[^>]*>[\s\S]*?<\/tr>/gi, // Table rows
+      /<div[^>]*class="[^"]*permit[^"]*"[^>]*>[\s\S]*?<\/div>/gi, // Permit divs
+    ];
+
+    // For now, return empty array - needs actual site inspection
+    // Once you inspect okc.gov/development-services/building-permits,
+    // adjust this parser to match the actual HTML structure
+    
+    console.log(`   ⚠️  Parser needs site-specific adjustment for ${sourceName}`);
+    console.log(`   💡 Tip: Inspect the HTML structure of ${url} and adjust the parser`);
+    
+    return records;
+  } catch (error) {
+    console.error(`   ❌ Error scraping ${sourceName}:`, error);
+    return [];
+  }
+}
+
+/**
+ * Scrape business licenses from Oklahoma Secretary of State
+ * Legal: Public business filings
+ */
+async function scrapeBusinessLicenses(url: string, sourceName: string): Promise<PublicDataRecord[]> {
+  try {
+    console.log(`   📡 Fetching ${sourceName}...`);
+    
+    // Note: This may require form submission or API if available
+    // Check if OK SOS has an API or public data export
+    
+    const response = await fetch(url, {
+      headers: {
+        'User-Agent': 'DealSprints OKC Intelligence Bot/1.0',
+      },
+      next: { revalidate: 0 },
+    });
+
+    if (!response.ok) {
+      console.error(`   ❌ HTTP ${response.status} from ${sourceName}`);
+      return [];
+    }
+
+    // TODO: Implement parsing based on actual site structure
+    console.log(`   ⚠️  Parser needs site-specific adjustment for ${sourceName}`);
+    
+    return [];
+  } catch (error) {
+    console.error(`   ❌ Error scraping ${sourceName}:`, error);
+    return [];
+  }
+}
+
+/**
+ * Scrape liquor licenses from ABLE Commission
+ * Legal: Public license data
+ */
+async function scrapeLiquorLicenses(url: string, sourceName: string): Promise<PublicDataRecord[]> {
+  try {
+    console.log(`   📡 Fetching ${sourceName}...`);
+    
+    // ABLE Commission may have an API or public data
+    const response = await fetch(url, {
+      headers: {
+        'User-Agent': 'DealSprints OKC Intelligence Bot/1.0',
+      },
+      next: { revalidate: 0 },
+    });
+
+    if (!response.ok) {
+      console.error(`   ❌ HTTP ${response.status} from ${sourceName}`);
+      return [];
+    }
+
+    // TODO: Implement parsing based on actual ABLE site structure
+    console.log(`   ⚠️  Parser needs site-specific adjustment for ${sourceName}`);
+    
+    return [];
+  } catch (error) {
+    console.error(`   ❌ Error scraping ${sourceName}:`, error);
+    return [];
+  }
+}
+
+/**
+ * Scrape property records from Oklahoma County Assessor
+ * Legal: Public property records
+ */
+async function scrapePropertyRecords(url: string, sourceName: string): Promise<PublicDataRecord[]> {
+  try {
+    console.log(`   📡 Fetching ${sourceName}...`);
+    
+    const response = await fetch(url, {
+      headers: {
+        'User-Agent': 'DealSprints OKC Intelligence Bot/1.0',
+      },
+      next: { revalidate: 0 },
+    });
+
+    if (!response.ok) {
+      console.error(`   ❌ HTTP ${response.status} from ${sourceName}`);
+      return [];
+    }
+
+    // TODO: Implement parsing based on actual assessor site
+    console.log(`   ⚠️  Parser needs site-specific adjustment for ${sourceName}`);
+    
+    return [];
+  } catch (error) {
+    console.error(`   ❌ Error scraping ${sourceName}:`, error);
+    return [];
+  }
+}
+
+/**
+ * Scrape zoning changes from OKC Planning Commission
+ * Legal: Public planning documents
+ */
+async function scrapeZoningChanges(url: string, sourceName: string): Promise<PublicDataRecord[]> {
+  try {
+    console.log(`   📡 Fetching ${sourceName}...`);
+    
+    const response = await fetch(url, {
+      headers: {
+        'User-Agent': 'DealSprints OKC Intelligence Bot/1.0',
+      },
+      next: { revalidate: 0 },
+    });
+
+    if (!response.ok) {
+      console.error(`   ❌ HTTP ${response.status} from ${sourceName}`);
+      return [];
+    }
+
+    // TODO: Implement parsing based on actual planning site
+    console.log(`   ⚠️  Parser needs site-specific adjustment for ${sourceName}`);
+    
+    return [];
+  } catch (error) {
+    console.error(`   ❌ Error scraping ${sourceName}:`, error);
+    return [];
   }
 }
 
@@ -406,6 +604,176 @@ Write an original insight about what this means for OKC businesses and opportuni
 function createFallbackInsight(title: string, content: string): string {
   const location = extractLocation(title, content);
   return `New development activity in ${location}. This announcement suggests potential opportunities for local businesses in the area.`;
+}
+
+/**
+ * Generate original insight from public data record
+ * This creates YOUR analysis of public data, not rewriting copyrighted content
+ */
+async function generateInsightFromPublicData(
+  record: PublicDataRecord,
+  dataType: PublicDataSource['type']
+): Promise<string> {
+  try {
+    const systemPrompt = `You're an OKC business intelligence analyst. Write original insights from public data.
+Be specific: mention addresses, values, companies when available.
+Write 2-3 sentences in a conversational, insider tone.
+Focus on what this means for OKC businesses and opportunities.
+This is YOUR original analysis of public records, not a rewrite.`;
+
+    let userPrompt = '';
+    
+    switch (dataType) {
+      case 'permit':
+        userPrompt = `New building permit data:
+- Address: ${record.address || 'Unknown'}
+- Type: Building Permit
+- Value: ${record.value ? `$${record.value.toLocaleString()}` : 'Not specified'}
+- Date: ${new Date(record.date).toLocaleDateString()}
+- Location: ${record.location || 'Oklahoma City'}
+
+Write an original insight about what this building permit means for OKC. What opportunities does this create? What does this suggest about the area?`;
+        break;
+        
+      case 'license':
+        userPrompt = `New business license data:
+- Business: ${record.businessName || record.title}
+- Location: ${record.location || 'Oklahoma City'}
+- Date: ${new Date(record.date).toLocaleDateString()}
+
+Write an original insight about this new business coming to OKC. What does this mean for the local market?`;
+        break;
+        
+      case 'liquor':
+        userPrompt = `New liquor license application:
+- Business: ${record.businessName || record.title}
+- Location: ${record.location || 'Oklahoma City'}
+- Date: ${new Date(record.date).toLocaleDateString()}
+
+Write an original insight about this new restaurant/bar coming to OKC. What does this suggest about the area's growth?`;
+        break;
+        
+      case 'property':
+        userPrompt = `New property transaction:
+- Address: ${record.address || 'Unknown'}
+- Value: ${record.value ? `$${record.value.toLocaleString()}` : 'Not specified'}
+- Date: ${new Date(record.date).toLocaleDateString()}
+- Location: ${record.location || 'Oklahoma City'}
+
+Write an original insight about what this property transaction means for OKC. What opportunities does this suggest?`;
+        break;
+        
+      case 'zoning':
+        userPrompt = `New zoning change:
+- Location: ${record.location || 'Oklahoma City'}
+- Date: ${new Date(record.date).toLocaleDateString()}
+- Details: ${record.title}
+
+Write an original insight about what this zoning change means for OKC development. What does this suggest about future growth?`;
+        break;
+        
+      default:
+        userPrompt = `New public data:
+- Title: ${record.title}
+- Location: ${record.location || 'Oklahoma City'}
+- Date: ${new Date(record.date).toLocaleDateString()}
+
+Write an original insight about what this means for OKC.`;
+    }
+
+    const result = await generateText({
+      model: openai('gpt-4o-mini'),
+      messages: [
+        {
+          role: 'system',
+          content: systemPrompt
+        },
+        {
+          role: 'user',
+          content: userPrompt
+        }
+      ],
+      temperature: 0.7,
+    });
+
+    return result.text.trim();
+  } catch (error) {
+    console.error('AI generation error:', error);
+    return createFallbackInsightFromPublicData(record, dataType);
+  }
+}
+
+/**
+ * Fallback insight for public data
+ */
+function createFallbackInsightFromPublicData(
+  record: PublicDataRecord,
+  dataType: PublicDataSource['type']
+): string {
+  const location = record.location || 'Oklahoma City';
+  
+  switch (dataType) {
+    case 'permit':
+      return `New building permit filed${record.address ? ` at ${record.address}` : ''} in ${location}. ${record.value ? `Project value: $${record.value.toLocaleString()}.` : ''} This suggests new development activity in the area.`;
+    case 'license':
+      return `New business license registered in ${location}. This indicates a new business is planning to open in the area.`;
+    case 'liquor':
+      return `New liquor license application in ${location}. This suggests a new restaurant or bar is coming to the area.`;
+    case 'property':
+      return `New property transaction in ${location}. ${record.value ? `Transaction value: $${record.value.toLocaleString()}.` : ''} This may indicate development or investment activity.`;
+    case 'zoning':
+      return `New zoning change in ${location}. This suggests potential development or redevelopment in the area.`;
+    default:
+      return `New activity detected in ${location}. This may indicate business growth or development in the area.`;
+  }
+}
+
+/**
+ * Categorize public data record
+ */
+function categorizePublicData(record: PublicDataRecord, dataType: PublicDataSource['type']): string {
+  switch (dataType) {
+    case 'permit':
+      return record.value && record.value > 1000000 ? 'development' : 'construction';
+    case 'license':
+      return 'opening';
+    case 'liquor':
+      return 'opening';
+    case 'property':
+      return 'real-estate';
+    case 'zoning':
+      return 'development';
+    default:
+      return 'development';
+  }
+}
+
+/**
+ * Extract tags from public data record
+ */
+function extractTagsFromPublicData(record: PublicDataRecord, dataType: PublicDataSource['type']): string[] {
+  const tags: string[] = ['okc'];
+  const text = `${record.title} ${record.address || ''} ${record.businessName || ''}`.toLowerCase();
+  
+  // Industry tags based on data type
+  if (dataType === 'liquor' || text.includes('restaurant') || text.includes('bar')) {
+    tags.push('food-beverage');
+  }
+  if (dataType === 'property' || text.includes('real estate') || text.includes('property')) {
+    tags.push('real-estate');
+  }
+  if (dataType === 'permit' && record.value && record.value > 500000) {
+    tags.push('development');
+  }
+  
+  // Location tags
+  if (record.location) {
+    if (record.location.includes('Bricktown')) tags.push('bricktown');
+    if (record.location.includes('Midtown')) tags.push('midtown');
+    if (record.location.includes('Downtown')) tags.push('downtown');
+  }
+  
+  return tags.slice(0, 5);
 }
 
 // ============================================================================
@@ -630,19 +998,107 @@ export async function GET(request: NextRequest) {
     }
 
     // ========================================================================
-    // PROCESS PUBLIC DATA SOURCES (Placeholder for future implementation)
+    // PROCESS PUBLIC DATA SOURCES (Government Data Scraping)
     // ========================================================================
     
     const enabledDataSources = PUBLIC_DATA_SOURCES.filter(s => s.enabled);
     if (enabledDataSources.length > 0) {
       console.log('📊 Processing public data sources...');
-      // TODO: Implement parsers for each data source
-      // For now, this section is ready but not active
+      
       for (const source of enabledDataSources) {
-        console.log(`   ⚠️  ${source.name} - Parser not yet implemented`);
+        try {
+          console.log(`📊 Processing ${source.name} (${source.type})...`);
+          
+          // Rate limiting: Wait before each source
+          await new Promise(resolve => setTimeout(resolve, source.rateLimitMs));
+          
+          // Scrape based on type
+          let records: PublicDataRecord[] = [];
+          
+          switch (source.type) {
+            case 'permit':
+              records = await scrapeBuildingPermits(source.url, source.name);
+              break;
+            case 'license':
+              records = await scrapeBusinessLicenses(source.url, source.name);
+              break;
+            case 'liquor':
+              records = await scrapeLiquorLicenses(source.url, source.name);
+              break;
+            case 'property':
+              records = await scrapePropertyRecords(source.url, source.name);
+              break;
+            case 'zoning':
+              records = await scrapeZoningChanges(source.url, source.name);
+              break;
+          }
+          
+          stats.dataScraped += records.length;
+          stats.bySource[source.name] = records.length;
+          console.log(`   Found ${records.length} records`);
+          
+          // Process each record
+          for (const record of records) {
+            try {
+              const recordId = `${source.type}-${record.id}`;
+              
+              // Check for duplicates
+              const exists = await recordExists(recordId);
+              if (exists) {
+                stats.rssDuplicates++; // Reuse duplicate counter
+                continue;
+              }
+              
+              console.log(`   ✨ Processing: ${record.title.substring(0, 60)}...`);
+              
+              // Generate original insight from public data
+              const insight = await generateInsightFromPublicData(record, source.type);
+              
+              // Extract metadata
+              const category = categorizePublicData(record, source.type);
+              const location = record.location || extractLocation(record.title, '');
+              const tags = extractTagsFromPublicData(record, source.type);
+              
+              // Save to database
+              const saved = await savePost({
+                source_url: recordId,
+                source_name: source.name,
+                scraped_title: record.title,
+                scraped_date: record.date,
+                ai_summary: insight,
+                ai_category: category,
+                ai_location: location,
+                ai_tags: tags,
+                status: 'pending_photo',
+                data_type: source.type, // Mark as permit, license, etc.
+                data_value: record.value,
+                data_address: record.address,
+              });
+              
+              if (saved) {
+                stats.dataNew++;
+                console.log(`   ✅ Saved`);
+              } else {
+                stats.errors++;
+                console.log(`   ⚠️  Failed to save`);
+              }
+              
+              // Rate limit: Wait between AI calls
+              await new Promise(resolve => setTimeout(resolve, 500));
+              
+            } catch (error) {
+              console.error(`   ❌ Error processing record:`, error);
+              stats.errors++;
+            }
+          }
+          
+        } catch (error) {
+          console.error(`   ❌ Error processing ${source.name}:`, error);
+          stats.errors++;
+        }
       }
     } else {
-      console.log('📊 Public data sources: All disabled (parsers to be implemented)');
+      console.log('📊 Public data sources: All disabled (enable in code to activate)');
     }
 
     // ========================================================================
@@ -666,7 +1122,7 @@ export async function GET(request: NextRequest) {
           enabled: enabledDataSources.length,
         },
       },
-      message: `Processed ${stats.rssScraped} RSS articles (${stats.rssNew} new, ${stats.rssDuplicates} duplicates)`,
+      message: `Processed ${stats.rssScraped} RSS articles (${stats.rssNew} new) and ${stats.dataScraped} public data records (${stats.dataNew} new)`,
     };
 
     console.log('✅ Scraper completed:', summary);
