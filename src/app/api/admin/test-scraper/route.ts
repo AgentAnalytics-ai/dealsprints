@@ -62,12 +62,12 @@ export async function GET(request: NextRequest) {
       hasTables: /<table[^>]*>/i.test(html),
       hasForms: /<form[^>]*>/i.test(html),
       hasLists: /<ul[^>]*>|<ol[^>]*>/i.test(html),
-      hasDivs: (html.match(/<div[^>]*>/gi) || []).length,
-      hasTables: (html.match(/<table[^>]*>/gi) || []).length,
-      hasForms: (html.match(/<form[^>]*>/gi) || []).length,
-      hasInputs: (html.match(/<input[^>]*>/gi) || []).length,
-      hasSelects: (html.match(/<select[^>]*>/gi) || []).length,
-      hasButtons: (html.match(/<button[^>]*>|<input[^>]*type=["']submit["'][^>]*>/gi) || []).length,
+      divCount: (html.match(/<div[^>]*>/gi) || []).length,
+      tableCount: (html.match(/<table[^>]*>/gi) || []).length,
+      formCount: (html.match(/<form[^>]*>/gi) || []).length,
+      inputCount: (html.match(/<input[^>]*>/gi) || []).length,
+      selectCount: (html.match(/<select[^>]*>/gi) || []).length,
+      buttonCount: (html.match(/<button[^>]*>|<input[^>]*type=["']submit["'][^>]*>/gi) || []).length,
     };
     
     // Extract sample HTML snippets
