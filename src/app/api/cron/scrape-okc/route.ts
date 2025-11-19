@@ -95,7 +95,7 @@ const DEVELOPMENT_RSS_SOURCES: DevelopmentRSSSource[] = [
 
 interface PublicDataSource {
   name: string;
-  type: 'permit' | 'license' | 'liquor' | 'property' | 'zoning';
+  type: 'permit' | 'license' | 'liquor' | 'property' | 'zoning' | 'court';
   url: string;
   enabled: boolean;
   parser: string; // Function name to implement
@@ -145,6 +145,14 @@ const PUBLIC_DATA_SOURCES: PublicDataSource[] = [
     url: 'https://www.okc.gov/planning',
     enabled: false,
     parser: 'parseZoningChanges',
+    rateLimitMs: 2000,
+  },
+  {
+    name: 'Oklahoma County Court Records',
+    type: 'court',
+    url: 'https://www.oscn.net/dockets/',
+    enabled: false,
+    parser: 'parseCourtRecords',
     rateLimitMs: 2000,
   },
 ];
@@ -455,15 +463,22 @@ async function scrapeBusinessLicenses(url: string, sourceName: string): Promise<
 /**
  * Scrape liquor licenses from ABLE Commission
  * Legal: Public license data
+ * 
+ * ABLE has a public search at: https://able.ok.gov/licenses
+ * We'll search for recent OKC area licenses
  */
 async function scrapeLiquorLicenses(url: string, sourceName: string): Promise<PublicDataRecord[]> {
   try {
     console.log(`   📡 Fetching ${sourceName}...`);
     
-    // ABLE Commission may have an API or public data
+    // ABLE Commission public license search
+    // Try to get recent licenses for OKC area
+    // Note: This may require form submission - check actual site structure
+    
     const response = await fetch(url, {
       headers: {
-        'User-Agent': 'DealSprints OKC Intelligence Bot/1.0',
+        'User-Agent': 'DealSprints OKC Intelligence Bot/1.0 (contact@dealsprints.com)',
+        'Accept': 'text/html,application/xhtml+xml',
       },
       next: { revalidate: 0 },
     });
@@ -537,6 +552,57 @@ async function scrapeZoningChanges(url: string, sourceName: string): Promise<Pub
     console.log(`   ⚠️  Parser needs site-specific adjustment for ${sourceName}`);
     
     return [];
+  } catch (error) {
+    console.error(`   ❌ Error scraping ${sourceName}:`, error);
+    return [];
+  }
+}
+
+/**
+ * Scrape court records from Oklahoma State Courts Network (OSCN)
+ * Legal: Public court records
+ * 
+ * OSCN provides public access to court dockets and filings
+ * URL: https://www.oscn.net/dockets/
+ */
+async function scrapeCourtRecords(url: string, sourceName: string): Promise<PublicDataRecord[]> {
+  try {
+    console.log(`   📡 Fetching ${sourceName}...`);
+    
+    // OSCN has public court records
+    // Note: May require search parameters or API access
+    // Check if OSCN has an API or RSS feed for recent filings
+    
+    const response = await fetch(url, {
+      headers: {
+        'User-Agent': 'DealSprints OKC Intelligence Bot/1.0 (contact@dealsprints.com)',
+        'Accept': 'text/html,application/xhtml+xml',
+      },
+      next: { revalidate: 0 },
+    });
+
+    if (!response.ok) {
+      console.error(`   ❌ HTTP ${response.status} from ${sourceName}`);
+      return [];
+    }
+
+    const html = await response.text();
+    const records: PublicDataRecord[] = [];
+
+    // TODO: Parse OSCN docket listings
+    // OSCN typically shows recent filings in tables or lists
+    // Look for case numbers, parties, dates, and case types
+    
+    // Example pattern (adjust based on actual OSCN structure):
+    // - Look for table rows with case information
+    // - Extract case number, parties, filing date, case type
+    // - Filter for OKC/Oklahoma County cases
+    
+    console.log(`   ⚠️  Parser needs site-specific adjustment for ${sourceName}`);
+    console.log(`   💡 Tip: Inspect OSCN docket page structure and adjust parser`);
+    console.log(`   📋 OSCN may require search form submission - check for API access`);
+    
+    return records;
   } catch (error) {
     console.error(`   ❌ Error scraping ${sourceName}:`, error);
     return [];
@@ -1030,6 +1096,9 @@ export async function GET(request: NextRequest) {
               break;
             case 'zoning':
               records = await scrapeZoningChanges(source.url, source.name);
+              break;
+            case 'court':
+              records = await scrapeCourtRecords(source.url, source.name);
               break;
           }
           

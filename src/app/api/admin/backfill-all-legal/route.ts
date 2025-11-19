@@ -263,7 +263,7 @@ function extractTags(title: string, content: string): string[] {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json().catch(() => ({}));
-    const { targetCount = 20, monthsBack = 3 } = body;
+    const { targetCount = 20, monthsBack = 6 } = body; // Default to 6 months to find more content
     
     console.log('🚀 Backfilling all legal sources...');
     console.log(`🎯 Target: ${targetCount} new posts`);
@@ -292,7 +292,11 @@ export async function POST(request: NextRequest) {
         const okcArticles = filterOKCMetro(articles);
         const recentArticles = filterRecentArticles(okcArticles, monthsBack);
         
-        console.log(`   Found ${articles.length} total, ${okcArticles.length} OKC, ${recentArticles.length} recent`);
+        console.log(`   📊 Stats: ${articles.length} total → ${okcArticles.length} OKC → ${recentArticles.length} recent (past ${monthsBack} months)`);
+        
+        if (articles.length === 0) {
+          console.log(`   ⚠️  No articles found in RSS feed - feed may be empty or URL may be incorrect`);
+        }
         
         // Process articles until we hit target
         for (const article of recentArticles) {
@@ -306,6 +310,7 @@ export async function POST(request: NextRequest) {
             if (exists) {
               stats.totalDuplicates++;
               stats.bySource[source.name].duplicates++;
+              console.log(`   ⏭️  Duplicate: ${article.title.substring(0, 50)}...`);
               continue;
             }
             
