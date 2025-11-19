@@ -102,7 +102,7 @@ export async function GET(request: NextRequest) {
       recommendations: [
         analysis.hasTables ? '✅ Has tables - likely data in <tr> rows' : '❌ No tables found',
         analysis.hasForms ? '⚠️ Has forms - may require form submission' : '✅ No forms (direct access)',
-        analysis.hasDivs > 0 ? `✅ Has ${analysis.hasDivs} divs - may contain structured data` : '❌ No divs found',
+        analysis.divCount > 0 ? `✅ Has ${analysis.divCount} divs - may contain structured data` : '❌ No divs found',
         dataPatterns.hasPermitNumbers ? '✅ Found permit number patterns' : '❌ No permit numbers found',
         dataPatterns.hasAddresses ? '✅ Found address patterns' : '❌ No addresses found',
         dataPatterns.hasDollarAmounts ? '✅ Found dollar amounts' : '❌ No dollar amounts found',
