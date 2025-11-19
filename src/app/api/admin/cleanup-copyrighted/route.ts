@@ -91,11 +91,10 @@ export async function POST(request: NextRequest) {
     }
 
     // Actually delete
-    const { error: deleteError, count: deletedCount } = await supabaseAdmin
+    const { error: deleteError } = await supabaseAdmin
       .from('scraped_posts')
       .delete()
-      .in('source_name', COPYRIGHTED_SOURCES)
-      .select('id', { count: 'exact', head: true });
+      .in('source_name', COPYRIGHTED_SOURCES);
 
     if (deleteError) {
       console.error('Error deleting posts:', deleteError);
@@ -105,19 +104,19 @@ export async function POST(request: NextRequest) {
       }, { status: 500 });
     }
 
-    console.log(`✅ Deleted ${deletedCount || 0} posts from copyrighted sources`);
+    console.log(`✅ Deleted ${count} posts from copyrighted sources`);
 
     // Verify legal sources are still there
-    const { data: legalPosts, count: legalCount } = await supabaseAdmin
+    const { count: legalCount } = await supabaseAdmin
       .from('scraped_posts')
-      .select('id', { count: 'exact', head: true })
+      .select('*', { count: 'exact', head: true })
       .in('source_name', LEGAL_SOURCES);
 
     return NextResponse.json({
       success: true,
-      message: `Deleted ${deletedCount || 0} posts from copyrighted sources`,
+      message: `Deleted ${count} posts from copyrighted sources`,
       stats: {
-        deleted: deletedCount || 0,
+        deleted: count,
         bySource,
         remainingLegalPosts: legalCount || 0,
         copyrightedSources: COPYRIGHTED_SOURCES,
