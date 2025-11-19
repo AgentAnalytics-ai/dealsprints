@@ -120,7 +120,7 @@ export async function GET(request: NextRequest) {
         },
         unknownPosts: {
           count: unknownPosts.length,
-          sources: [...new Set(unknownPosts.map(p => p.source_name))],
+          sources: Array.from(new Set(unknownPosts.map(p => p.source_name))),
         },
       },
       bySource: Object.keys(bySource).map(source => ({
