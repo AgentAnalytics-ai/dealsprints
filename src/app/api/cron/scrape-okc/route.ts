@@ -110,8 +110,8 @@ const PUBLIC_DATA_SOURCES: PublicDataSource[] = [
   {
     name: 'OKC Building Permits',
     type: 'permit',
-    url: 'https://okc.gov/development-services/building-permits',
-    enabled: true, // ✅ Enabled - parser implemented
+    url: 'https://www.okc.gov/government/development-services',
+    enabled: true, // ✅ Enabled - parser implemented (URL may need adjustment)
     parser: 'parseBuildingPermits',
     rateLimitMs: 2000, // 2 seconds - be extra respectful of government sites
   },

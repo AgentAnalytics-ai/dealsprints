@@ -14,8 +14,12 @@ export async function GET(request: NextRequest) {
     
     const sources: Record<string, { url: string; name: string }> = {
       permits: {
-        url: 'https://okc.gov/development-services/building-permits',
+        url: 'https://www.okc.gov/government/development-services',
         name: 'OKC Building Permits',
+      },
+      permits2: {
+        url: 'https://www.okc.gov/departments/development-services',
+        name: 'OKC Development Services (Alt)',
       },
       liquor: {
         url: 'https://able.ok.gov/licenses',
@@ -50,6 +54,14 @@ export async function GET(request: NextRequest) {
         status: response.status,
         statusText: response.statusText,
         url: selectedSource.url,
+        note: response.status === 404 
+          ? 'URL may be incorrect. Try visiting the site manually to find the correct path.'
+          : 'Check if the site requires authentication or has changed its structure.',
+        suggestions: response.status === 404 ? [
+          'Visit okc.gov and navigate to Development Services section',
+          'Check if permits are in a different section',
+          'May require search form or API access',
+        ] : [],
       }, { status: response.status });
     }
     
