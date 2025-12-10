@@ -387,10 +387,7 @@ export async function POST(request: NextRequest) {
 
   } catch (error) {
     console.error('❌ Backfill error:', error);
-    let errorMessage = 'Unknown error';
-    if (error instanceof Error) {
-      errorMessage = error.message;
-    }
+    const errorMessage = error instanceof Error ? error.message : String(error || 'Unknown error');
     return NextResponse.json(
       { 
         error: 'Backfill failed', 
