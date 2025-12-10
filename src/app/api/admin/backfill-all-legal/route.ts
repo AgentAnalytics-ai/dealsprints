@@ -261,6 +261,16 @@ function extractTags(title: string, content: string): string[] {
 }
 
 export async function POST(request: NextRequest) {
+  // 🛑 PAUSED: Scraping disabled to save costs
+  return Response.json({ 
+    error: 'Scraping paused to save costs. Re-enable by removing this early return.',
+    paused: true 
+  }, { status: 503 });
+
+  // ============================================================================
+  // BELOW CODE IS PAUSED - Remove early return above to re-enable
+  // ============================================================================
+  
   try {
     const body = await request.json().catch(() => ({}));
     const { targetCount = 20, monthsBack = 6 } = body; // Default to 6 months to find more content

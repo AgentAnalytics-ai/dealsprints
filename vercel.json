@@ -1,9 +1,4 @@
 {
-  "crons": [
-    {
-      "path": "/api/cron/scrape-okc",
-      "schedule": "0 6 * * *"
-    }
-  ]
+  "crons": []
 }
 
