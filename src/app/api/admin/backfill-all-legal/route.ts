@@ -352,7 +352,7 @@ export async function POST(request: NextRequest) {
               });
             
             if (error) {
-              console.error(`   ❌ Error:`, error.message);
+              console.error(`   ❌ Error:`, error?.message || 'Unknown error');
               stats.totalErrors++;
             } else {
               stats.totalNew++;
