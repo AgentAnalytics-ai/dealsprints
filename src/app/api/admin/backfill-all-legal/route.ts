@@ -385,9 +385,14 @@ export async function POST(request: NextRequest) {
       message: `Backfilled ${stats.totalNew} new posts from legal sources (target: ${targetCount})`,
     });
 
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('❌ Backfill error:', error);
-    const errorMessage = error instanceof Error ? error.message : String(error || 'Unknown error');
+    let errorMessage = 'Unknown error';
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    } else if (error) {
+      errorMessage = String(error);
+    }
     return NextResponse.json(
       { 
         error: 'Backfill failed', 
