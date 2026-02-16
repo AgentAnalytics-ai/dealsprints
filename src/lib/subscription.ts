@@ -62,10 +62,19 @@ export async function checkSubscription(userId: string): Promise<SubscriptionSta
     }
 
     // Check subscription status with Stripe
-    const subscription = await stripe.subscriptions.retrieve(member.stripe_subscription_id) as Stripe.Subscription;
+    const subscription = await stripe.subscriptions.retrieve(member.stripe_subscription_id);
 
     const isActive = subscription.status === 'active' || subscription.status === 'trialing';
     const plan = subscription.items.data[0]?.price?.metadata?.plan as 'realtor' | null || null;
+
+    // Safely access subscription properties
+    const currentPeriodEnd = 'current_period_end' in subscription && subscription.current_period_end
+      ? new Date(subscription.current_period_end * 1000)
+      : null;
+    
+    const cancelAtPeriodEnd = 'cancel_at_period_end' in subscription 
+      ? subscription.cancel_at_period_end || false
+      : false;
 
     return {
       hasAccess: isActive,
@@ -74,10 +83,8 @@ export async function checkSubscription(userId: string): Promise<SubscriptionSta
       customerId: member.stripe_customer_id,
       plan,
       status: subscription.status as SubscriptionStatus['status'],
-      currentPeriodEnd: subscription.current_period_end 
-        ? new Date(subscription.current_period_end * 1000) 
-        : null,
-      cancelAtPeriodEnd: subscription.cancel_at_period_end || false,
+      currentPeriodEnd,
+      cancelAtPeriodEnd,
     };
   } catch (error) {
     console.error('Subscription check error:', error);
