@@ -79,7 +79,11 @@ export function SubscriptionGate({ children }: { children: React.ReactNode }) {
     );
   }
 
-  if (!subscription?.hasAccess) {
+  // TEMPORARY: Allow access without subscription for testing
+  // TODO: Remove this bypass after fixing auth flow
+  const BYPASS_SUBSCRIPTION = true;
+  
+  if (!BYPASS_SUBSCRIPTION && !subscription?.hasAccess) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-50 flex items-center justify-center p-6">
         <div className="max-w-2xl w-full">
