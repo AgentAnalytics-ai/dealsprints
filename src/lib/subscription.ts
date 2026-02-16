@@ -67,14 +67,13 @@ export async function checkSubscription(userId: string): Promise<SubscriptionSta
     const isActive = subscription.status === 'active' || subscription.status === 'trialing';
     const plan = subscription.items.data[0]?.price?.metadata?.plan as 'realtor' | null || null;
 
-    // Safely access subscription properties
-    const currentPeriodEnd = 'current_period_end' in subscription && subscription.current_period_end
-      ? new Date(subscription.current_period_end * 1000)
+    // Safely access subscription properties with type assertion
+    const subscriptionData = subscription as unknown as Stripe.Subscription;
+    const currentPeriodEnd = subscriptionData.current_period_end
+      ? new Date(subscriptionData.current_period_end * 1000)
       : null;
     
-    const cancelAtPeriodEnd = 'cancel_at_period_end' in subscription 
-      ? subscription.cancel_at_period_end || false
-      : false;
+    const cancelAtPeriodEnd = subscriptionData.cancel_at_period_end || false;
 
     return {
       hasAccess: isActive,
