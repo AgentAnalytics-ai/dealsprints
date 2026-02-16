@@ -11,6 +11,20 @@ import { generateText } from 'ai';
 
 export const dynamic = 'force-dynamic';
 
+// Type guard for error handling
+function getErrorMessage(error: unknown): string {
+  if (error instanceof Error) {
+    return error.message;
+  }
+  if (typeof error === 'string') {
+    return error;
+  }
+  if (error !== null && error !== undefined) {
+    return String(error);
+  }
+  return 'Unknown error';
+}
+
 // Legal RSS sources (same as in cron)
 const LEGAL_RSS_SOURCES = [
   {
@@ -387,14 +401,7 @@ export async function POST(request: NextRequest) {
 
   } catch (err: unknown) {
     console.error('❌ Backfill error:', err);
-    let errorMessage = 'Unknown error';
-    if (err instanceof Error) {
-      errorMessage = err.message;
-    } else if (typeof err === 'string') {
-      errorMessage = err;
-    } else if (err !== null && err !== undefined) {
-      errorMessage = String(err);
-    }
+    const errorMessage = getErrorMessage(err);
     
     return NextResponse.json(
       { 
