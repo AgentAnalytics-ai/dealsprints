@@ -131,12 +131,6 @@ export function SubscriptionGate({ children }: { children: React.ReactNode }) {
                 {subscribing ? 'Processing...' : 'Subscribe Now'}
                 <ArrowRight className="w-5 h-5" />
               </button>
-              <Link
-                href="/pricing"
-                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-gray-700 font-semibold rounded-xl border-2 border-gray-300 hover:border-gray-400 transition-all"
-              >
-                View Pricing
-              </Link>
             </div>
 
             {/* Status Info */}
