@@ -32,5 +32,9 @@ export interface ScrapedPost {
   published_at: string | null;
   created_at: string;
   updated_at: string;
+  // Realtor dashboard fields
+  data_type?: string | null; // 'permit', 'license', 'liquor', 'property', 'zoning', 'rss'
+  data_value?: number | null; // Permit/property value
+  data_address?: string | null; // Address for geocoding
 }
 

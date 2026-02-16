@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "deploy": "powershell -ExecutionPolicy Bypass -File ./deploy.ps1",
+    "deploy:quick": "powershell -ExecutionPolicy Bypass -File ./deploy-quick.ps1"
   },
   "dependencies": {
     "@ai-sdk/google": "^2.0.17",

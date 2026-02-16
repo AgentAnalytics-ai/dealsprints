@@ -25,6 +25,12 @@ export function Header() {
           {/* Minimal Navigation - Right Side Only */}
           <nav className="hidden md:flex items-center gap-8">
             <Link 
+              href="/realtor/dashboard" 
+              className={`${isHomepage ? 'text-white/90 hover:text-white' : 'text-gray-700 hover:text-gray-900'} font-medium transition-all`}
+            >
+              Realtor Dashboard
+            </Link>
+            <Link 
               href="/okc/feed" 
               className={`${isHomepage ? 'text-white/90 hover:text-white' : 'text-gray-700 hover:text-gray-900'} font-medium transition-all`}
             >

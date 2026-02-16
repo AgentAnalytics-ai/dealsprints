@@ -84,8 +84,15 @@ export default async function HomePage() {
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-5 justify-center items-center mb-8">
               <Link
-                href="/okc/feed"
+                href="/realtor/dashboard"
                 className="group px-10 py-5 bg-white text-purple-600 font-bold rounded-xl hover:bg-gray-50 transition-all shadow-2xl text-lg w-full sm:w-auto flex items-center justify-center gap-3"
+              >
+                Realtor Dashboard
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </Link>
+              <Link
+                href="/okc/feed"
+                className="group px-10 py-5 bg-white/20 backdrop-blur-md text-white font-bold rounded-xl hover:bg-white/30 transition-all border border-white/30 text-lg w-full sm:w-auto flex items-center justify-center gap-3"
               >
                 Browse Feed Free
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
