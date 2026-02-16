@@ -1,23 +1,17 @@
-import { supabase } from '@/lib/supabase';
-import { Header } from '@/components/Header';
-import { Footer } from '@/components/Footer';
-import { GetStartedButton } from '@/components/home/GetStartedButton';
-import { TrendingUp, Clock, CheckCircle, ArrowRight, Zap } from 'lucide-react';
-import Link from 'next/link';
+import { redirect } from 'next/navigation';
+import { getSession } from '@/lib/auth';
 
 export default async function HomePage() {
-  // Calculate date 30 days ago
-  const thirtyDaysAgo = new Date();
-  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+  // Check if user is authenticated
+  const { session } = await getSession();
   
-  // Get total count for stats
-  const { count: publishedCount } = await supabase
-    .from('scraped_posts')
-    .select('*', { count: 'exact', head: true })
-    .eq('status', 'published')
-    .gte('published_at', thirtyDaysAgo.toISOString());
-
-  return (
+  // If authenticated, redirect to dashboard
+  if (session) {
+    redirect('/realtor/dashboard');
+  }
+  
+  // If not authenticated, redirect to login
+  redirect('/login');
     <main className="min-h-screen">
       <Header />
       

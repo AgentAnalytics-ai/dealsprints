@@ -9,6 +9,7 @@ import { supabaseAuth } from '@/lib/auth';
 export async function GET(request: NextRequest) {
   const requestUrl = new URL(request.url);
   const code = requestUrl.searchParams.get('code');
+  const redirectTo = requestUrl.searchParams.get('redirect') || '/realtor/dashboard';
 
   if (code) {
     try {
@@ -20,7 +21,7 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  // Redirect to dashboard after successful auth
-  return NextResponse.redirect(`${requestUrl.origin}/dashboard`);
+  // Redirect to dashboard (or specified redirect) after successful auth
+  return NextResponse.redirect(`${requestUrl.origin}${redirectTo}`);
 }
 
