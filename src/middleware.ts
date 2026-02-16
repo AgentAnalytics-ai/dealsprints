@@ -15,14 +15,16 @@ export async function middleware(request: NextRequest) {
 
   // Protect realtor routes
   if (pathname.startsWith('/realtor')) {
-    // Get session from cookies
-    const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+    // Get session from cookies using type assertion to bypass TypeScript limitation
+    const cookieOptions = {
       cookies: {
         get(name: string) {
           return request.cookies.get(name)?.value;
         },
       },
-    });
+    } as any;
+    
+    const supabase = createClient(supabaseUrl, supabaseAnonKey, cookieOptions);
 
     const { data: { session } } = await supabase.auth.getSession();
 
