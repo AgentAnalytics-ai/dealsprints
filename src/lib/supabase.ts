@@ -36,5 +36,10 @@ export interface ScrapedPost {
   data_type?: string | null; // 'permit', 'license', 'liquor', 'property', 'zoning', 'rss'
   data_value?: number | null; // Permit/property value
   data_address?: string | null; // Address for geocoding
+  // Market intelligence fields
+  impact_type?: 'positive' | 'negative' | 'mixed' | null; // Property value impact
+  impact_radius?: number | null; // Impact radius in miles
+  impact_value_change?: number | null; // Estimated % value change
+  development_status?: 'planned' | 'approved' | 'in_progress' | 'completed' | null;
 }
 

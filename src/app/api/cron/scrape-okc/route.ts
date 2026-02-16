@@ -353,6 +353,10 @@ async function savePost(post: {
   data_type?: string;
   data_value?: number;
   data_address?: string;
+  impact_type?: 'positive' | 'negative' | 'mixed' | null;
+  impact_radius?: number | null;
+  impact_value_change?: number | null;
+  development_status?: 'planned' | 'approved' | 'in_progress' | 'completed' | null;
 }): Promise<boolean> {
   try {
     const { error } = await supabaseAdmin
@@ -822,6 +826,109 @@ Write an original insight about what this means for OKC businesses and opportuni
 }
 
 /**
+ * Classify development impact on property values
+ * Identifies public housing, schools, commercial, etc.
+ */
+async function classifyDevelopmentImpact(
+  title: string,
+  content: string
+): Promise<{
+  impact_type: 'positive' | 'negative' | 'mixed' | null;
+  impact_radius: number | null;
+  impact_value_change: number | null;
+  development_status: 'planned' | 'approved' | 'in_progress' | 'completed' | null;
+}> {
+  try {
+    const fullText = `${title} ${content}`.toLowerCase();
+    
+    // Check for public/government housing keywords (NEGATIVE IMPACT)
+    const negativeKeywords = [
+      'affordable housing',
+      'public housing',
+      'low-income housing',
+      'hud',
+      'housing authority',
+      'subsidized housing',
+      'section 8',
+      'public housing authority',
+      'government housing',
+      'income-restricted',
+      'housing assistance',
+    ];
+    
+    const hasNegativeImpact = negativeKeywords.some(keyword => fullText.includes(keyword));
+    
+    // Check for positive impact keywords (POSITIVE IMPACT)
+    const positiveKeywords = [
+      'new school',
+      'school construction',
+      'park',
+      'recreation center',
+      'community center',
+      'library',
+      'hospital',
+      'medical center',
+      'upscale',
+      'luxury',
+      'high-end',
+      'commercial development',
+      'retail development',
+    ];
+    
+    const hasPositiveImpact = positiveKeywords.some(keyword => fullText.includes(keyword));
+    
+    // Determine impact type
+    let impact_type: 'positive' | 'negative' | 'mixed' | null = null;
+    let impact_radius: number | null = null;
+    let impact_value_change: number | null = null;
+    
+    if (hasNegativeImpact) {
+      impact_type = 'negative';
+      impact_radius = 1.0; // 1 mile radius for public housing
+      impact_value_change = -8; // -8% average impact
+    } else if (hasPositiveImpact) {
+      impact_type = 'positive';
+      impact_radius = 0.5; // 0.5 mile radius for schools/parks
+      impact_value_change = 10; // +10% average impact
+    } else {
+      // Check for mixed-use or commercial
+      if (fullText.includes('mixed-use') || fullText.includes('commercial')) {
+        impact_type = 'mixed';
+        impact_radius = 0.5;
+        impact_value_change = 3; // +3% for commercial
+      }
+    }
+    
+    // Determine development status
+    let development_status: 'planned' | 'approved' | 'in_progress' | 'completed' | null = null;
+    if (fullText.includes('approved') || fullText.includes('approval')) {
+      development_status = 'approved';
+    } else if (fullText.includes('construction') || fullText.includes('building') || fullText.includes('underway')) {
+      development_status = 'in_progress';
+    } else if (fullText.includes('completed') || fullText.includes('opened') || fullText.includes('finished')) {
+      development_status = 'completed';
+    } else if (fullText.includes('proposed') || fullText.includes('planning') || fullText.includes('planned')) {
+      development_status = 'planned';
+    }
+    
+    return {
+      impact_type,
+      impact_radius,
+      impact_value_change,
+      development_status,
+    };
+  } catch (error) {
+    console.error('Impact classification error:', error);
+    return {
+      impact_type: null,
+      impact_radius: null,
+      impact_value_change: null,
+      development_status: null,
+    };
+  }
+}
+
+/**
  * Fallback insight generation if AI fails
  */
 function createFallbackInsight(title: string, content: string): string {
@@ -1194,6 +1301,12 @@ export async function GET(request: NextRequest) {
             const location = extractLocation(article.title, article.contentSnippet || '');
             const tags = extractTags(article.title, article.contentSnippet || '');
             
+            // Classify development impact (for market intelligence)
+            const impact = await classifyDevelopmentImpact(
+              article.title,
+              article.contentSnippet || ''
+            );
+            
             // Save to database
             const saved = await savePost({
               source_url: article.link,
@@ -1206,6 +1319,10 @@ export async function GET(request: NextRequest) {
               ai_tags: tags,
               status: 'pending_photo',
               data_type: 'rss', // Mark as RSS source
+              impact_type: impact.impact_type,
+              impact_radius: impact.impact_radius,
+              impact_value_change: impact.impact_value_change,
+              development_status: impact.development_status,
             });
             
             if (saved) {

@@ -119,6 +119,11 @@ export async function GET(request: NextRequest) {
         tags: post.ai_tags || [],
         score,
         opportunity,
+        // Market intelligence fields
+        impact_type: post.impact_type || null,
+        impact_radius: post.impact_radius || null,
+        impact_value_change: post.impact_value_change || null,
+        development_status: post.development_status || null,
         // Will be geocoded on frontend
         coordinates: null as { lat: number; lng: number } | null,
       };

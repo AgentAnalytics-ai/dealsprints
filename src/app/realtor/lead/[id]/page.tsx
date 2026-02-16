@@ -10,6 +10,7 @@ import { Footer } from '@/components/Footer';
 import { MapPin, Calendar, DollarSign, Building2, UtensilsCrossed, Home, ExternalLink, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import dynamicImport from 'next/dynamic';
+import { LeadNotes } from '@/components/realtor/LeadNotes';
 
 const GoogleMap = dynamicImport(() => import('@/components/realtor/RealtorMap'), {
   ssr: false,
@@ -224,6 +225,9 @@ export default async function LeadDetailPage({ params }: PageProps) {
 
           {/* Sidebar */}
           <div className="lg:col-span-1 space-y-6">
+            {/* Notes & Status */}
+            <LeadNotes leadId={lead.id} />
+
             {/* Tags */}
             {lead.tags.length > 0 && (
               <div className="bg-white rounded-lg shadow-lg p-6">

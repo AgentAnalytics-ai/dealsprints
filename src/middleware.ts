@@ -1,27 +1,47 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+/**
+ * Next.js Middleware
+ * Protects routes requiring authentication and subscription
+ */
 
-export function middleware(request: NextRequest) {
-  const url = new URL(request.url);
-  
-  // Redirect www to non-www
-  if (url.hostname.startsWith("www.")) {
-    url.hostname = url.hostname.replace("www.", "");
-    return NextResponse.redirect(url, 308);
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
+import { createClient } from '@supabase/supabase-js';
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+
+export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  // Protect realtor routes
+  if (pathname.startsWith('/realtor')) {
+    // Get session from cookies
+    const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+      cookies: {
+        get(name: string) {
+          return request.cookies.get(name)?.value;
+        },
+      },
+    });
+
+    const { data: { session } } = await supabase.auth.getSession();
+
+    // Redirect to login if not authenticated
+    if (!session) {
+      const loginUrl = new URL('/login', request.url);
+      loginUrl.searchParams.set('redirect', pathname);
+      return NextResponse.redirect(loginUrl);
+    }
+
+    // Check subscription status (will be checked again in the page component)
+    // Middleware just ensures they're logged in
   }
-  
+
   return NextResponse.next();
 }
 
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - api (API routes)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     */
-    "/((?!api|_next/static|_next/image|favicon.ico).*)",
+    '/realtor/:path*',
   ],
 };

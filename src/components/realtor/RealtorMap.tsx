@@ -6,7 +6,7 @@
 'use client';
 
 import { useMemo, useState, useEffect } from 'react';
-import { GoogleMap, Marker, InfoWindow, LoadScript } from '@react-google-maps/api';
+import { GoogleMap, Marker, InfoWindow, LoadScript, Circle } from '@react-google-maps/api';
 import { MapPin } from 'lucide-react';
 
 const libraries: ("places")[] = ["places"];
@@ -43,6 +43,11 @@ interface Lead {
   tags: string[];
   score: number;
   opportunity: 'hot' | 'warm' | 'future';
+  // Market intelligence fields
+  impact_type: 'positive' | 'negative' | 'mixed' | null;
+  impact_radius: number | null;
+  impact_value_change: number | null;
+  development_status: 'planned' | 'approved' | 'in_progress' | 'completed' | null;
   coordinates: { lat: number; lng: number } | null;
 }
 
@@ -65,12 +70,18 @@ export default function RealtorMap({ leads, selectedLead, onLeadSelect }: Realto
     return leads.filter(lead => lead.coordinates);
   }, [leads]);
 
-  // Get marker color based on type
-  const getMarkerColor = (type: string, opportunity: string) => {
-    if (opportunity === 'hot') return '#EF4444'; // Red for hot
-    if (opportunity === 'warm') return '#F59E0B'; // Yellow for warm
+  // Get marker color based on impact type (prioritize impact over opportunity)
+  const getMarkerColor = (lead: Lead) => {
+    // Impact type takes priority
+    if (lead.impact_type === 'negative') return '#EF4444'; // Red for negative impact
+    if (lead.impact_type === 'positive') return '#10B981'; // Green for positive impact
+    if (lead.impact_type === 'mixed') return '#F59E0B'; // Yellow for mixed impact
     
-    switch (type) {
+    // Fallback to opportunity/type
+    if (lead.opportunity === 'hot') return '#EF4444';
+    if (lead.opportunity === 'warm') return '#F59E0B';
+    
+    switch (lead.type) {
       case 'permit': return '#3B82F6'; // Blue
       case 'liquor': return '#10B981'; // Green
       case 'property': return '#8B5CF6'; // Purple
@@ -78,6 +89,19 @@ export default function RealtorMap({ leads, selectedLead, onLeadSelect }: Realto
       default: return '#6B7280'; // Gray
     }
   };
+
+  // Get circle color for impact radius
+  const getCircleColor = (impactType: string | null) => {
+    switch (impactType) {
+      case 'negative': return '#EF4444'; // Red
+      case 'positive': return '#10B981'; // Green
+      case 'mixed': return '#F59E0B'; // Yellow
+      default: return null;
+    }
+  };
+
+  // Convert miles to meters for Google Maps Circle radius
+  const milesToMeters = (miles: number) => miles * 1609.34;
 
   // Create custom marker icon
   const createMarkerIcon = (color: string) => {
@@ -119,17 +143,39 @@ export default function RealtorMap({ leads, selectedLead, onLeadSelect }: Realto
       {leadsWithCoords.map((lead) => {
         if (!lead.coordinates) return null;
         
-        const markerColor = getMarkerColor(lead.type, lead.opportunity);
+        const markerColor = getMarkerColor(lead);
         const icon = createMarkerIcon(markerColor);
+        const circleColor = getCircleColor(lead.impact_type);
         
         return (
-          <Marker
-            key={lead.id}
-            position={lead.coordinates}
-            icon={icon}
-            onClick={() => onLeadSelect(lead)}
-            title={lead.title}
-          >
+          <>
+            {/* Impact radius circle */}
+            {lead.impact_radius && circleColor && (
+              <Circle
+                key={`circle-${lead.id}`}
+                center={lead.coordinates}
+                radius={milesToMeters(lead.impact_radius)}
+                options={{
+                  fillColor: circleColor,
+                  fillOpacity: 0.1,
+                  strokeColor: circleColor,
+                  strokeOpacity: 0.5,
+                  strokeWeight: 2,
+                  clickable: false,
+                  zIndex: 1,
+                }}
+              />
+            )}
+            
+            {/* Lead marker */}
+            <Marker
+              key={lead.id}
+              position={lead.coordinates}
+              icon={icon}
+              onClick={() => onLeadSelect(lead)}
+              title={lead.title}
+              zIndex={2}
+            >
             {selectedLead?.id === lead.id && (
               <InfoWindow
                 position={lead.coordinates}
@@ -161,7 +207,7 @@ export default function RealtorMap({ leads, selectedLead, onLeadSelect }: Realto
                     {lead.summary}
                   </p>
                   
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 flex-wrap">
                     <span className="text-xs px-2 py-1 bg-purple-100 text-purple-800 rounded">
                       {lead.type}
                     </span>
@@ -170,11 +216,31 @@ export default function RealtorMap({ leads, selectedLead, onLeadSelect }: Realto
                         Hot Lead
                       </span>
                     )}
+                    {lead.impact_type && (
+                      <span className={`text-xs px-2 py-1 rounded ${
+                        lead.impact_type === 'negative' 
+                          ? 'bg-red-100 text-red-800'
+                          : lead.impact_type === 'positive'
+                          ? 'bg-green-100 text-green-800'
+                          : 'bg-yellow-100 text-yellow-800'
+                      }`}>
+                        {lead.impact_type === 'negative' && '🔴'}
+                        {lead.impact_type === 'positive' && '🟢'}
+                        {lead.impact_type === 'mixed' && '🟡'}
+                        {lead.impact_value_change && `${lead.impact_value_change > 0 ? '+' : ''}${lead.impact_value_change}%`}
+                      </span>
+                    )}
+                    {lead.impact_radius && (
+                      <span className="text-xs px-2 py-1 bg-gray-100 text-gray-700 rounded">
+                        {lead.impact_radius}mi radius
+                      </span>
+                    )}
                   </div>
                 </div>
               </InfoWindow>
             )}
           </Marker>
+          </>
         );
       })}
       </GoogleMap>
