@@ -35,20 +35,17 @@ export async function GET(request: NextRequest) {
       days: searchParams.get('days') ? parseInt(searchParams.get('days')!) : 30, // Default 30 days
     };
 
-    // Build query
+    // Build query - Show ALL scraped data (realtors want to see everything happening)
     let query = supabaseAdmin
       .from('scraped_posts')
       .select('*')
-      .in('status', ['published', 'approved']) // Only published/approved
-      .order('scraped_date', { ascending: false });
+      .order('scraped_date', { ascending: false }); // Most recent first
 
     // Filter by data_type (permit, license, etc.)
-    if (filters.type) {
+    if (filters.type && filters.type !== 'all') {
       query = query.eq('data_type', filters.type);
-    } else {
-      // Default: only show permit, license, liquor, property (not RSS)
-      query = query.in('data_type', ['permit', 'license', 'liquor', 'property', 'zoning']);
     }
+    // Default: Show ALL data types (including RSS feeds) - realtors want to see everything happening
 
     // Filter by date (last N days)
     if (filters.days) {

@@ -78,6 +78,7 @@ export default function RealtorDashboardPage() {
   const [minValue, setMinValue] = useState<number>(0);
   const [daysFilter, setDaysFilter] = useState<number>(30);
   const [viewMode, setViewMode] = useState<'map' | 'list'>('map');
+  const [activeTab, setActiveTab] = useState<'impact' | 'opportunities' | 'all'>('impact');
 
   // Fetch leads
   useEffect(() => {
@@ -132,6 +133,20 @@ export default function RealtorDashboardPage() {
   const filteredLeads = useMemo(() => {
     let filtered = leads;
     
+    // Tab filter (productized view)
+    if (activeTab === 'impact') {
+      // Show only developments affecting property values
+      filtered = filtered.filter(lead => 
+        lead.impact_type === 'negative' || lead.impact_type === 'positive' || lead.impact_type === 'mixed'
+      );
+    } else if (activeTab === 'opportunities') {
+      // Show only new opportunities (permits, licenses)
+      filtered = filtered.filter(lead => 
+        lead.type === 'permit' || lead.type === 'license' || lead.type === 'liquor'
+      );
+    }
+    // 'all' tab shows everything
+    
     // Type filter
     if (typeFilter !== 'all') {
       filtered = filtered.filter(lead => lead.type === typeFilter);
@@ -152,13 +167,13 @@ export default function RealtorDashboardPage() {
       filtered = filtered.filter(lead => 
         lead.title.toLowerCase().includes(query) ||
         lead.address.toLowerCase().includes(query) ||
-        lead.summary.toLowerCase().includes(query) ||
+        lead.summary?.toLowerCase().includes(query) ||
         lead.tags.some(tag => tag.toLowerCase().includes(query))
       );
     }
     
     return filtered;
-  }, [leads, searchQuery, typeFilter, impactFilter]);
+  }, [leads, activeTab, searchQuery, typeFilter, impactFilter]);
 
   const getTypeIcon = (type: string) => {
     switch (type) {
@@ -246,10 +261,10 @@ export default function RealtorDashboardPage() {
                   <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
                     <Target className="w-6 h-6 text-white" />
                   </div>
-                  OKC Intelligence Dashboard
+                  What's Happening in OKC
                 </h1>
                 <p className="text-gray-600">
-                  Early-stage leads from public records • Updated daily
+                  Everything we're tracking: permits, licenses, developments, news • Updated daily at 6am
                 </p>
               </div>
               
@@ -327,6 +342,53 @@ export default function RealtorDashboardPage() {
           </div>
         </div>
 
+        {/* Tabs - Productized View */}
+        <div className="bg-white border-b border-gray-200">
+          <div className="max-w-7xl mx-auto px-6">
+            <div className="flex gap-1 border-b border-gray-200">
+              <button
+                onClick={() => setActiveTab('impact')}
+                className={`px-6 py-4 text-sm font-medium border-b-2 transition-colors ${
+                  activeTab === 'impact'
+                    ? 'border-red-500 text-red-600'
+                    : 'border-transparent text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                🔴 Impact Alerts
+                <span className="ml-2 text-xs text-gray-500">
+                  ({filteredLeads.filter(l => l.impact_type === 'negative' || l.impact_type === 'positive').length})
+                </span>
+              </button>
+              <button
+                onClick={() => setActiveTab('opportunities')}
+                className={`px-6 py-4 text-sm font-medium border-b-2 transition-colors ${
+                  activeTab === 'opportunities'
+                    ? 'border-blue-500 text-blue-600'
+                    : 'border-transparent text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                🎯 New Opportunities
+                <span className="ml-2 text-xs text-gray-500">
+                  ({filteredLeads.filter(l => l.type === 'permit' || l.type === 'license' || l.type === 'liquor').length})
+                </span>
+              </button>
+              <button
+                onClick={() => setActiveTab('all')}
+                className={`px-6 py-4 text-sm font-medium border-b-2 transition-colors ${
+                  activeTab === 'all'
+                    ? 'border-gray-500 text-gray-900'
+                    : 'border-transparent text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                📋 Everything
+                <span className="ml-2 text-xs text-gray-500">
+                  ({filteredLeads.length})
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+
         {/* Search & Filters */}
         <div className="bg-white border-b border-gray-200 sticky top-0 z-40 shadow-sm">
           <div className="max-w-7xl mx-auto px-6 py-4">
@@ -336,7 +398,13 @@ export default function RealtorDashboardPage() {
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <input
                   type="text"
-                  placeholder="Search leads by address, title, or tags..."
+                  placeholder={
+                    activeTab === 'impact' 
+                      ? "Search developments affecting property values..."
+                      : activeTab === 'opportunities'
+                      ? "Search permits, licenses, new construction..."
+                      : "Search all leads..."
+                  }
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"

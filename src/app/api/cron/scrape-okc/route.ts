@@ -1220,16 +1220,8 @@ function extractTags(title: string, content: string): string[] {
 // ============================================================================
 
 export async function GET(request: NextRequest) {
-  // 🛑 PAUSED: Scraper disabled to save costs
-  // Re-enable by removing this early return
-  return Response.json({ 
-    message: 'Scraper is paused to save costs. Re-enable by removing the early return at the top of this function.',
-    paused: true 
-  }, { status: 200 });
-
-  // ============================================================================
-  // BELOW CODE IS PAUSED - Remove early return above to re-enable
-  // ============================================================================
+  // ✅ SCRAPER ENABLED - Running daily at 6am UTC
+  // Shows realtors everything happening in OKC
   
   const startTime = Date.now();
   
