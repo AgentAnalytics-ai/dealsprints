@@ -3,20 +3,14 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabaseAuth } from '@/lib/auth';
-import { Mail, AlertCircle, ArrowRight, Target } from 'lucide-react';
+import { Mail, Lock, AlertCircle, ArrowRight, Target } from 'lucide-react';
 
 export default function LoginPage() {
   const router = useRouter();
-  // Remember email from localStorage (better UX)
-  const [email, setEmail] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('dealsprints_email') || '';
-    }
-    return '';
-  });
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,51 +22,28 @@ export default function LoginPage() {
       const searchParams = new URLSearchParams(window.location.search);
       const redirectTo = searchParams.get('redirect') || '/realtor/dashboard';
       
-      // Send magic link (passwordless login)
-      const { error: signInError } = await supabaseAuth.auth.signInWithOtp({
+      // Sign in with email and password
+      const { data, error: signInError } = await supabaseAuth.auth.signInWithPassword({
         email,
-        options: {
-          emailRedirectTo: `${window.location.origin}/auth/callback?redirect=${encodeURIComponent(redirectTo)}`,
-        },
+        password,
       });
 
       if (signInError) {
         throw signInError;
       }
 
-      // Remember email in localStorage
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('dealsprints_email', email);
+      if (data.session) {
+        // Successfully logged in - redirect to dashboard
+        router.push(redirectTo);
+      } else {
+        throw new Error('No session created');
       }
-
-      setSuccess(true);
     } catch (err: any) {
       console.error('Login error:', err);
-      setError(err.message || 'Failed to send magic link. Please try again.');
+      setError(err.message || 'Failed to sign in. Please check your email and password.');
       setLoading(false);
     }
   };
-
-  if (success) {
-    return (
-      <main className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center">
-        <div className="max-w-md w-full mx-auto px-6">
-          <div className="bg-white rounded-2xl shadow-2xl p-8 text-center border border-gray-100">
-            <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-              <Mail className="w-10 h-10 text-green-600" />
-            </div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-3">Check Your Email</h2>
-            <p className="text-gray-600 mb-2">
-              We've sent a magic link to <strong className="text-gray-900">{email}</strong>
-            </p>
-            <p className="text-sm text-gray-500">
-              Click the link in your email to access your dashboard
-            </p>
-          </div>
-        </div>
-      </main>
-    );
-  }
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center">
@@ -96,6 +67,13 @@ export default function LoginPage() {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-6">
+            {error && (
+              <div className="p-4 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3">
+                <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+                <p className="text-sm text-red-800">{error}</p>
+              </div>
+            )}
+
             {/* Email */}
             <div>
               <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
@@ -109,13 +87,31 @@ export default function LoginPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
+                  autoComplete="email"
                   className="w-full pl-12 pr-4 py-3.5 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-gray-900 placeholder-gray-400"
                   placeholder="your@email.com"
                 />
               </div>
-              <p className="mt-2 text-xs text-gray-500">
-                We'll send you a magic link - no password needed
-              </p>
+            </div>
+
+            {/* Password */}
+            <div>
+              <label htmlFor="password" className="block text-sm font-semibold text-gray-700 mb-2">
+                Password
+              </label>
+              <div className="relative">
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  autoComplete="current-password"
+                  className="w-full pl-12 pr-4 py-3.5 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-gray-900 placeholder-gray-400"
+                  placeholder="Enter your password"
+                />
+              </div>
             </div>
 
             {/* Submit Button */}
@@ -127,11 +123,11 @@ export default function LoginPage() {
               {loading ? (
                 <>
                   <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  Sending magic link...
+                  Signing in...
                 </>
               ) : (
                 <>
-                  Continue to Dashboard
+                  Sign In
                   <ArrowRight className="w-5 h-5" />
                 </>
               )}

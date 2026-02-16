@@ -3,103 +3,80 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabaseAuth } from '@/lib/auth';
-import { Header } from '@/components/Header';
-import { Footer } from '@/components/Footer';
+import { Mail, Lock, AlertCircle, ArrowRight, Target } from 'lucide-react';
 import Link from 'next/link';
-import { Mail, AlertCircle, CheckCircle, ArrowRight } from 'lucide-react';
 
 export default function SignupPage() {
   const router = useRouter();
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    
+    // Validate passwords match
+    if (password !== confirmPassword) {
+      setError('Passwords do not match');
+      return;
+    }
+
+    if (password.length < 6) {
+      setError('Password must be at least 6 characters');
+      return;
+    }
+
     setLoading(true);
 
     try {
-      // Send magic link (passwordless signup)
-      const { error: signUpError } = await supabaseAuth.auth.signInWithOtp({
+      // Sign up with email and password
+      const { data, error: signUpError } = await supabaseAuth.auth.signUp({
         email,
+        password,
         options: {
-          emailRedirectTo: `${window.location.origin}/okc/feed`,
+          emailRedirectTo: `${window.location.origin}/realtor/dashboard`,
         },
       });
 
       if (signUpError) {
-        // If email already exists, try to send magic link for login
-        if (signUpError.message.includes('already registered')) {
-          const { error: loginError } = await supabaseAuth.auth.signInWithOtp({
-            email,
-            options: {
-              emailRedirectTo: `${window.location.origin}/okc/feed`,
-            },
-          });
-          
-          if (loginError) {
-            throw loginError;
-          }
-        } else {
-          throw signUpError;
-        }
+        throw signUpError;
       }
 
-      setSuccess(true);
+      if (data.user) {
+        // If email confirmation is required, show message
+        // Otherwise, redirect to dashboard
+        if (data.session) {
+          router.push('/realtor/dashboard');
+        } else {
+          // Email confirmation required
+          setError('Please check your email to confirm your account');
+          setLoading(false);
+        }
+      }
     } catch (err: any) {
       console.error('Signup error:', err);
-      setError(err.message || 'Failed to send magic link. Please try again.');
+      setError(err.message || 'Failed to create account. Please try again.');
       setLoading(false);
     }
   };
 
-  if (success) {
-    return (
-      <main className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-        <Header />
-        <div className="max-w-md mx-auto px-6 py-32">
-          <div className="bg-white rounded-2xl shadow-xl p-8 text-center">
-            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <CheckCircle className="w-10 h-10 text-green-600" />
-            </div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Check Your Email</h2>
-            <p className="text-gray-600 mb-4">
-              We've sent a magic link to <strong>{email}</strong>. Click the link to log in instantly.
-            </p>
-            <Link
-              href="/okc/feed"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-purple-600 text-white font-semibold rounded-lg hover:bg-purple-700 transition-all"
-            >
-              Go to Feed
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-          </div>
-        </div>
-        <Footer />
-      </main>
-    );
-  }
-
   return (
-    <main className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-      <Header />
-      
-      <div className="max-w-md mx-auto px-6 py-32">
-        {/* Header */}
+    <main className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center">
+      <div className="max-w-md w-full mx-auto px-6">
+        {/* Logo/Title */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">Create Your Account</h1>
-          <p className="text-gray-600">Manage your subscription and access your dashboard</p>
-          <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-            <p className="text-sm text-blue-800">
-              <strong>New to DealSprints?</strong> No signup needed! Browse the feed free and upgrade when ready.
-            </p>
+          <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+            <Target className="w-8 h-8 text-white" />
           </div>
+          <h1 className="text-4xl font-bold text-gray-900 mb-3">Create Account</h1>
+          <p className="text-gray-600 text-lg">Sign up to access your dashboard</p>
         </div>
 
         {/* Signup Form */}
-        <div className="bg-white rounded-2xl shadow-xl p-8">
+        <div className="bg-white rounded-2xl shadow-2xl p-8 border border-gray-100">
           {error && (
             <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3">
               <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
@@ -110,64 +87,97 @@ export default function SignupPage() {
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Email */}
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
                 Email Address
               </label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <input
                   id="email"
-                  name="email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                  placeholder="you@example.com"
+                  autoComplete="email"
+                  className="w-full pl-12 pr-4 py-3.5 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-gray-900 placeholder-gray-400"
+                  placeholder="your@email.com"
                 />
               </div>
-              <p className="mt-2 text-xs text-gray-500">
-                We'll send you a magic link to log in. No password needed!
-              </p>
+            </div>
+
+            {/* Password */}
+            <div>
+              <label htmlFor="password" className="block text-sm font-semibold text-gray-700 mb-2">
+                Password
+              </label>
+              <div className="relative">
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  autoComplete="new-password"
+                  minLength={6}
+                  className="w-full pl-12 pr-4 py-3.5 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-gray-900 placeholder-gray-400"
+                  placeholder="At least 6 characters"
+                />
+              </div>
+            </div>
+
+            {/* Confirm Password */}
+            <div>
+              <label htmlFor="confirmPassword" className="block text-sm font-semibold text-gray-700 mb-2">
+                Confirm Password
+              </label>
+              <div className="relative">
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <input
+                  id="confirmPassword"
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  required
+                  autoComplete="new-password"
+                  minLength={6}
+                  className="w-full pl-12 pr-4 py-3.5 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-gray-900 placeholder-gray-400"
+                  placeholder="Confirm your password"
+                />
+              </div>
             </div>
 
             {/* Submit Button */}
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white font-semibold py-3 px-6 rounded-lg hover:from-purple-700 hover:to-blue-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="w-full bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 text-white font-semibold py-4 px-6 rounded-xl hover:from-blue-700 hover:via-purple-700 hover:to-indigo-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
             >
               {loading ? (
                 <>
                   <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  Sending magic link...
+                  Creating account...
                 </>
               ) : (
                 <>
-                  Send Magic Link
+                  Create Account
+                  <ArrowRight className="w-5 h-5" />
                 </>
               )}
             </button>
           </form>
 
           {/* Footer Links */}
-          <div className="mt-6 text-center space-y-2">
+          <div className="mt-6 text-center">
             <p className="text-sm text-gray-600">
               Already have an account?{' '}
-              <Link href="/login" className="text-purple-600 font-semibold hover:text-purple-700">
+              <Link href="/login" className="text-blue-600 font-semibold hover:text-blue-700">
                 Sign in
-              </Link>
-            </p>
-            <p className="text-sm text-gray-600">
-              <Link href="/" className="text-gray-500 hover:text-gray-700">
-                ← Back to home
               </Link>
             </p>
           </div>
         </div>
       </div>
-
-      <Footer />
     </main>
   );
 }
