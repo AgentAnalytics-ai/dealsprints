@@ -229,7 +229,7 @@ export default async function LeadDetailPage({ params }: PageProps) {
               <div className="bg-white rounded-lg shadow-lg p-6">
                 <h3 className="text-sm font-semibold text-gray-900 mb-3">Tags</h3>
                 <div className="flex flex-wrap gap-2">
-                  {lead.tags.map((tag, i) => (
+                  {lead.tags.map((tag: string, i: number) => (
                     <span
                       key={i}
                       className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded border border-gray-200"
