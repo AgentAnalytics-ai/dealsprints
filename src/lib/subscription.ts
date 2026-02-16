@@ -62,7 +62,7 @@ export async function checkSubscription(userId: string): Promise<SubscriptionSta
     }
 
     // Check subscription status with Stripe
-    const subscription = await stripe.subscriptions.retrieve(member.stripe_subscription_id);
+    const subscription = await stripe.subscriptions.retrieve(member.stripe_subscription_id) as Stripe.Subscription;
 
     const isActive = subscription.status === 'active' || subscription.status === 'trialing';
     const plan = subscription.items.data[0]?.price?.metadata?.plan as 'realtor' | null || null;
@@ -77,7 +77,7 @@ export async function checkSubscription(userId: string): Promise<SubscriptionSta
       currentPeriodEnd: subscription.current_period_end 
         ? new Date(subscription.current_period_end * 1000) 
         : null,
-      cancelAtPeriodEnd: subscription.cancel_at_period_end,
+      cancelAtPeriodEnd: subscription.cancel_at_period_end || false,
     };
   } catch (error) {
     console.error('Subscription check error:', error);
