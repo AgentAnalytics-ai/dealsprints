@@ -91,6 +91,14 @@ export default async function LeadDetailPage({ params }: PageProps) {
     source: post.source_name,
     sourceUrl: post.source_url,
     tags: post.ai_tags || [],
+    score: 50, // Default score
+    opportunity: 'warm' as const,
+    // Market intelligence fields
+    impact_type: post.impact_type || null,
+    impact_radius: post.impact_radius || null,
+    impact_value_change: post.impact_value_change || null,
+    development_status: post.development_status || null,
+    coordinates: null as { lat: number; lng: number } | null,
   };
 
   const getTypeIcon = (type: string) => {
@@ -167,13 +175,13 @@ export default async function LeadDetailPage({ params }: PageProps) {
             {/* Map */}
             {coordinates && (
               <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-                <div className="h-[400px]">
-                  <GoogleMap
-                    leads={[{ ...lead, coordinates, opportunity: 'warm' as const, score: 50 }]}
-                    selectedLead={{ ...lead, coordinates, opportunity: 'warm' as const, score: 50 }}
-                    onLeadSelect={() => {}}
-                  />
-                </div>
+              <div className="h-[400px]">
+                <GoogleMap
+                  leads={[{ ...lead, coordinates }]}
+                  selectedLead={{ ...lead, coordinates }}
+                  onLeadSelect={() => {}}
+                />
+              </div>
               </div>
             )}
 
