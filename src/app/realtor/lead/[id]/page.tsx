@@ -9,9 +9,9 @@ import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { MapPin, Calendar, DollarSign, Building2, UtensilsCrossed, Home, ExternalLink, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
-import dynamic from 'next/dynamic';
+import dynamicImport from 'next/dynamic';
 
-const GoogleMap = dynamic(() => import('@/components/realtor/RealtorMap'), {
+const GoogleMap = dynamicImport(() => import('@/components/realtor/RealtorMap'), {
   ssr: false,
   loading: () => <div className="w-full h-[400px] bg-gray-200 animate-pulse rounded-lg" />
 });
