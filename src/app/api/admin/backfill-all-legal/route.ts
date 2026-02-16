@@ -8,22 +8,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase';
 import { openai } from '@ai-sdk/openai';
 import { generateText } from 'ai';
+import { getErrorMessage } from '@/lib/errorHandler';
 
 export const dynamic = 'force-dynamic';
-
-// Type guard for error handling
-function getErrorMessage(error: unknown): string {
-  if (error instanceof Error) {
-    return error.message;
-  }
-  if (typeof error === 'string') {
-    return error;
-  }
-  if (error !== null && error !== undefined) {
-    return String(error);
-  }
-  return 'Unknown error';
-}
 
 // Legal RSS sources (same as in cron)
 const LEGAL_RSS_SOURCES = [

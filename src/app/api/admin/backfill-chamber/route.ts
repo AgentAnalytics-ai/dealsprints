@@ -8,6 +8,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase';
 import { openai } from '@ai-sdk/openai';
 import { generateText } from 'ai';
+import { getErrorMessage } from '@/lib/errorHandler';
 
 export const dynamic = 'force-dynamic';
 
@@ -373,12 +374,12 @@ export async function POST(request: NextRequest) {
     console.log('✅ OKC Chamber Backfill completed:', summary);
 
     return NextResponse.json(summary);
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('❌ Backfill error:', error);
     return NextResponse.json(
       { 
         error: 'Backfill failed', 
-        details: error instanceof Error ? error.message : 'Unknown error'
+        details: getErrorMessage(error)
       },
       { status: 500 }
     );
