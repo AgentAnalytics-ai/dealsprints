@@ -27,6 +27,7 @@ import { NextRequest } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase';
 import { openai } from '@ai-sdk/openai';
 import { generateText } from 'ai';
+import { getErrorMessage } from '@/lib/errorHandler';
 
 // Vercel configuration
 export const dynamic = 'force-dynamic';
@@ -1365,7 +1366,7 @@ export async function GET(request: NextRequest) {
 
     return Response.json(summary);
 
-  } catch (error) {
+  } catch (error: unknown) {
     const duration = ((Date.now() - startTime) / 1000).toFixed(2);
     console.error('❌ Scraper error:', error);
     
@@ -1373,7 +1374,7 @@ export async function GET(request: NextRequest) {
       { 
         success: false,
         error: 'Scraper failed', 
-        details: error instanceof Error ? error.message : String(error),
+        details: getErrorMessage(error),
         duration: `${duration}s`,
       },
       { status: 500 }
