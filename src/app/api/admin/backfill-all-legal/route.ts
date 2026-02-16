@@ -387,13 +387,14 @@ export async function POST(request: NextRequest) {
 
   } catch (err: unknown) {
     console.error('❌ Backfill error:', err);
-    const errorMessage = err instanceof Error 
-      ? err.message 
-      : typeof err === 'string' 
-        ? err 
-        : err !== null && err !== undefined 
-          ? String(err) 
-          : 'Unknown error';
+    let errorMessage = 'Unknown error';
+    if (err instanceof Error) {
+      errorMessage = err.message;
+    } else if (typeof err === 'string') {
+      errorMessage = err;
+    } else if (err !== null && err !== undefined) {
+      errorMessage = String(err);
+    }
     
     return NextResponse.json(
       { 
